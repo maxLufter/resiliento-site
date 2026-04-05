@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000; /* Absolute Black */
+  --foreground: #F8FAFC;
+  --brand-cyan: #16EDB9;
+  --brand-cyan-hover: #12C99D;
+  --surface-border: #161616; /* Extremely dark grey */
+  --surface-bg: #030303; 
+  --surface-bg-elevated: #080808; 
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-cyan);
+  --color-brand-hover: var(--brand-cyan-hover);
+  --color-surface: var(--surface-bg);
+  --color-surface-hover: var(--surface-bg-elevated);
+  --color-border: var(--surface-border);
+  --font-sans: var(--font-inter);
+  --font-montserrat: var(--font-montserrat);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Adds a subtle noise texture to the background to break the flat digital feel */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}

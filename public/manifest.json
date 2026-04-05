@@ -1,0 +1,8 @@
+{
+  "name": "RESILIENTO",
+  "short_name": "RESILIENTO",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#1246d6"
+}
