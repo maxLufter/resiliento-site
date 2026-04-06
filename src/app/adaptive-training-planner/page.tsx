@@ -64,9 +64,9 @@ export default function AdaptiveTrainingPlannerPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white uppercase mb-3">Handling The Missed Session</h3>
                 <p className="text-slate-400 font-light text-sm leading-relaxed">
-                  Missing a technical threshold session alters the weekly load distribution. Rather than blindly skipping it or unsafely stacking it onto tomorrow, an <Link href="/hybrid-training-engine" className="text-brand hover:underline">adaptive hybrid engine</Link> deterministically reschedules the highest-priority sessions inside the remaining 72 hours.
+                  Missing a technical threshold swim or interval run alters the weekly load distribution. Rather than blindly skipping it or unsafely stacking it onto tomorrow, an <Link href="/hybrid-training-engine" className="text-brand hover:underline">adaptive hybrid engine</Link> deterministically reschedules the highest-priority sessions inside the remaining 72 hours.
                   <br/><br/>
-                  It redistributes the lost aerobic volume to alternative disciplines (e.g., adding 15 minutes of Z2 to your weekend ride) without causing an acute load spike that would compromise tissue integrity.
+                  It redistributes the lost aerobic volume to alternative disciplines (e.g., adding 15 minutes of Z2 to your weekend long ride) without causing an acute load spike that would compromise tissue integrity.
                 </p>
               </div>
 
@@ -76,9 +76,9 @@ export default function AdaptiveTrainingPlannerPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white uppercase mb-3">Smart Compression Algorithm</h3>
                 <p className="text-slate-400 font-light text-sm leading-relaxed">
-                  Your 90-minute structured ride is blocked because you only have a 35-minute window before leaving for the airport. Simply truncating the main set ruins the intended stimulus. 
+                  Your 90-minute structured endurance ride is blocked because you only have a 35-minute window before leaving for the airport. Simply truncating the main cycle set ruins the intended stimulus. 
                   <br/><br/>
-                  Smart compression calculates the required Training Stress Score (TSS) for the original workout and mathematically converts the steady-state aerobic blocks into a higher-density threshold or sweet-spot work, extracting an equivalent systemic stress score from the brutally abbreviated timeframe.
+                  Smart compression calculates the required Training Stress Score (TSS) for the original bike workout and mathematically converts the steady-state aerobic blocks into higher-density threshold or sweet-spot work on the trainer, extracting an equivalent systemic stress score from the brutally abbreviated timeframe.
                 </p>
               </div>
             </div>

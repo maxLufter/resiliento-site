@@ -39,7 +39,7 @@ export default function MobilityPage() {
               </h2>
               <div className="prose prose-invert prose-brand max-w-none text-slate-300 font-light leading-relaxed">
                 <p className="text-lg">
-                  For the vast majority of endurance and hybrid athletes, mobility is an afterthought—a quick routine performed out of a vague sense of guilt at the end of a grueling track workout. This unstructured, passive approach yields almost zero long-term neuromuscular adaptation.
+                  For the vast majority of triathletes and endurance runners, mobility is an afterthought—a quick routine performed out of a vague sense of guilt at the end of a grueling track session or long swim. This unstructured, passive approach yields almost zero long-term neuromuscular adaptation.
                 </p>
                 <p>
                   Passive stretching without context does not fix biomechanical restrictions. To actually improve <strong>position tolerance</strong> (e.g., staying low on a TT bike without destroying your lower back) or <strong>movement quality</strong> (e.g., maintaining healthy hip extension during hour three of a marathon), mobility must be highly specific.

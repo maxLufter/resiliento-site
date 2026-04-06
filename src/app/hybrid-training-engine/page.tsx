@@ -101,7 +101,7 @@ export default function HybridTrainingEnginePage() {
                 <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Shared Load Budgets</h4>
               </div>
               <p className="text-slate-400 font-light text-sm leading-relaxed flex-1">
-                Strength and endurance draw from the exact same recovery pool. The engine enforces a unified structural load ceiling. If your triathlon run volume peaks during a "Race Build" phase, the engine automatically compresses your strength volume down to "Maintenance Archetypes." It prevents you from simultaneously chasing maximum muscular hypertrophy and maximum aerobic endurance, which biologically cancel each other out.
+                Strength and endurance draw from the exact same recovery pool. The engine enforces a unified structural load ceiling. If your triathlon swim, bike, or run volume peaks during an "Ironman Build" phase, the engine automatically compresses your strength volume down to "Maintenance Archetypes." It prevents you from simultaneously chasing maximum muscular hypertrophy and maximum aerobic endurance, which biologically cancel each other out.
               </p>
             </div>
 
@@ -111,7 +111,7 @@ export default function HybridTrainingEnginePage() {
                 <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Contextual Re-Routing</h4>
               </div>
               <p className="text-slate-400 font-light text-sm leading-relaxed flex-1">
-                Plans must survive contact with reality. A missed long ride isn't just left behind, nor is it blindly stacked onto tomorrow. The engine algorithmically redistributes the physiological target across the upcoming week without violating daily acute load thresholds.<br/><br/>
+                Plans must survive contact with reality. A missed two-hour long ride isn't just left behind, nor is it blindly stacked onto tomorrow's tempo run. The engine algorithmically redistributes the physiological target across the upcoming week without violating daily acute load thresholds.<br/><br/>
                 <Link href="/adaptive-training-planner" className="text-brand hover:underline font-medium uppercase text-[10px] tracking-widest mt-2 inline-block">Explore Adaptive Planning →</Link>
               </p>
             </div>

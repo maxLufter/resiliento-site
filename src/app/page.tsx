@@ -22,7 +22,7 @@ export default function Home() {
             </h1>
             
             <p className="text-xl sm:text-3xl text-slate-400 mb-16 leading-[1.4] max-w-3xl font-light tracking-tight">
-              Endurance, strength, mobility, and readiness unified. 
+              Swim, bike, run, heavy strength, and mobility unified. 
               Built for athletes who demand <span className="text-white font-medium">systematic logic</span>, not blind compliance.
             </p>
             
@@ -64,7 +64,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-3xl font-bold tracking-tight text-white mb-4 uppercase">Blind Pacing</h3>
                   <p className="text-slate-400 text-lg leading-relaxed font-light">
-                    Your triathlon app demands threshold intervals today. It has zero awareness of the structural damage from yesterday's heavy squats.
+                    Your triathlon app demands a high-intensity threshold run today. It has zero awareness of the structural damage from yesterday's heavy back squats.
                   </p>
                 </div>
 
@@ -233,7 +233,7 @@ export default function Home() {
               Built For<br/>Race Day.
             </h2>
             <p className="text-xl text-slate-400 font-light leading-relaxed max-w-2xl">
-              Most planning tools let you enter a race date and call it structure. RESILIENTO reverse-engineers your entire macrocycle from A-Race to today — then enforces periodization, taper logic, and volume caps with mathematical precision.
+              Most planning tools let you enter a race date and call it structure. RESILIENTO reverse-engineers your Ironman, 70.3, or marathon build from A-Race to today — then enforces periodization, taper logic, and volume caps with mathematical precision.
             </p>
           </div>
 
@@ -291,7 +291,7 @@ export default function Home() {
                 Strength<br/>Is Not<br/>Optional.
               </h2>
               <p className="text-xl text-slate-400 font-light leading-relaxed">
-                Most endurance apps treat strength as a sidebar. RESILIENTO runs the strength engine in parallel with the endurance planner — both systems share the same load budget, recovery model, and adaptation timeline.
+                Most triathlon and running apps treat strength as a sidebar. RESILIENTO runs the strength engine in parallel with the endurance planner — both systems share the same load budget, recovery model, and adaptation timeline.
               </p>
             </div>
             <div className="space-y-8 pt-4">
