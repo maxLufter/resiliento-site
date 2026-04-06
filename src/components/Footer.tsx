@@ -68,9 +68,9 @@ export function Footer() {
                 <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">CommHQ</h3>
                 <ul role="list" className="space-y-4">
                   <li>
-                    <Link href="/waitlist" className="text-sm text-white hover:text-brand transition-colors flex items-center gap-2">
-                      <span>Waitlist Access</span>
-                      <span className="text-brand">→</span>
+                    <Link href="/waitlist" className="text-sm text-white hover:text-brand transition-colors flex items-center gap-2 group">
+                      <span className="group-hover:text-brand">Join Waitlist</span>
+                      <span className="text-brand transform group-hover:translate-x-1 transition-transform">→</span>
                     </Link>
                   </li>
                   <li className="text-sm text-slate-500 font-mono">
