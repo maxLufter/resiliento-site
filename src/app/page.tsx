@@ -14,7 +14,7 @@ export default function Home() {
           <div className="max-w-5xl">
             <div className="flex items-center gap-4 mb-16">
               <div className="h-[2px] w-16 bg-brand"></div>
-              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Architecture Phase: Closed Cohort V1.0</span>
+              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
             </div>
             
             <h1 className="text-6xl sm:text-8xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
@@ -32,7 +32,7 @@ export default function Home() {
                 className="group relative inline-flex items-center justify-between border-2 border-brand bg-brand/5 px-8 py-5 w-full sm:w-auto hover:bg-brand transition-colors"
               >
                 <span className="text-[13px] font-bold tracking-[0.2em] text-white group-hover:text-black uppercase">
-                  Initialize Profile
+                  Join Waitlist
                 </span>
                 <span className="text-brand group-hover:text-black ml-4 transform group-hover:translate-x-1 transition-all">→</span>
               </Link>
@@ -383,11 +383,8 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2">
-              <div className="aspect-[16/10] bg-[#050505] border border-border flex flex-col items-center justify-center relative group overflow-hidden">
-                <img src="/dashboard.png" alt="RESILIENTO Dashboard" className="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black font-mono text-[10px] sm:text-xs text-slate-600 tracking-widest uppercase opacity-100 peer-placeholder-shown:opacity-100 group-hover:opacity-0 transition-all text-center p-4">
-                  [ WAITING FOR dashboard.png IN PUBLIC DIR ]
-                </div>
+              <div className="bg-[#050505] border border-border flex flex-col items-center justify-center relative overlow-hidden rounded-xl shadow-2xl shadow-brand/10 p-2 sm:p-4">
+                <img src="/screenshots/dashboard.png" alt="RESILIENTO Dashboard showing overall CTL readiness and training focus" className="object-cover w-full h-auto rounded-lg border border-border/50" />
               </div>
             </div>
           </div>
@@ -395,11 +392,8 @@ export default function Home() {
           {/* Screenshot 2: Readiness & Recovery */}
           <div className="grid lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-7">
-              <div className="aspect-[16/10] bg-[#050505] border border-border flex flex-col items-center justify-center relative group overflow-hidden">
-                <img src="/recovery.png" alt="Recovery Insights" className="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black font-mono text-[10px] sm:text-xs text-slate-600 tracking-widest uppercase opacity-100 group-hover:opacity-0 transition-all text-center p-4">
-                  [ WAITING FOR recovery.png IN PUBLIC DIR ]
-                </div>
+              <div className="bg-[#050505] border border-border flex flex-col items-center justify-center relative rounded-xl shadow-2xl shadow-brand/10 p-2 sm:p-4">
+                <img src="/screenshots/recovery.png" alt="Recovery Insights showing Acute-to-Chronic Workload Ratio and Injury Risk" className="object-cover w-full h-auto rounded-lg border border-border/50" />
               </div>
             </div>
             <div className="lg:col-span-5">
@@ -427,11 +421,8 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2">
-              <div className="aspect-[16/10] bg-[#050505] border border-border flex flex-col items-center justify-center relative group overflow-hidden">
-                <img src="/calendar.png" alt="Calendar View" className="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black font-mono text-[10px] sm:text-xs text-slate-600 tracking-widest uppercase opacity-100 group-hover:opacity-0 transition-all text-center p-4">
-                  [ WAITING FOR calendar.png IN PUBLIC DIR ]
-                </div>
+              <div className="bg-[#050505] border border-border flex flex-col items-center justify-center relative rounded-xl shadow-2xl shadow-brand/10 p-2 sm:p-4">
+                <img src="/screenshots/calendar.png" alt="Calendar View showing tactical training schedule and missed session adjustment" className="object-cover w-full h-auto rounded-lg border border-border/50" />
               </div>
             </div>
           </div>
@@ -439,11 +430,8 @@ export default function Home() {
            {/* Screenshot 4: Session Detail */}
            <div className="grid lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-7">
-              <div className="aspect-[16/10] bg-[#050505] border border-border flex flex-col items-center justify-center relative group overflow-hidden">
-                <img src="/session.png" alt="Session Detail" className="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black font-mono text-[10px] sm:text-xs text-slate-600 tracking-widest uppercase opacity-100 group-hover:opacity-0 transition-all text-center p-4">
-                  [ WAITING FOR session.png IN PUBLIC DIR ]
-                </div>
+              <div className="bg-[#050505] border border-border flex flex-col items-center justify-center relative rounded-xl shadow-2xl shadow-brand/10 p-2 sm:p-4">
+                <img src="/screenshots/session_run.png" alt="Structured Session Detail highlighting exact main set pacing and coach technical focus" className="object-cover w-full h-auto rounded-lg border border-border/50" />
               </div>
             </div>
             <div className="lg:col-span-5">

@@ -1,54 +1,166 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Adaptive Training Planner for Athletes | RESILIENTO",
-  description: "Why static plans fail real athletes. Learn how schedule friction affects progress and why adaptive planning is critical for consistent results.",
+  title: "Adaptive Training Planner | RESILIENTO",
+  description: "Why static PDF plans fail real athletes, how smart compression works, and why adapting to schedule friction is the secret to long-term consistency.",
 };
 
 export default function AdaptiveTrainingPlannerPage() {
   return (
-    <article className="mx-auto max-w-3xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-      <header className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-6 sm:text-5xl">
-          Static Plans Die on Contact with Reality
-        </h1>
-        <p className="text-xl text-slate-400">
-          Real life disrupts ideal schedules. Here's why adaptive planning outcompetes rigid templates.
-        </p>
-      </header>
+    <div className="flex flex-col">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
+        <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full mt-12">
+          <div className="max-w-4xl">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-[2px] w-12 bg-brand"></div>
+              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Core Concept 02</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tighter text-white mb-8 uppercase leading-[1]">
+              Static Plans Die <br/> On Contact With Reality.
+            </h1>
+            <p className="text-xl sm:text-2xl text-slate-400 leading-[1.6] font-light max-w-3xl">
+              Real life disrupts ideal schedules. Trying to perfectly execute a rigid 16-week template usually leads to injury or burnout. Here is how dynamic adaptation preserves the actual training intent.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <div className="prose prose-invert prose-brand max-w-none text-slate-300">
-        <h2>The Illusion of the 16-Week PDF</h2>
-        <p>
-          Most athletes start a new block of training with a rigid, 16-week plan. For the first two weeks, it works flawlessly. Then, life happens. You get stuck at work, a meeting runs late, your child gets sick, or the weather turns dangerous.
-        </p>
-        <p>
-          Immediately, a static plan becomes a source of stress rather than a source of progress. You are left with two bad choices: try to "catch up" by stacking missed workouts, thereby increasing injury risk; or skip the workout entirely, missing key developmental stimuli.
-        </p>
-        
-        <h2>How Adaptive Planning Solves This</h2>
-        <p>
-          An adaptive training planner does what a smart coach would do. If your 90-minute endurance session is cut down to 45 minutes because of a schedule change, the planner doesn't just truncate the session. It recalculates the optimal stimulus for the time available, perhaps converting a steady aerobic ride into a dense threshold block.
-        </p>
-        <p>
-          Adaptive planning isn't just about shifting things on a calendar. It's about preserving the fundamental logic of the training block despite constraints.
-        </p>
+      {/* The Fragility of Static Plans */}
+      <section className="py-24 border-b border-border bg-surface">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-8 uppercase">
+                The Catch-Up Trap
+              </h2>
+              <div className="prose prose-invert prose-brand max-w-none text-slate-300 font-light leading-relaxed">
+                <p>
+                  Most athletes start a new block of training with a rigid, 16-week PDF or static calendar. For the first two weeks, it works flawlessly. Then, life happens.
+                </p>
+                <p>
+                  A meeting runs late. You miss your Tuesday swim. Suddenly, your perfect plan becomes a source of stress. You try to "catch up" by moving the swim to Wednesday, stacking it on top of a heavy track workout. Consequently, you are fatigued for your Thursday ride, missing your power targets. By Friday, you are over-reached, under-recovered, and structurally disjointed.
+                </p>
+                <p>
+                  <strong>Preserving the shape of the calendar at the expense of the physiological stimulus ALWAYS backfires.</strong> 
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-8">
+              <div className="border border-border bg-black p-8 group hover:border-brand/50 transition-colors">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Example A</span>
+                </div>
+                <h3 className="text-xl font-bold text-white uppercase mb-3">The Missed Swim</h3>
+                <p className="text-slate-400 font-light text-sm leading-relaxed">
+                  Missing a technical swim session alters the weekly load distribution. Instead of just skipping it or stubbornly stacking it, the planner deterministically reschedules the highest-priority sessions inside the remaining 72 hours, redistributing the aerobic volume to alternative disciplines without causing a load spike.
+                </p>
+              </div>
 
-        <h2>Consistency Over Perfection</h2>
-        <p>
-          The athletes who make the most progress aren't the ones who heroically execute a perfect 16-week block once a year. They are the ones who string together B+ weeks for 3 years straight. Adaptive planning ensures that when life inevitably causes friction, the engine bends instead of breaking.
-        </p>
-      </div>
+              <div className="border border-border bg-black p-8 group hover:border-brand/50 transition-colors">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Example B</span>
+                </div>
+                <h3 className="text-xl font-bold text-white uppercase mb-3">Smart Compression</h3>
+                <p className="text-slate-400 font-light text-sm leading-relaxed">
+                  Your 90-minute structured ride is blocked because you only have a 35-minute window before work. Truncating the main set ruins the stimulus. Smart compression converts the steady-state aerobic blocks into higher-density threshold work, extracting an equivalent systemic stress score from the abbreviated timeframe.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="mt-16 pt-10 border-t border-white/10 text-center">
-        <h3 className="text-2xl font-semibold text-white mb-6">Experience intelligent adaptation.</h3>
-        <Link 
-          href="/waitlist" 
-          className="inline-flex justify-center rounded-md bg-brand px-6 py-3 text-sm font-semibold text-[#0B111A] shadow-sm hover:bg-brand-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand transition-all"
-        >
-          Join the Waitlist
-        </Link>
-      </div>
-    </article>
+      {/* Adaptive Architecture */}
+      <section className="py-24 border-b border-border bg-black">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6 uppercase">
+              The Difference Between Truncating, Skipping, and Adapting
+            </h2>
+            <p className="text-lg text-slate-400 max-w-3xl font-light">
+              Consistency is not about flawless execution. It is about how intelligently you handle disruption.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-0 border border-border">
+            <div className="p-10 border-r border-border border-b sm:border-b-0">
+              <h4 className="text-lg font-bold text-white uppercase mb-4 tracking-tight">Truncating (The Bad Way)</h4>
+              <p className="text-slate-500 font-light text-sm leading-relaxed">
+                Stopping a workout halfway through because you ran out of time. You often bypass the core main set or skip the critical cooldown, meaning you get the fatigue without the specific adaptation.
+              </p>
+            </div>
+            <div className="p-10 border-r border-border border-b sm:border-b-0">
+              <h4 className="text-lg font-bold text-white uppercase mb-4 tracking-tight">Skipping (The Lazy Way)</h4>
+              <p className="text-slate-500 font-light text-sm leading-relaxed">
+                Wiping the session off the calendar entirely. Do this twice in a week, and the progressive overload of the mesocycle collapses. The macro-level plan is completely derailed.
+              </p>
+            </div>
+            <div className="p-10 bg-brand/5 border border-brand relative">
+              <div className="absolute top-0 right-0 p-4">
+                <span className="w-2 h-2 rounded-full bg-brand animate-pulse block"></span>
+              </div>
+              <h4 className="text-lg font-bold text-white uppercase mb-4 tracking-tight">Adapting (The Engine Way)</h4>
+              <p className="text-slate-500 font-light text-sm leading-relaxed">
+                The engine queries the remaining week, notes the exact Training Stress Score deficit, and mathematically restructures tomorrow's session to ingest the lost volume without violating recovery caps.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 border-b border-border bg-surface">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-white uppercase">Planner FAQ</h2>
+          </div>
+          
+          <div className="space-y-8">
+            <div className="border-b border-border pb-8">
+              <h3 className="text-xl font-bold text-white uppercase mb-3">If I keep missing sessions, what happens?</h3>
+              <p className="text-slate-400 font-light leading-relaxed">
+                If the engine detects accumulated disruption exceeding a threshold (e.g. you've missed 40% of the volume over two weeks), it triggers a Horizon Re-Projection. It mathematically accepts that you are off the original trajectory, shifts the peaking curve, and rebuilds the macrocycle so you aren't perpetually drowning in unattainable load.
+              </p>
+            </div>
+            <div className="border-b border-border pb-8">
+              <h3 className="text-xl font-bold text-white uppercase mb-3">Does adapting mean I can slack off freely?</h3>
+              <p className="text-slate-400 font-light leading-relaxed">
+                No. It means zero guesswork when uncontrollable events happen. It relies on your discipline to execute the adjusted load. If you consistently skip, the engine will eventually de-load your structural expectations to keep you safe.
+              </p>
+            </div>
+            <div className="border-b border-border pb-8">
+              <h3 className="text-xl font-bold text-white uppercase mb-3">How does it adapt strength sessions?</h3>
+              <p className="text-slate-400 font-light leading-relaxed">
+                Because it is a <Link href="/hybrid-training-engine" className="text-brand hover:underline">Hybrid Engine</Link>, missing a heavy strength day might cause the planner to convert a high-intensity run interval tomorrow into an aerobic recovery run to make room for the rescheduled strength block. 
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-32 bg-[#030303]">
+        <div className="mx-auto max-w-4xl px-4 text-center">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tighter text-white mb-6 uppercase">
+            Execute. Adapt. Repeat.
+          </h2>
+          <p className="text-xl text-slate-400 font-light mb-10 max-w-2xl mx-auto">
+            Stop letting a missed Tuesday ruin your entire week. The most successful athletes are the most adaptable.
+          </p>
+          <Link 
+            href="/#waitlist" 
+            className="group relative inline-flex items-center justify-between border-2 border-brand bg-brand/5 px-8 py-5 hover:bg-brand transition-colors"
+          >
+            <span className="text-[13px] font-bold tracking-[0.2em] text-white group-hover:text-black uppercase">
+              Join Waitlist
+            </span>
+            <span className="text-brand group-hover:text-black ml-4 transform group-hover:translate-x-1 transition-all">→</span>
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }

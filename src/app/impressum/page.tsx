@@ -13,41 +13,29 @@ export default function ImpressumPage() {
         <p className="mt-4 text-slate-400">Legal Notice</p>
       </header>
 
-      <div className="prose prose-invert prose-brand max-w-none text-slate-300">
-        <h2>Information pursuant to Sect. 5 TMG</h2>
-        <p>
-          <strong>[Company Name]</strong><br />
-          [Street Address]<br />
-          [City, Zip Code]<br />
-          [Country]
-        </p>
+      <div className="prose prose-invert prose-brand max-w-none text-slate-400 font-light space-y-8">
+        <div className="border-t border-border pt-8">
+          <h2 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Information pursuant to Sect. 5 TMG</h2>
+          <p className="leading-relaxed">
+            RESILIENTO<br />
+            {/* TODO: Add Full Legal Address here before commercial launch */}
+            Pending Incorporation Finalization<br />
+          </p>
+        </div>
 
-        <h2>Represented by:</h2>
-        <p>
-          [Founder/Director Name]
-        </p>
-
-        <h2>Contact:</h2>
-        <p>
-          Email: support@resiliento.app<br />
-          Phone: [Optional Phone Number]
-        </p>
-
-        <h2>Register / commercial register entry:</h2>
-        <p>
-          [Registry Court, if applicable]<br />
-          [Registration Number, if applicable]
-        </p>
+        <div className="border-t border-border pt-8">
+          <h2 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Contact</h2>
+          <p className="leading-relaxed">
+            Email: <a href="mailto:support@resiliento.app" className="text-brand hover:underline">support@resiliento.app</a><br />
+          </p>
+        </div>
         
-        <h2>VAT ID:</h2>
-        <p>
-          Sales tax identification number according to Sect. 27 a of the Sales Tax Law:<br />
-          [VAT Number, if applicable]
-        </p>
-
-        <p className="text-sm mt-12 text-slate-500">
-          * Note: This is a placeholder document that will be updated with full legal entity details prior to commercial launch and payment collection.
-        </p>
+        <div className="border-t border-border pt-8">
+          <h2 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Status</h2>
+          <p className="leading-relaxed text-sm">
+            RESILIENTO is currently in closed cohort testing phase. Full commercial entity registration, authorized representative details, and VAT identification are pending finalization prior to public launch.
+          </p>
+        </div>
       </div>
     </article>
   );

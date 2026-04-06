@@ -85,7 +85,7 @@ export function WaitlistForm() {
         className="w-full relative flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 p-4 transition-all disabled:opacity-50 group mt-8"
       >
         <span className="text-sm font-bold tracking-widest text-white uppercase">
-          {status === "loading" ? "Transmitting..." : "Initialize Profile"}
+          {status === "loading" ? "Transmitting..." : "Join Waitlist"}
         </span>
         <span className="text-brand group-hover:translate-x-1 transition-transform">→</span>
       </button>

@@ -39,7 +39,7 @@ export function Navigation() {
             href="/waitlist" 
             className="group flex items-center gap-2 border border-border bg-black hover:border-brand px-6 py-3 text-[11px] font-mono tracking-[0.2em] uppercase text-white hover:text-brand transition-colors"
           >
-            <span>Initialize</span>
+            <span>Waitlist</span>
           </Link>
         </div>
       </div>
