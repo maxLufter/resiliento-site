@@ -29,7 +29,7 @@ export default function ImpressumPage() {
 
         <h2>Contact:</h2>
         <p>
-          Email: hello@resiliento.com<br />
+          Email: support@resiliento.app<br />
           Phone: [Optional Phone Number]
         </p>
 

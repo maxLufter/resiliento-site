@@ -44,7 +44,7 @@ export default function PrivacyPage() {
           Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to request access, correction, erasure, restriction, transfer, or to object to processing.
         </p>
         <p>
-          To exercise any of these rights, please contact us at hello@resiliento.com.
+          To exercise any of these rights, please contact us at support@resiliento.app.
         </p>
       </div>
     </article>

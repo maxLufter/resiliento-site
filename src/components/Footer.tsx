@@ -74,7 +74,7 @@ export function Footer() {
                     </Link>
                   </li>
                   <li className="text-sm text-slate-500 font-mono">
-                    SYS: hello@resiliento.com
+                    SYS: support@resiliento.app
                   </li>
                 </ul>
               </div>
