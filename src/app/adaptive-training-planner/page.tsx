@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "The Adaptive Training Planner Algorithm | RESILIENTO",
+  title: "RESILIENTO App | Adaptive Training Planner Algorithm",
   description: "Why static PDF plans fail real athletes. Learn the mechanics of smart compression, deterministic recalculation, and how adapting to schedule friction preserves consistency.",
 };
 
@@ -20,7 +20,7 @@ export default function AdaptiveTrainingPlannerPage() {
               <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Core Concept 02</span>
             </div>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white mb-8 uppercase leading-[0.9]">
-              Static Plans Die <br/> On Contact With Reality
+              The RESILIENTO <br/> Adaptive Planner
             </h1>
             <p className="text-xl sm:text-2xl text-slate-400 leading-[1.6] font-light max-w-3xl">
               Real life disrupts ideal schedules. Trying to perfectly execute a rigid 16-week template usually leads to acute injury or systemic burnout. Here is how dynamic algorithmic adaptation overrules arbitrary calendars.
@@ -148,6 +148,35 @@ export default function AdaptiveTrainingPlannerPage() {
               <p className="text-slate-400 font-light text-sm leading-relaxed">
                 The engine actively queries the remaining week, notes the exact Training Stress Score (TSS) deficit, and mathematically restructures tomorrow's session to ingest the lost volume, substituting intervals or modifying formats without ever violating maximum daily recovery caps.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Resolution Architecture Framework Table */}
+      <section className="py-24 border-b border-border bg-black">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="border border-border bg-[#050505] p-8 sm:p-12 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 blur-3xl rounded-full"></div>
+            <div className="flex items-center gap-4 mb-10">
+              <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Resolution Protocol Snapshot</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-y border-border">
+              <div className="p-6 md:p-8 font-bold text-slate-400 uppercase text-sm border-b md:border-b-0 md:border-r border-border bg-surface/20">The Friction Event</div>
+              <div className="p-6 md:p-8 font-bold text-brand uppercase text-sm bg-brand/5">RESILIENTO Automated Algorithm</div>
+              
+              {/* Row 1 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Missed 2hr Weekend Long Ride</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-b md:border-b-0 border-border font-light bg-brand/5">Injects 45m Z2 active recovery into Monday; converts Thursday tempo run to high-yield threshold to safely recapture TSS.</div>
+              
+              {/* Row 2 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Acute Sleep Disruption (HRV Drop)</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-b md:border-b-0 border-border font-light bg-brand/5">Intercepts planned VO2 Max interval swim. Downgrades session to form-focused drills to retain structural safety without zeroing the day.</div>
+              
+              {/* Row 3 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t md:border-r border-border font-medium">Repeatedly Missed Strength Blocks</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">Triggers Horizon Re-Projection. Lowers projected 1RM targets; recalculates entirely new mesocycle ramp rate grounded in reality.</div>
             </div>
           </div>
         </div>

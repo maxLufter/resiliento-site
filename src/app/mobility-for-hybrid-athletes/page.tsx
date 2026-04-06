@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Structural Mobility for Hybrid Athletes | RESILIENTO",
+  title: "RESILIENTO App | Structural Mobility Engine",
   description: "Why random stretching fails hybrid athletes. Learn how to use integrated, context-aware mobility to improve position tolerance, movement quality, and structural durability.",
 };
 
@@ -20,7 +20,7 @@ export default function MobilityPage() {
               <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Core Concept 03</span>
             </div>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white mb-8 uppercase leading-[0.9]">
-              Mobility Is Not <br/> A 5-Minute Cool-Down
+              The RESILIENTO <br/> Mobility Engine
             </h1>
             <p className="text-xl sm:text-2xl text-slate-400 leading-[1.6] font-light max-w-3xl">
               Randomly pulling on your hamstrings after a hard session achieves nothing. True structural mobility is an engineered intervention designed specifically to restore position tolerance, movement quality, and durability for hybrid athletes.
@@ -146,6 +146,35 @@ export default function MobilityPage() {
               <p className="text-slate-400 text-sm font-light leading-relaxed flex-1">
                 If you sit for 9 hours in an office chair before you train, your glutes are entirely amnesic. Pre-session activation is 100% mandatory to prevent the hamstrings from absorbing out-of-phase loads and tearing during track sprints.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Kinetic Protocol Snapshot Table */}
+      <section className="py-24 border-b border-border bg-black">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="border border-border bg-[#050505] p-8 sm:p-12 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 blur-3xl rounded-full"></div>
+            <div className="flex items-center gap-4 mb-10">
+              <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Kinetic Protocol Snapshot</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-y border-border">
+              <div className="p-6 md:p-8 font-bold text-slate-400 uppercase text-sm border-b md:border-b-0 md:border-r border-border bg-surface/20">Readiness State</div>
+              <div className="p-6 md:p-8 font-bold text-brand uppercase text-sm bg-brand/5">RESILIENTO Action & Mechanism</div>
+              
+              {/* Row 1 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Pre-Session: Heavy Squat / Lift</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-b md:border-b-0 border-border font-light bg-brand/5"><strong>Phase 1 Activation (5-8 min):</strong> Ignites dormant muscle groups (glute medius) without over-lengthening tissue. Maximizes safe force production.</div>
+              
+              {/* Row 2 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Post-Session: Long Aero Ride</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-b md:border-b-0 border-border font-light bg-brand/5"><strong>Phase 2 Restoration (15 min):</strong> Triggers aggressive thoracic spine extension protocols to structurally counteract flexed hip positioning before the run.</div>
+              
+              {/* Row 3 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t md:border-r border-border font-medium">System Rest Day / High Fatigue</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5"><strong>Deep Tissue Downgrade (25-40 min):</strong> Prolonged isometric holds. Explicitly designed to clear biomechanical glue and down-regulate the CNS.</div>
             </div>
           </div>
         </div>

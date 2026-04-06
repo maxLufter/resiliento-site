@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "The Hybrid Training Engine Explained | RESILIENTO",
+  title: "RESILIENTO App | The Hybrid Training Engine Architecture",
   description: "Why fragmented athlete software fails, the danger of the 'more data' trap without decision logic, and how a true hybrid training engine aligns endurance, strength, and recovery into one unified macrocycle.",
 };
 
@@ -20,7 +20,7 @@ export default function HybridTrainingEnginePage() {
               <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Core Concept 01</span>
             </div>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white mb-8 uppercase leading-[0.9]">
-              The Architecture of a <br/> Hybrid Training Engine
+              The RESILIENTO <br/> Hybrid Engine
             </h1>
             <p className="text-xl sm:text-2xl text-slate-400 leading-[1.6] font-light max-w-3xl">
               When software treats strength, endurance, and systemic recovery as parallel universes, your body pays the toll. Here is why fragmentation breaks athletes—and what structural integration actually solves.
@@ -77,6 +77,35 @@ export default function HybridTrainingEnginePage() {
                   <strong>The Engine Solution:</strong> An integrated training engine ingests that 32% score along with your subjective perceived exertion from yesterday, and immediately alters today's objective. It formally downgrades the session to protect your macro-level trajectory.
                 </p>
               </div>
+            </div>
+          </div>
+          
+          {/* Mechanism Snapshot Table */}
+          <div className="mt-24 border border-border bg-black p-8 sm:p-12 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 blur-3xl rounded-full"></div>
+            <div className="flex items-center gap-4 mb-10">
+              <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Mechanism Snapshot</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-y border-border">
+              <div className="p-6 md:p-8 font-bold text-white uppercase text-sm border-b md:border-b-0 md:border-r border-border bg-surface/50">Core Function</div>
+              <div className="p-6 md:p-8 font-bold text-slate-400 uppercase text-sm border-b md:border-b-0 md:border-r border-border bg-surface/20">Standard Apps</div>
+              <div className="p-6 md:p-8 font-bold text-brand uppercase text-sm bg-brand/5">RESILIENTO Engine</div>
+              
+              {/* Row 1 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Load Calculation</div>
+              <div className="p-6 md:p-8 text-sm text-slate-500 border-t border-b md:border-b-0 md:border-r border-border font-light">Endurance TSS only. Strength is ignored or completely disjointed.</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">Unified biological load. All disciplines draw from one recovery pool.</div>
+              
+              {/* Row 2 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t border-b md:border-b-0 md:border-r border-border font-medium">Missed Sessions</div>
+              <div className="p-6 md:p-8 text-sm text-slate-500 border-t border-b md:border-b-0 md:border-r border-border font-light">Ignored entirely, or manually and unsafely dragged to tomorrow.</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">System deterministically redistributes lost volume without violating daily safety caps.</div>
+              
+              {/* Row 3 */}
+              <div className="p-6 md:p-8 text-sm text-slate-300 border-t md:border-r border-border font-medium">Wearable Data Integration</div>
+              <div className="p-6 md:p-8 text-sm text-slate-500 border-t md:border-r border-border font-light">Generates a passive score. You still have to figure out what to do with it.</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">Automatically rewrites today's workout structure based on acute fatigue metrics.</div>
             </div>
           </div>
         </div>

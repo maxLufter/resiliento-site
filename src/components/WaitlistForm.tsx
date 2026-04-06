@@ -37,7 +37,7 @@ export function WaitlistForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="email" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
-          Identity / Email <span className="text-brand">*</span>
+          Email Address <span className="text-brand">*</span>
         </label>
         <input
           id="email"
@@ -51,7 +51,7 @@ export function WaitlistForm() {
 
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="sport" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
-          Primary Discipline
+          Primary Sport
         </label>
         <input
           id="sport"
@@ -64,7 +64,7 @@ export function WaitlistForm() {
 
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="frustration" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
-          Primary Friction Point
+          Biggest Training Bottleneck
         </label>
         <textarea
           id="frustration"
