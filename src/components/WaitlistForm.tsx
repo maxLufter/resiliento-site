@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { joinWaitlist } from "@/app/actions/waitlist";
 
 export function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function clientAction(formData: FormData) {
     setStatus("loading");
     
-    // Simulate API call
-    setTimeout(() => {
+    const result = await joinWaitlist(formData);
+    
+    if (result.success) {
       setStatus("success");
-      // Later: Connect to backend.
-    }, 800);
+    } else {
+      setStatus("error");
+    }
   }
 
   if (status === "success") {
@@ -34,7 +36,7 @@ export function WaitlistForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form action={clientAction} className="space-y-6">
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="email" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
           Email Address <span className="text-brand">*</span>
