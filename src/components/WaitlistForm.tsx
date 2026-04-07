@@ -26,7 +26,7 @@ export function WaitlistForm() {
         
         <div className="flex items-center gap-3 mb-4">
           <div className="w-2 h-2 bg-brand animate-pulse"></div>
-          <h3 className="text-lg font-semibold text-white tracking-wide">ACCESS SECURED</h3>
+          <h3 className="text-lg font-semibold text-white tracking-wide">POSITION SECURED</h3>
         </div>
         <p className="text-slate-400 leading-relaxed font-light text-sm">
           Your parameters have been logged. We will initiate contact when the next cohort phase begins.

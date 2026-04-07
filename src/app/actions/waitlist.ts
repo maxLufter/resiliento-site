@@ -31,7 +31,7 @@ export async function joinWaitlist(formData: FormData) {
     await resend.emails.send({
       from: "Team Resiliento <support@resiliento.app>",
       to: email,
-      subject: "Waitlist Status: Access Secured",
+      subject: "Waitlist Status: Position Secured",
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; color: #1a1a1a; padding: 40px 20px;">
           <div style="margin-bottom: 32px;">
