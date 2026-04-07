@@ -27,18 +27,35 @@ export async function joinWaitlist(formData: FormData) {
       `,
     });
 
-    // 2. Send laconic confirmation to User
+    // 2. Send premium confirmation to User
     await resend.emails.send({
       from: "Team Resiliento <support@resiliento.app>",
       to: email,
-      subject: "Access Secured: Resiliento",
+      subject: "Waitlist Status: Access Secured",
       html: `
-        <div style="font-family: monospace; max-width: 600px; margin: 0 auto; color: #333;">
-          <p>Parameters logged.</p>
-          <p>Your access is secured. We are assembling the optimal hybrid training engine.</p>
-          <p>We will initiate contact when the next cohort phase begins.</p>
-          <br>
-          <p>Stay resilient,<br>Team Resiliento</p>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; color: #1a1a1a; padding: 40px 20px;">
+          <div style="margin-bottom: 32px;">
+            <h1 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">RESILIENTO</h1>
+            <div style="height: 2px; width: 30px; background-color: #000; margin-top: 16px;"></div>
+          </div>
+          
+          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+            Your position on the waitlist is secured.
+          </p>
+          
+          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px; color: #4a4a4a;">
+            We are currently onboarding athletes in carefully metered cohorts. This ensures our adaptive progression models calibrate perfectly to each individual's baseline.
+          </p>
+          
+          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 32px; color: #4a4a4a;">
+            As soon as the engine is ready for your specific profile, we will send your access instructions to this address.
+          </p>
+          
+          <div style="border-top: 1px solid #eaeaea; padding-top: 24px;">
+            <p style="font-size: 11px; color: #888; margin: 0; letter-spacing: 1px; text-transform: uppercase;">
+              The Resiliento Engine
+            </p>
+          </div>
         </div>
       `,
     });
