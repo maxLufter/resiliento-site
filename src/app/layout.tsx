@@ -17,6 +17,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  verification: {
+    google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
+  },
   title: "RESILIENTO | Hybrid Training Engine",
   description: "The hybrid training engine for modern athletes. Unifying endurance, strength, mobility, and recovery into one adaptive system.",
 };
