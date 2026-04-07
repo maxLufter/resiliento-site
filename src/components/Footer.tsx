@@ -8,7 +8,7 @@ export function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-24">
           <div className="space-y-8">
             <Link href="/" className="flex items-center gap-4 group">
-              <div className="relative w-14 h-14 sm:w-[72px] sm:h-[72px] flex-shrink-0">
+              <div className="relative w-10 h-10 sm:w-14 sm:h-14 lg:w-[72px] lg:h-[72px] flex-shrink-0">
                 <Image 
                   src="/resiliento_icon_light.svg" 
                   alt="RESILIENTO Icon" 
@@ -17,15 +17,15 @@ export function Footer() {
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="font-montserrat font-[550] text-2xl sm:text-[28px] text-white tracking-[0.13em] uppercase leading-none -mr-[0.13em] opacity-80 group-hover:opacity-100 transition-opacity">RESILIENTO</span>
-                <span className="font-montserrat font-bold tracking-[0.25em] text-[8px] sm:text-[9.5px] text-slate-500 uppercase mt-1 opacity-80 group-hover:opacity-100 transition-opacity">HYBRID TRAINING ENGINE</span>
+                <span className="font-montserrat font-[550] text-xl sm:text-2xl lg:text-[28px] text-white tracking-[0.13em] uppercase leading-none -mr-[0.13em] opacity-80 group-hover:opacity-100 transition-opacity">RESILIENTO</span>
+                <span className="font-montserrat font-bold tracking-[0.25em] text-[7px] sm:text-[8px] lg:text-[9.5px] text-slate-500 uppercase mt-1 opacity-80 group-hover:opacity-100 transition-opacity">HYBRID TRAINING ENGINE</span>
               </div>
             </Link>
             <p className="text-sm leading-[1.8] text-slate-500 max-w-xs font-light">
               Engineering resilience for the hybrid athlete. Systematic planning over chaotic effort.
             </p>
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-12 xl:col-span-2 xl:mt-0">
+          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-12">
               <div>
                 <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Engine</h3>

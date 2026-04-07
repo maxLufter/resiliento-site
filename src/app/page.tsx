@@ -17,11 +17,11 @@ export default function Home() {
               <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
             </div>
             
-            <h1 className="text-6xl sm:text-8xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
+            <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
               The Hybrid <br className="hidden sm:block"/> Training Engine.
             </h1>
             
-            <p className="text-xl sm:text-3xl text-slate-400 mb-16 leading-[1.4] max-w-3xl font-light tracking-tight">
+            <p className="text-lg sm:text-2xl lg:text-3xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] sm:leading-[1.4] max-w-3xl font-light tracking-tight">
               Swim, bike, run, heavy strength, and mobility unified. 
               Built for athletes who demand <span className="text-white font-medium">systematic logic</span>, not blind compliance.
             </p>
@@ -42,9 +42,9 @@ export default function Home() {
       </section>
 
       {/* The Collision Section - Replaces Generic "Problem" Grid */}
-      <section id="architecture" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-40 border-b border-border">
-        <div className="grid lg:grid-cols-2 gap-24 items-start">
-          <div className="sticky top-40">
+      <section id="architecture" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-32 lg:py-40 border-b border-border">
+        <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
+          <div className="lg:sticky lg:top-40">
             <h2 className="text-5xl sm:text-7xl font-bold tracking-tighter text-white uppercase leading-[0.9]">
               The <br/> Collision.
             </h2>
@@ -96,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* Engine Mechanics - Replaces "Solution" Checklist */}
-      <section className="bg-surface border-b border-border py-40">
+      <section className="bg-surface border-b border-border py-20 sm:py-32 lg:py-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-24 flex items-center justify-between border-b border-border pb-12">
             <h2 className="text-5xl sm:text-7xl font-bold tracking-tighter text-white uppercase">
@@ -134,9 +134,9 @@ export default function Home() {
       </section>
 
       {/* Section 1: Autoregulation Engine */}
-      <section className="py-40 border-b border-border bg-black">
+      <section className="py-20 sm:py-32 lg:py-40 border-b border-border bg-black">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-24 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
             <div>
               <div className="flex items-center gap-4 mb-10">
                 <div className="h-[1px] w-8 bg-brand" />
@@ -221,7 +221,7 @@ export default function Home() {
       </section>
 
       {/* Section 2: Race Architecture & Peaking */}
-      <section className="py-40 border-b border-border bg-[#030303]">
+      <section className="py-20 sm:py-32 lg:py-40 border-b border-border bg-[#030303]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-12">
             <div className="h-[1px] w-8 bg-brand" />
@@ -278,14 +278,14 @@ export default function Home() {
       </section>
 
       {/* Section 3: Strength & Mobility as First-Class Citizens */}
-      <section className="py-40 border-b border-border bg-black">
+      <section className="py-20 sm:py-32 lg:py-40 border-b border-border bg-black">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-12">
             <div className="h-[1px] w-8 bg-brand" />
             <span className="text-brand font-mono text-[11px] tracking-[0.3em] uppercase">Module 03 — Structural Integration</span>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-24 mb-24">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 mb-24">
             <div>
               <h2 className="text-5xl sm:text-7xl font-bold tracking-tighter text-white uppercase leading-[0.9] mb-8">
                 Strength<br/>Is Not<br/>Optional.
@@ -359,7 +359,7 @@ export default function Home() {
       </section>
 
       {/* Telemetry & Interface Section */}
-      <section className="py-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b border-border">
+      <section className="py-20 sm:py-32 lg:py-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b border-border">
         <div className="mb-24">
           <h2 className="text-[10px] sm:text-xs font-mono tracking-[0.3em] uppercase text-brand mb-6">
             System Telemetry
@@ -449,7 +449,7 @@ export default function Home() {
       </section>
 
       {/* Target Athlete Directive - Raw and Aggressive */}
-      <section className="py-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b border-border">
+      <section className="py-20 sm:py-32 lg:py-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b border-border">
         <h2 className="text-[10px] sm:text-xs font-mono tracking-[0.3em] uppercase text-brand mb-12 text-center">
           Target Execution Profiles
         </h2>
@@ -472,7 +472,7 @@ export default function Home() {
       </section>
 
       {/* Terminal Waitlist Section */}
-      <section id="waitlist" className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-40">
+      <section id="waitlist" className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 sm:py-32 lg:py-40">
         <div className="border border-border bg-[#030303] p-8 sm:p-16 relative">
           {/* Corner accents */}
           <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-brand"></div>

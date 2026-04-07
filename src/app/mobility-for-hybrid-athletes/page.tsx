@@ -32,7 +32,7 @@ export default function MobilityPage() {
       {/* The Problem with Random Stretching Grid Context */}
       <section className="py-24 border-b border-border bg-surface">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 sm:gap-16 lg:gap-24">
             <div>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-8 uppercase">
                 The Waste of Random Stretching
