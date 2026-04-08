@@ -84,7 +84,7 @@ export function Footer() {
         <div className="mt-24 border-t border-border pt-12">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-[10px] font-mono tracking-[0.2em] text-slate-600 uppercase">
-              &copy; {new Date().getFullYear()} RESILIENTO SECURE SYSTEMS.
+              &copy; {new Date().getFullYear()} RESILIENTO.
             </p>
             <div className="flex items-center gap-2 text-[10px] font-mono text-brand uppercase tracking-[0.2em]">
               <span className="w-1.5 h-1.5 bg-brand animate-pulse"></span>
