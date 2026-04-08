@@ -5,10 +5,28 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function joinWaitlist(formData: FormData) {
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const sport = formData.get("sport") as string;
-  const frustration = formData.get("frustration") as string;
+  // 1. Silent Honeypot Trap - if filled, trick the bot into thinking it succeeded
+  const botTrap = formData.get("bot_trap");
+  if (botTrap) {
+    console.warn("Bot prevented from submitting waitlist");
+    return { success: true };
+  }
+
+  // 2. Input Sanitization Engine - neutralizes executable code (XSS prevention)
+  const sanitize = (str: string | null) => {
+    if (!str) return "";
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  };
+
+  const name = sanitize(formData.get("name") as string);
+  const email = sanitize(formData.get("email") as string).trim();
+  const sport = sanitize(formData.get("sport") as string);
+  const frustration = sanitize(formData.get("frustration") as string);
 
   if (!email) {
     return { success: false, error: "Email is required" };

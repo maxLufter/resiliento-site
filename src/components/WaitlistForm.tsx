@@ -37,6 +37,16 @@ export function WaitlistForm() {
 
   return (
     <form action={clientAction} className="space-y-6">
+      {/* Hidden honeypot field to trap bots */}
+      <input 
+        type="text" 
+        name="bot_trap" 
+        tabIndex={-1} 
+        autoComplete="off" 
+        className="opacity-0 absolute w-0 h-0 pointer-events-none" 
+        aria-hidden="true" 
+      />
+
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="name" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
           Preferred Name <span className="text-brand">*</span>
