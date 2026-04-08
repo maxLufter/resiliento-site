@@ -85,7 +85,7 @@ export function WaitlistForm() {
           id="sport"
           name="sport"
           type="text"
-          placeholder="Triathlon, Hybrid, OCR..."
+          placeholder="Triathlon, HYROX, OCR..."
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
         />
       </div>

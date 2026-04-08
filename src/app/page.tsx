@@ -10,7 +10,7 @@ export default function Home() {
     "applicationCategory": "HealthAndFitnessApplication",
     "operatingSystem": "Web",
     "url": "https://resiliento.app",
-    "description": "The hybrid training engine for modern athletes. Unifying endurance, strength, mobility, and recovery into one adaptive system.",
+    "description": "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, and mobility into one adaptive system.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -43,7 +43,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg sm:text-2xl lg:text-3xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] sm:leading-[1.4] max-w-3xl font-light tracking-tight">
-              Swim, bike, run, heavy strength, and mobility unified. 
+              Triathlon, HYROX, ultra-endurance, heavy strength, and mobility globally unified. 
               Built for athletes who demand <span className="text-white font-medium">systematic logic</span>, not blind compliance.
             </p>
             
@@ -85,7 +85,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-3xl font-bold tracking-tight text-white mb-4 uppercase">Blind Pacing</h3>
                   <p className="text-slate-400 text-lg leading-relaxed font-light">
-                    Your triathlon app demands a high-intensity threshold run today. It has zero awareness of the structural damage from yesterday's heavy back squats.
+                    Your HYROX or triathlon plan demands a high-intensity threshold run today. It has zero awareness of the structural damage from yesterday's heavy back squats.
                   </p>
                 </div>
 

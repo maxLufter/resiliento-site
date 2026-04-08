@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
   },
   title: "RESILIENTO | Hybrid Training Engine",
-  description: "The hybrid training engine for modern athletes. Unifying endurance, strength, mobility, and recovery into one adaptive system.",
-  keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "adaptive training engine", "endurance sports", "mobility for athletes"],
+  description: "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, mobility, and recovery into one adaptive system.",
+  keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes"],
   openGraph: {
     title: "RESILIENTO | Hybrid Training Engine",
     description: "The hybrid training engine for modern athletes. Built for athletes who demand systematic logic, not blind compliance.",
