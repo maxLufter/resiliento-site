@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
+import { MovementVisualizer } from "@/components/MovementVisualizer";
 
 export default function Home() {
   const jsonLd = {
@@ -375,6 +376,8 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          <MovementVisualizer />
         </div>
       </section>
 
