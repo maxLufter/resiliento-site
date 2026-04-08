@@ -38,6 +38,20 @@ export function WaitlistForm() {
   return (
     <form action={clientAction} className="space-y-6">
       <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
+        <label htmlFor="name" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
+          Preferred Name <span className="text-brand">*</span>
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          placeholder="First Name"
+          className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
+        />
+      </div>
+
+      <div className="group border-b border-white/10 focus-within:border-brand transition-colors pb-2">
         <label htmlFor="email" className="block text-xs font-mono tracking-widest text-slate-500 mb-2 uppercase">
           Email Address <span className="text-brand">*</span>
         </label>

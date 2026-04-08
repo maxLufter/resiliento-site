@@ -5,6 +5,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function joinWaitlist(formData: FormData) {
+  const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const sport = formData.get("sport") as string;
   const frustration = formData.get("frustration") as string;
@@ -21,6 +22,7 @@ export async function joinWaitlist(formData: FormData) {
       subject: `New Waitlist Signup: ${email}`,
       html: `
         <h2>New Waitlist Lead</h2>
+        <p><strong>Name:</strong> ${name || "Not provided"}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Primary Sport:</strong> ${sport || "Not provided"}</p>
         <p><strong>Bottleneck:</strong> ${frustration || "Not provided"}</p>
@@ -35,9 +37,9 @@ export async function joinWaitlist(formData: FormData) {
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a; padding: 20px; background-color: #ffffff;">
           
-          <!-- Hero Banner -->
-          <div style="margin-bottom: 32px; border-radius: 6px; overflow: hidden; background-color: #030303;">
-            <img src="https://resiliento.app/og-image.jpg" alt="RESILIENTO Hybrid Training Engine" style="display: block; width: 100%; height: auto;" />
+          <!-- Header Logo -->
+          <div style="margin-bottom: 32px; text-align: left;">
+            <img src="https://resiliento.app/logo-picture.png" alt="RESILIENTO" style="display: block; width: 150px; height: auto;" />
           </div>
           
           <div style="padding: 0 10px;">
