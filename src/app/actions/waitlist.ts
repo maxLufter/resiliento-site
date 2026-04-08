@@ -33,28 +33,43 @@ export async function joinWaitlist(formData: FormData) {
       to: email,
       subject: "Waitlist Status: Position Secured",
       html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; color: #1a1a1a; padding: 40px 20px;">
-          <div style="margin-bottom: 32px;">
-            <h1 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">RESILIENTO</h1>
-            <div style="height: 2px; width: 30px; background-color: #000; margin-top: 16px;"></div>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a; padding: 20px; background-color: #ffffff;">
+          
+          <!-- Hero Banner -->
+          <div style="margin-bottom: 32px; border-radius: 6px; overflow: hidden; background-color: #030303;">
+            <img src="https://resiliento.app/og-image.jpg" alt="RESILIENTO Hybrid Training Engine" style="display: block; width: 100%; height: auto;" />
           </div>
           
-          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-            Your position on the waitlist is secured.
-          </p>
-          
-          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px; color: #4a4a4a;">
-            We are currently onboarding athletes in carefully metered cohorts. This ensures our adaptive progression models calibrate perfectly to each individual's baseline.
-          </p>
-          
-          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 32px; color: #4a4a4a;">
-            As soon as the engine is ready for your specific profile, we will send your access instructions to this address.
-          </p>
-          
-          <div style="border-top: 1px solid #eaeaea; padding-top: 24px;">
-            <p style="font-size: 11px; color: #888; margin: 0; letter-spacing: 1px; text-transform: uppercase;">
-              The Resiliento Engine
+          <div style="padding: 0 10px;">
+            <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #111;">
+              Position Confirmed
+            </h2>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px; color: #4a4a4a;">
+              Your parameters have been logged and your position on the waitlist is secured.
             </p>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px; color: #4a4a4a;">
+              We are currently onboarding athletes in carefully metered execution cohorts. This ensures our adaptive progression models calibrate perfectly to each individual's baseline without system saturation.
+            </p>
+            
+            <p style="font-size: 16px; line-height: 1.6; margin: 0 0 32px; color: #4a4a4a;">
+              As soon as the engine is ready to ingest your specific profile, we will automatically send your access payload to this address.
+            </p>
+            
+            <!-- Sleek Footer -->
+            <div style="border-top: 1px solid #eaeaea; padding-top: 24px; margin-top: 40px; display: table; width: 100%;">
+              <div style="display: table-cell; vertical-align: middle;">
+                <p style="font-size: 11px; color: #888; margin: 0; letter-spacing: 1px; text-transform: uppercase; font-family: monospace;">
+                  RESILIENTO <span style="margin: 0 5px;">|</span> ALG-PHASE-1
+                </p>
+              </div>
+              <div style="display: table-cell; vertical-align: middle; text-align: right;">
+                <a href="https://resiliento.app" style="font-size: 11px; color: #3182ce; text-decoration: none; letter-spacing: 1px; text-transform: uppercase; font-family: monospace;">
+                  View System Status →
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       `,
