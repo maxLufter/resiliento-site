@@ -60,6 +60,8 @@ export function WaitlistForm() {
           name="email"
           type="email"
           required
+          pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+          title="Please enter a valid email address with a domain"
           placeholder="athlete@domain.com"
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
         />

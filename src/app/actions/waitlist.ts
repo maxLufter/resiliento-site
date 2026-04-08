@@ -14,6 +14,12 @@ export async function joinWaitlist(formData: FormData) {
     return { success: false, error: "Email is required" };
   }
 
+  // Strict email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return { success: false, error: "Invalid email structure" };
+  }
+
   try {
     // 1. Send Notification to Admin
     await resend.emails.send({
