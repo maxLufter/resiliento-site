@@ -2,8 +2,28 @@ import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "RESILIENTO",
+    "applicationCategory": "HealthAndFitnessApplication",
+    "operatingSystem": "Web",
+    "url": "https://resiliento.app",
+    "description": "The hybrid training engine for modern athletes. Unifying endurance, strength, mobility, and recovery into one adaptive system.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/PreOrder"
+    }
+  };
+
   return (
     <div className="flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col justify-end pb-32 overflow-hidden border-b border-border">
         {/* Abstract structural graphics */}

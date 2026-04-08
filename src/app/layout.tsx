@@ -17,11 +17,35 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://resiliento.app'),
   verification: {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
   },
   title: "RESILIENTO | Hybrid Training Engine",
   description: "The hybrid training engine for modern athletes. Unifying endurance, strength, mobility, and recovery into one adaptive system.",
+  keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "adaptive training engine", "endurance sports", "mobility for athletes"],
+  openGraph: {
+    title: "RESILIENTO | Hybrid Training Engine",
+    description: "The hybrid training engine for modern athletes. Built for athletes who demand systematic logic, not blind compliance.",
+    url: "https://resiliento.app",
+    siteName: "Resiliento",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 800,
+        alt: "RESILIENTO Hybrid Training Engine - Stronger in Every Discipline",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RESILIENTO | Hybrid Training Engine",
+    description: "Unifying endurance, strength, mobility, and recovery into one adaptive system.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
