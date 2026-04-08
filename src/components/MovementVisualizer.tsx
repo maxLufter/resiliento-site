@@ -5,12 +5,8 @@ import { useState, useRef, useEffect } from "react";
 const ARCHETYPES = [
   { id: "squat", name: "Squat Pattern", desc: "Bilateral and unilateral knee dominance. Absorbing and producing vertical force." },
   { id: "hinge", name: "Hinge Mechanic", desc: "Posterior chain loading. Glute and hamstring dominance for explosive power." },
-  { id: "horizontal_push", name: "Horizontal Push", desc: "Anterior compound pressing. Chest and front delt architectural stabilization." },
-  { id: "horizontal_pull", name: "Horizontal Pull", desc: "Posterior back thickness. Rhomboid and latissimus dorsi engagement." },
-  { id: "vertical_push", name: "Vertical Push", desc: "Overhead stabilization. Core bracing under strict vertical load." },
   { id: "vertical_pull", name: "Vertical Pull", desc: "Full kinetic chain suspension. Latissimus dominance and grip integrity." },
-  { id: "core", name: "Core Architecture", desc: "Anti-rotation and anti-extension. Bracing the chassis under systemic load." },
-  { id: "carry", name: "Loaded Carry", desc: "Locomotion under stress. Forearm, trap, and pelvic pillar resilience." }
+  { id: "horizontal_push", name: "Horizontal Push", desc: "Anterior compound pressing. Chest and front delt architectural stabilization." }
 ];
 
 export function MovementVisualizer() {
