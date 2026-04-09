@@ -25,45 +25,50 @@ export function Footer() {
               Engineering resilience for the hybrid athlete. Systematic planning over chaotic effort.
             </p>
           </div>
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-12">
-              <div>
-                <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Engine</h3>
-                <ul role="list" className="space-y-4">
-                  <li>
-                    <Link href="/hybrid-training-engine" className="text-sm text-slate-400 hover:text-white transition-colors">
-                      Theory
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/adaptive-training-planner" className="text-sm text-slate-400 hover:text-white transition-colors">
-                      Adaptation
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/mobility-for-hybrid-athletes" className="text-sm text-slate-400 hover:text-white transition-colors">
-                      Mobility
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Legal</h3>
-                <ul role="list" className="space-y-4">
-                  <li>
-                    <Link href="/privacy" className="text-sm text-slate-400 hover:text-white transition-colors">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/impressum" className="text-sm text-slate-400 hover:text-white transition-colors">
-                      Impressum
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+          <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-12 xl:col-span-2 xl:mt-0">
+            <div>
+              <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Engine</h3>
+              <ul role="list" className="space-y-4">
+                <li>
+                  <Link href="/hybrid-training-engine" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Theory
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/adaptive-training-planner" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Adaptation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/mobility-for-hybrid-athletes" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Mobility
+                  </Link>
+                </li>
+              </ul>
             </div>
-            <div className="md:grid md:grid-cols-1">
+            
+            <div>
+              <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Disciplines</h3>
+              <ul role="list" className="space-y-4">
+                <li>
+                  <Link href="/hyrox" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    HYROX Training
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/triathlon" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Triathlon Training
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/running" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Hybrid Running
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="space-y-12">
               <div>
                 <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">CommHQ</h3>
                 <ul role="list" className="space-y-4">
@@ -75,6 +80,22 @@ export function Footer() {
                   </li>
                   <li className="text-sm text-slate-500 font-mono">
                     SYS: support@resiliento.app
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Legal</h3>
+                <ul role="list" className="space-y-4">
+                  <li>
+                    <Link href="/privacy" className="text-sm text-slate-400 hover:text-white transition-colors">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/impressum" className="text-sm text-slate-400 hover:text-white transition-colors">
+                      Impressum
+                    </Link>
                   </li>
                 </ul>
               </div>
