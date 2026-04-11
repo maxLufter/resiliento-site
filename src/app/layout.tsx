@@ -18,6 +18,9 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://resiliento.app'),
+  alternates: {
+    canonical: 'https://resiliento.app',
+  },
   verification: {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
   },
