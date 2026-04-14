@@ -12,7 +12,7 @@ export default function Home() {
     "applicationCategory": "HealthAndFitnessApplication",
     "operatingSystem": "Web",
     "url": "https://resiliento.app",
-    "description": "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, and mobility into one adaptive system.",
+    "description": "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, and mobility into one adaptive system.",
     "offers": {
       "@type": "Offer",
       "price": "0",

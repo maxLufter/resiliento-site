@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     ]
   },
   title: "RESILIENTO | Hybrid Training Engine",
-  description: "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, mobility, and recovery into one adaptive system.",
+  description: "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one adaptive system.",
   keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes"],
   openGraph: {
     title: "RESILIENTO | Hybrid Training Engine",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "RESILIENTO | Hybrid Training Engine",
-    description: "Unifying endurance, strength, mobility, and recovery into one adaptive system.",
+    description: "Unifying triathlon, running, HYROX, strength, mobility, and recovery into one adaptive system.",
     images: ["/og-image.jpg"],
   },
 };
@@ -79,7 +79,7 @@ export default function RootLayout({
               "operatingSystem": "Web",
               "url": "https://resiliento.app",
               "image": "https://resiliento.app/logo-picture.png",
-              "description": "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, mobility, and recovery into one adaptive system.",
+              "description": "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one adaptive system.",
               "offers": {
                 "@type": "Offer",
                 "availability": "https://schema.org/PreOrder"
