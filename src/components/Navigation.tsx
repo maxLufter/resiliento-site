@@ -43,6 +43,15 @@ export function Navigation() {
           </Link>
         </div>
       </div>
+
+      {/* Mobile Nav Row */}
+      <div className="md:hidden border-t border-white/5 bg-black/40 backdrop-blur-md">
+        <nav className="flex items-center justify-center gap-6 px-4 py-3 text-[9px] font-mono tracking-[0.2em] text-slate-400 uppercase overflow-x-auto hide-scrollbar">
+          <Link href="/hybrid-training-engine" className="hover:text-brand transition-colors whitespace-nowrap">Theory</Link>
+          <Link href="/adaptive-training-planner" className="hover:text-brand transition-colors whitespace-nowrap">Adaptation</Link>
+          <Link href="/mobility-for-hybrid-athletes" className="hover:text-brand transition-colors whitespace-nowrap">Mobility</Link>
+        </nav>
+      </div>
     </header>
   );
 }

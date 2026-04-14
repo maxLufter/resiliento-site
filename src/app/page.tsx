@@ -28,7 +28,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero Section */}
-      <section className="relative min-h-[100svh] max-h-[1200px] flex flex-col justify-end pb-32 overflow-hidden border-b border-border">
+      <section className="relative min-h-[100svh] max-h-[1200px] flex flex-col justify-center pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden border-b border-border">
         {/* Abstract structural graphics */}
         <div className="absolute top-1/4 right-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform rotate-45 opacity-50 pointer-events-none" />
         <div className="absolute top-1/3 right-[15%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform rotate-45 opacity-20 pointer-events-none" />
