@@ -24,6 +24,15 @@ export const metadata: Metadata = {
   verification: {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.svg', type: 'image/svg+xml' }
+    ],
+    apple: [
+      { url: '/logo-picture.png' }
+    ]
+  },
   title: "RESILIENTO | Hybrid Training Engine",
   description: "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, mobility, and recovery into one adaptive system.",
   keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes"],
