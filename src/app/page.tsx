@@ -270,7 +270,7 @@ export default function Home() {
             <h2 className="text-5xl sm:text-7xl font-bold tracking-tighter text-white uppercase leading-[0.9] mb-8">
               Built For<br/>Race Day.
             </h2>
-            <p className="text-xl text-slate-400 font-light leading-relaxed max-w-2xl">
+            <p data-nosnippet className="text-xl text-slate-400 font-light leading-relaxed max-w-2xl">
               Most planning tools let you enter a race date and call it structure. RESILIENTO reverse-engineers your Ironman, 70.3, or marathon build from A-Race to today — then enforces periodization, taper logic, and volume caps with mathematical precision.
             </p>
           </div>
@@ -279,21 +279,21 @@ export default function Home() {
             <div className="p-12 border-r border-border hover:bg-surface transition-colors group">
               <div className="text-brand font-mono text-xs tracking-[0.3em] uppercase mb-6 opacity-60 group-hover:opacity-100 transition-opacity">A-Race Priority</div>
               <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4">Primary Target</h4>
-              <p className="text-slate-500 font-light leading-relaxed">
+              <p data-nosnippet className="text-slate-500 font-light leading-relaxed">
                 Your A-Race is the fixed structural anchor. All training blocks, volume peaks, and taper sequences are calculated backward from this single non-negotiable date. The entire mesocycle is shaped by proximity to it.
               </p>
             </div>
             <div className="p-12 border-r border-border hover:bg-surface transition-colors group">
               <div className="text-brand font-mono text-xs tracking-[0.3em] uppercase mb-6 opacity-60 group-hover:opacity-100 transition-opacity">B/C Race Injection</div>
               <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4">Race-As-Stimulus</h4>
-              <p className="text-slate-500 font-light leading-relaxed">
+              <p data-nosnippet className="text-slate-500 font-light leading-relaxed">
                 Secondary and tertiary races are treated as high-intensity stimulus events, not disruptions. The engine integrates them into the load curve — using them to drive specificity peaks without blowing the taper window for the A-Race.
               </p>
             </div>
             <div className="p-12 hover:bg-surface transition-colors group">
               <div className="text-brand font-mono text-xs tracking-[0.3em] uppercase mb-6 opacity-60 group-hover:opacity-100 transition-opacity">Automated Tapering</div>
               <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4">Peak Expression</h4>
-              <p className="text-slate-500 font-light leading-relaxed">
+              <p data-nosnippet className="text-slate-500 font-light leading-relaxed">
                 The taper is not a manual cutback. Volume, intensity, and density are reduced according to sport-specific physiological decay curves — engineered to land you at race morning with maximum freshness and retained fitness.
               </p>
             </div>

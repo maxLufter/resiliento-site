@@ -67,6 +67,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable} h-full antialiased dark`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "RESILIENTO",
+              "applicationCategory": "HealthAndFitnessApplication",
+              "operatingSystem": "Web",
+              "url": "https://resiliento.app",
+              "image": "https://resiliento.app/logo-picture.png",
+              "description": "The hybrid training engine for modern athletes. Unifying HYROX, triathlon, strength, mobility, and recovery into one adaptive system.",
+              "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/PreOrder"
+              }
+            })
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-brand selection:text-black">
         <div className="fixed inset-0 bg-noise -z-10" />
         <Navigation />
