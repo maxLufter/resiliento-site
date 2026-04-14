@@ -59,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable} h-full antialiased dark`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-brand selection:text-black">
-        <div className="fixed inset-0 bg-noise z-pointer-events-none" />
+        <div className="fixed inset-0 bg-noise -z-10" />
         <Navigation />
         <main className="flex-1 relative z-10">{children}</main>
         <Footer />
