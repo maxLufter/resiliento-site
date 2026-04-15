@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "RESILIENTO App | Adaptive Training Planner Algorithm",
@@ -9,6 +10,7 @@ export const metadata = {
 export default function AdaptiveTrainingPlannerPage() {
   return (
     <div className="flex flex-col">
+      <SoftwareApplicationJsonLd specificDescription="Adaptive training planner algorithm that deterministically reschedules missed workouts and handles real-life friction." />
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
         <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
@@ -48,7 +50,7 @@ export default function AdaptiveTrainingPlannerPage() {
                   <strong>Athletes with static plans have two very bad options when life gets in the way:</strong>
                 </p>
                 <ul>
-                  <li>They try to "catch up" by dragging the missed swim to Wednesday, stubbornly stacking it on top of a highly demanding track workout. Consequently, they are deeply fatigued for their Thursday ride, subsequently missing their critical power targets and arriving at the weekend structurally disjointed and over-reached.</li>
+                  <li>They try to &quot;catch up&quot; by dragging the missed swim to Wednesday, stubbornly stacking it on top of a highly demanding track workout. Consequently, they are deeply fatigued for their Thursday ride, subsequently missing their critical power targets and arriving at the weekend structurally disjointed and over-reached.</li>
                   <li>They delete the session outright, sacrificing the progressive overload required to force aerobic adaptation over the mesocycle.</li>
                 </ul>
                 <p>
@@ -100,7 +102,7 @@ export default function AdaptiveTrainingPlannerPage() {
              <div className="lg:col-span-5 relative z-10">
               <h2 className="text-3xl font-bold text-white uppercase mb-6 tracking-tight">Tactical Schedule UI</h2>
               <p className="text-slate-400 font-light leading-relaxed mb-6">
-                The calendar in RESILIENTO is not a static PDF. It is a live calculation. When a session is missed, or a day is marked as "Low Readiness," the interface instantly rebuilds the remainder of the week's tactical grid to safely absorb the disruption. 
+                The calendar in RESILIENTO is not a static PDF. It is a live calculation. When a session is missed, or a day is marked as &quot;Low Readiness,&quot; the interface instantly rebuilds the remainder of the week&apos;s tactical grid to safely absorb the disruption. 
               </p>
               <ul className="space-y-3 font-mono text-[10px] tracking-widest uppercase text-slate-500">
                 <li className="flex items-center gap-3"><span className="w-1 h-1 bg-brand rounded-full"></span> Automatic CSS Volume Redistribution</li>
@@ -136,7 +138,7 @@ export default function AdaptiveTrainingPlannerPage() {
                <div className="text-slate-600 font-mono text-[10px] tracking-widest uppercase mb-4">Level 2 - Destructive</div>
               <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Skipping</h4>
               <p className="text-slate-500 font-light text-sm leading-relaxed">
-                Wiping the session off the calendar entirely. You survive today, but if you do this twice in a week, the progressive overload of the mesocycle collapses. The engine's macro-level plan effectively derails, and your race volume projection drops below the safety threshold.
+                Wiping the session off the calendar entirely. You survive today, but if you do this twice in a week, the progressive overload of the mesocycle collapses. The engine&apos;s macro-level plan effectively derails, and your race volume projection drops below the safety threshold.
               </p>
             </div>
             <div className="p-12 bg-brand/5 border border-brand/30 relative hover:bg-brand/10 transition-colors">
@@ -146,7 +148,7 @@ export default function AdaptiveTrainingPlannerPage() {
                <div className="text-brand font-mono text-[10px] tracking-widest uppercase mb-4">Level 3 - Optimal</div>
               <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Algorithmic Adapting</h4>
               <p className="text-slate-400 font-light text-sm leading-relaxed">
-                The engine actively queries the remaining week, notes the exact Training Stress Score (TSS) deficit, and mathematically restructures tomorrow's session to ingest the lost volume, substituting intervals or modifying formats without ever violating maximum daily recovery caps.
+                The engine actively queries the remaining week, notes the exact Training Stress Score (TSS) deficit, and mathematically restructures tomorrow&apos;s session to ingest the lost volume, substituting intervals or modifying formats without ever violating maximum daily recovery caps.
               </p>
             </div>
           </div>
@@ -193,7 +195,7 @@ export default function AdaptiveTrainingPlannerPage() {
             <div className="border-l-2 border-brand pl-6">
               <h3 className="text-lg font-bold text-white uppercase mb-3">If I inherently keep missing sessions, what happens?</h3>
               <p className="text-slate-400 font-light leading-relaxed">
-                RESILIENTO features a protocol called <strong>Horizon Re-Projection</strong>. If the engine detects accumulated disruption exceeding a major threshold (e.g., you've consistently missed 40% of the volume over two microcycles), it mathematically accepts that you are off the original trajectory. It automatically shifts the peaking curve and rebuilds the macrocycle closer to your reality, so you aren't perpetually drowning in unattainable load targets.
+                RESILIENTO features a protocol called <strong>Horizon Re-Projection</strong>. If the engine detects accumulated disruption exceeding a major threshold (e.g., you&apos;ve consistently missed 40% of the volume over two microcycles), it mathematically accepts that you are off the original trajectory. It automatically shifts the peaking curve and rebuilds the macrocycle closer to your reality, so you aren&apos;s perpetually drowning in unattainable load targets.
               </p>
             </div>
             <div className="border-l-2 border-border pl-6 hover:border-brand transition-colors">

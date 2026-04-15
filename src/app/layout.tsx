@@ -5,6 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,7 +20,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL('https://resiliento.app'),
   alternates: {
-    canonical: 'https://resiliento.app',
+    canonical: './',
   },
   verification: {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
@@ -33,20 +34,26 @@ export const metadata: Metadata = {
       { url: '/logo-picture.png' }
     ]
   },
-  title: "RESILIENTO | Hybrid Training Engine",
-  description: "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one adaptive system.",
-  keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes"],
+  title: {
+    default: "RESILIENTO | Hybrid Training Engine for Triathlon, HYROX & Hybrid Athletes",
+    template: "%s | RESILIENTO"
+  },
+  description: "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one dynamic system.",
+  keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes", "adaptive training plan"],
   openGraph: {
-    title: "RESILIENTO | Hybrid Training Engine",
-    description: "The hybrid training engine for modern athletes. Built for athletes who demand systematic logic, not blind compliance.",
-    url: "https://resiliento.app",
-    siteName: "Resiliento",
+    title: {
+      default: "RESILIENTO | Hybrid Training Engine",
+      template: "%s | RESILIENTO"
+    },
+    description: "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, and recovery into one system.",
+    url: "./",
+    siteName: "RESILIENTO",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
-        height: 800,
-        alt: "RESILIENTO Hybrid Training Engine - Stronger in Every Discipline",
+        height: 630,
+        alt: "RESILIENTO Hybrid Training Engine",
       },
     ],
     locale: "en_US",
@@ -68,25 +75,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable} h-full antialiased dark`}>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              "name": "RESILIENTO",
-              "applicationCategory": "HealthAndFitnessApplication",
-              "operatingSystem": "Web",
-              "url": "https://resiliento.app",
-              "image": "https://resiliento.app/logo-picture.png",
-              "description": "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one adaptive system.",
-              "offers": {
-                "@type": "Offer",
-                "availability": "https://schema.org/PreOrder"
-              }
-            })
-          }}
-        />
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-brand selection:text-black">
         <div className="fixed inset-0 bg-noise -z-10" />

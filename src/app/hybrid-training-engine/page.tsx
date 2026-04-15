@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "RESILIENTO App | The Hybrid Training Engine Architecture",
@@ -9,6 +10,7 @@ export const metadata = {
 export default function HybridTrainingEnginePage() {
   return (
     <div className="flex flex-col">
+      <SoftwareApplicationJsonLd specificDescription="The hybrid training engine architecture integrating endurance, strength, and mobility." />
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
         <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
@@ -45,10 +47,10 @@ export default function HybridTrainingEnginePage() {
                   <strong>None of these systems communicate. They are structurally blind to each other.</strong>
                 </p>
                 <p>
-                  Your triathlon endurance app demands complex VO2 max intervals today because it has zero awareness of the heavy deadlifts you ground through yesterday evening. Your wearable flashes a red "Recovery: 24%" warning, but it doesn't plug into your training software to actually rewrite today’s track workout. 
+                  Your triathlon endurance app demands complex VO2 max intervals today because it has zero awareness of the heavy deadlifts you ground through yesterday evening. Your wearable flashes a red &quot;Recovery: 24%&quot; warning, but it doesn&apos;t plug into your training software to actually rewrite today’s track workout. 
                 </p>
                 <p>
-                  Physical stress is systemic. You only have one Central Nervous System (CNS) and one structural chassis. But your software is siloed. When planners don't talk to logs, you become the manual load manager, forced to absorb the biomechanical and physiological collision.
+                  Physical stress is systemic. You only have one Central Nervous System (CNS) and one structural chassis. But your software is siloed. When planners don&apos;t talk to logs, you become the manual load manager, forced to absorb the biomechanical and physiological collision.
                 </p>
               </div>
             </div>
@@ -72,9 +74,9 @@ export default function HybridTrainingEnginePage() {
                 </div>
                 <h3 className="text-xl font-bold text-white uppercase mb-3">The "More Data" Trap</h3>
                 <p className="text-slate-400 font-light text-sm leading-relaxed">
-                  Your smart ring registers a terrible night of sleep, a suppressed HRV, and gives you a 32% "Readiness Score." But more data is not a solution if there is no algorithmic decision logic attached. A fragmented recovery score just makes you feel guilty while you try to execute the original training plan.
+                  Your smart ring registers a terrible night of sleep, a suppressed HRV, and gives you a 32% &quot;Readiness Score.&quot; But more data is not a solution if there is no algorithmic decision logic attached. A fragmented recovery score just makes you feel guilty while you try to execute the original training plan.
                   <br/><br/>
-                  <strong>The Engine Solution:</strong> An integrated training engine ingests that 32% score along with your subjective perceived exertion from yesterday, and immediately alters today's objective. It formally downgrades the session to protect your macro-level trajectory.
+                  <strong>The Engine Solution:</strong> An integrated training engine ingests that 32% score along with your subjective perceived exertion from yesterday, and immediately alters today&apos;s objective. It formally downgrades the session to protect your macro-level trajectory.
                 </p>
               </div>
             </div>
@@ -105,7 +107,7 @@ export default function HybridTrainingEnginePage() {
               {/* Row 3 */}
               <div className="p-6 md:p-8 text-sm text-slate-300 border-t md:border-r border-border font-medium">Wearable Data Integration</div>
               <div className="p-6 md:p-8 text-sm text-slate-500 border-t md:border-r border-border font-light">Generates a passive score. You still have to figure out what to do with it.</div>
-              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">Automatically rewrites today's workout structure based on acute fatigue metrics.</div>
+              <div className="p-6 md:p-8 text-sm text-white border-t border-border font-light bg-brand/5">Automatically rewrites today&apos;s workout structure based on acute fatigue metrics.</div>
             </div>
           </div>
         </div>
@@ -130,7 +132,7 @@ export default function HybridTrainingEnginePage() {
                 <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Shared Load Budgets</h4>
               </div>
               <p className="text-slate-400 font-light text-sm leading-relaxed flex-1">
-                Strength and endurance draw from the exact same recovery pool. The engine enforces a unified structural load ceiling. If your triathlon swim, bike, or run volume peaks during an "Ironman Build" phase, the engine automatically compresses your strength volume down to "Maintenance Archetypes." It prevents you from simultaneously chasing maximum muscular hypertrophy and maximum aerobic endurance, which biologically cancel each other out.
+                Strength and endurance draw from the exact same recovery pool. The engine enforces a unified structural load ceiling. If your triathlon swim, bike, or run volume peaks during an &quot;Ironman Build&quot; phase, the engine automatically compresses your strength volume down to &quot;Maintenance Archetypes.&quot; It prevents you from simultaneously chasing maximum muscular hypertrophy and maximum aerobic endurance, which biologically cancel each other out.
               </p>
             </div>
 
@@ -140,7 +142,7 @@ export default function HybridTrainingEnginePage() {
                 <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Contextual Re-Routing</h4>
               </div>
               <p className="text-slate-400 font-light text-sm leading-relaxed flex-1">
-                Plans must survive contact with reality. A missed two-hour long ride isn't just left behind, nor is it blindly stacked onto tomorrow's tempo run. The engine algorithmically redistributes the physiological target across the upcoming week without violating daily acute load thresholds.<br/><br/>
+                Plans must survive contact with reality. A missed two-hour long ride isn&apos;t just left behind, nor is it blindly stacked onto tomorrow&apos;s tempo run. The engine algorithmically redistributes the physiological target across the upcoming week without violating daily acute load thresholds.<br/><br/>
                 <Link href="/adaptive-training-planner" className="text-brand hover:underline font-medium uppercase text-[10px] tracking-widest mt-2 inline-block">Explore Adaptive Planning →</Link>
               </p>
             </div>
@@ -152,7 +154,7 @@ export default function HybridTrainingEnginePage() {
                 <h4 className="text-xl font-bold text-white uppercase mb-4 tracking-tight">Kinetic Protection</h4>
               </div>
               <p className="text-slate-400 font-light text-sm leading-relaxed flex-1 relative z-10">
-                Mobility isn't a random 15-minute stretching video on YouTube. It acts as an integrated, prescribed correction. The engine observes the accumulated fatigue generated by your primary disciplines (e.g., hundreds of miles in aero position) and prescribes targeted positional fixes to counteract that specific muscular shortening.<br/><br/>
+                Mobility isn&apos;t a random 15-minute stretching video on YouTube. It acts as an integrated, prescribed correction. The engine observes the accumulated fatigue generated by your primary disciplines (e.g., hundreds of miles in aero position) and prescribes targeted positional fixes to counteract that specific muscular shortening.<br/><br/>
                 <Link href="/mobility-for-hybrid-athletes" className="text-brand hover:underline font-medium uppercase text-[10px] tracking-widest mt-2 inline-block">Explore Structural Mobility →</Link>
               </p>
             </div>
@@ -202,7 +204,7 @@ export default function HybridTrainingEnginePage() {
             <div className="border border-border p-8 hover:border-brand/30 transition-colors">
               <h3 className="text-xl font-bold text-white uppercase mb-2">The 70.3 + Powerlifting Hybrid</h3>
               <p className="text-slate-400 text-sm font-light leading-relaxed mb-4">
-                Attempting to maintain a 500lb deadlift while building base volume for a Half-Ironman means your CNS is constantly under assault. The engine staggers peak strength blocks against lower-intensity aerobic build weeks, ensuring you aren't attempting to hit maximum wattage on the bike the day after maximum absolute strength outputs.
+                Attempting to maintain a 500lb deadlift while building base volume for a Half-Ironman means your CNS is constantly under assault. The engine staggers peak strength blocks against lower-intensity aerobic build weeks, ensuring you aren&apos;s attempting to hit maximum wattage on the bike the day after maximum absolute strength outputs.
               </p>
             </div>
             <div className="border border-border p-8 hover:border-brand/30 transition-colors">

@@ -3,30 +3,27 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { MovementVisualizer } from "@/components/MovementVisualizer";
 import { ExpandableCard } from "@/components/ExpandableCard";
 import { ExpandableListItem } from "@/components/ExpandableListItem";
+import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
+const landingFaqs = [
+  {
+    question: "What makes RESILIENTO an adaptive training plan?",
+    answer: "Unlike static PDF plans, RESILIENTO is a dynamic engine. It monitors your daily HRV, subjective readiness, and past training load. If you are fatigued or miss a session, the system automatically recalculates your upcoming workouts, compressing intervals or shifting rest days to keep you on tracking without overtraining."
+  },
+  {
+    question: "Can it handle hybrid training (running and lifting together)?",
+    answer: "Yes. RESILIENTO was built specifically for concurrent training. It mathematically buffers your high-intensity track days away from heavy lower-body lifts, reducing interference and allowing you to build aerobic capacity while maintaining strength."
+  },
+  {
+    question: "Does it work for Triathlon and HYROX?",
+    answer: "Absolutely. We have specific modules for both. The Triathlon module coordinates swim, bike, and run while injecting structural maintenance strength. The HYROX module focuses on sled conditioning, compromise running, and wall balls, preparing you specifically for the race demands."
+  }
+];
 export default function Home() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "RESILIENTO",
-    "applicationCategory": "HealthAndFitnessApplication",
-    "operatingSystem": "Web",
-    "url": "https://resiliento.app",
-    "description": "The hybrid training engine for modern athletes. Unifying triathlon, running, HYROX, strength, and mobility into one adaptive system.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/PreOrder"
-    }
-  };
-
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SoftwareApplicationJsonLd specificDescription="The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, and mobility into one single framework." />
+      <FAQJsonLd faqs={landingFaqs} />
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 sm:pt-48 sm:pb-32 overflow-hidden border-b border-border">
         {/* Abstract structural graphics */}
@@ -45,8 +42,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg sm:text-2xl lg:text-3xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] sm:leading-[1.4] max-w-3xl font-light tracking-tight">
-              Triathlon, HYROX, ultra-endurance, heavy strength, and mobility globally unified. 
-              Built for athletes who demand <span className="text-white font-medium">systematic logic</span>, not blind compliance.
+              The adaptive training app for triathlon, HYROX, and hybrid athletes. One system coordinating endurance, strength, mobility, and recovery with dynamic adaptation.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-8">
@@ -76,21 +72,21 @@ export default function Home() {
           <div className="space-y-24">
             <div>
               <p className="text-2xl text-slate-300 leading-relaxed font-light mb-12">
-                Physical stress is systemic. When your endurance planner doesn't talk to your strength log, you absorb the collision. Fragmentation breaks athletes.
+                Physical stress is systemic. When your endurance planner doesn&apos;t talk to your strength log, you absorb the collision. Fragmentation breaks athletes.
               </p>
               
               <div className="space-y-12">
                 <ExpandableListItem 
                   label="Failure Point 01"
                   title="Blind Pacing"
-                  summary="Your HYROX or triathlon plan demands a high-intensity threshold run today. It has zero awareness of the structural damage from yesterday's heavy back squats."
+                  summary="Your HYROX or triathlon plan demands a high-intensity threshold run today. It has zero awareness of the structural damage from yesterday&apos;s heavy back squats."
                   details={
                     <>
                       <p>
-                        Executing intensity domains blindly guarantees failure. The physiological cost of a heavy lower-body lifting session dramatically impairs your ability to hit VO2 Max or anaerobic threshold targets for roughly 36 to 48 hours. When you manually stack these workouts back-to-back, you aren't adapting—you are accumulating unrecoverable nervous system fatigue.
+                        Executing intensity domains blindly guarantees failure. The physiological cost of a heavy lower-body lifting session dramatically impairs your ability to hit VO2 Max or anaerobic threshold targets for roughly 36 to 48 hours. When you manually stack these workouts back-to-back, you aren&apos;t adapting—you are accumulating unrecoverable nervous system fatigue.
                       </p>
                       <p>
-                        Our algorithm intrinsically buffers your load. It tracks the specific neuromuscular taxation generated by the strength engine, and forces a structural separation before allowing the endurance engine to prescribe high-output sprints. It's concurrent training, solved.
+                        Our algorithm intrinsically buffers your load. It tracks the specific neuromuscular taxation generated by the strength engine, and forces a structural separation before allowing the endurance engine to prescribe high-output sprints. It&apos;s concurrent training, solved.
                       </p>
                     </>
                   }
@@ -99,7 +95,7 @@ export default function Home() {
                 <ExpandableListItem 
                   label="Failure Point 02"
                   title="Passive Readiness"
-                  summary="Your wearable spits out a low readiness score, but lacks the architectural capability to actually rebuild tomorrow's session to match it."
+                  summary="Your wearable spits out a low readiness score, but lacks the architectural capability to actually rebuild tomorrow&apos;s session to match it."
                   details={
                     <>
                       <p>
@@ -115,7 +111,7 @@ export default function Home() {
                 <ExpandableListItem 
                   label="Failure Point 03"
                   title="Schedule Fragility"
-                  summary="If your 90-minute training block shrinks to 30 minutes, static plans fail. They don't know how to cleanly compress the daily physiological target."
+                  summary="If your 90-minute training block shrinks to 30 minutes, static plans fail. They don&apos;t know how to cleanly compress the daily physiological target."
                   details={
                     <>
                       <p>
@@ -157,7 +153,7 @@ export default function Home() {
               <div className="text-brand text-4xl mb-6 font-light opacity-50 group-hover:opacity-100 transition-opacity">02.</div>
               <h4 className="text-2xl text-white font-bold tracking-tight mb-4 uppercase">Biomechanical Buffering</h4>
               <p className="text-slate-400 text-lg font-light leading-[1.6]">
-                Strength and mobility aren't optional bolt-ons. They are deployed tactically to counter the exact accumulated load of your primary discipline.
+                Strength and mobility aren&apos;t optional bolt-ons. They are deployed tactically to counter the exact accumulated load of your primary discipline.
               </p>
             </div>
             <div className="group">
@@ -196,7 +192,7 @@ export default function Home() {
                   <div>
                     <h4 className="text-xl font-bold text-white uppercase mb-3 tracking-tight">Signal Acquisition</h4>
                     <p className="text-slate-500 font-light leading-relaxed">
-                      Each morning the engine reads incoming signals — subjective fatigue score, resting HR variance, HRV trend, and last 7-day load vector. These aren't visualized for you to manually interpret. They are fed directly into the next decision.
+                      Each morning the engine reads incoming signals — subjective fatigue score, resting HR variance, HRV trend, and last 7-day load vector. These aren&apos;t visualized for you to manually interpret. They are fed directly into the next decision.
                     </p>
                   </div>
                 </div>
@@ -208,7 +204,7 @@ export default function Home() {
                   <div>
                     <h4 className="text-xl font-bold text-white uppercase mb-3 tracking-tight">Load Decision</h4>
                     <p className="text-slate-500 font-light leading-relaxed">
-                      Based on the incoming signal state, today's session is classified as Go, Compress, Downgrade, or Recovery. This isn't a notification. This is a structural output that dictates which specific workout blocks are assembled for today.
+                      Based on the incoming signal state, today&apos;s session is classified as Go, Compress, Downgrade, or Recovery. This isn&apos;t a notification. This is a structural output that dictates which specific workout blocks are assembled for today.
                     </p>
                   </div>
                 </div>
@@ -342,7 +338,7 @@ export default function Home() {
               <div className="border-l-2 border-border hover:border-brand pl-8 transition-colors">
                 <h4 className="text-xl font-bold text-white uppercase mb-2 tracking-tight">Concurrent Training Logic</h4>
                 <p className="text-slate-500 font-light leading-relaxed">
-                  The engine explicitly models interference effects — heavy leg strength sessions are automatically buffered from high-intensity endurance sessions. No more destroying your track workout with the residual fatigue of yesterday's deadlifts.
+                  The engine explicitly models interference effects — heavy leg strength sessions are automatically buffered from high-intensity endurance sessions. No more destroying your track workout with the residual fatigue of yesterday&apos;s deadlifts.
                 </p>
               </div>
               <div className="border-l-2 border-border hover:border-brand pl-8 transition-colors">
@@ -415,7 +411,7 @@ export default function Home() {
             <div className="lg:col-span-5 order-2 lg:order-1">
               <h4 className="text-2xl font-bold text-white uppercase mb-4 tracking-tight">Adaptive Dashboard</h4>
               <p className="text-slate-400 font-light leading-relaxed mb-6">
-                The central command. Instantly surface today's structural focus—from decreasing run intervals to your proximity to the next major objective. The engine synthesizes your entire load progression into actionable daily directives.
+                The central command. Instantly surface today&apos;s structural focus—from decreasing run intervals to your proximity to the next major objective. The engine synthesizes your entire load progression into actionable daily directives.
               </p>
               <div className="flex items-center gap-3 text-[10px] font-mono text-brand uppercase tracking-[0.2em]">
                 <span className="w-1 h-px bg-brand"></span>
@@ -439,7 +435,7 @@ export default function Home() {
             <div className="lg:col-span-5">
               <h4 className="text-2xl font-bold text-white uppercase mb-4 tracking-tight">Recovery & Risk Insights</h4>
               <p className="text-slate-400 font-light leading-relaxed mb-6">
-                Passive metric dashboards are dead. The Recovery matrix tracks your Acute-to-Chronic Workload Ratio (ACWR), Load Progression, and Biomechanical Stress levels. The engine uses this exact data to algorithmically adjust tomorrow's intervals.
+                Passive metric dashboards are dead. The Recovery matrix tracks your Acute-to-Chronic Workload Ratio (ACWR), Load Progression, and Biomechanical Stress levels. The engine uses this exact data to algorithmically adjust tomorrow&apos;s intervals.
               </p>
               <div className="flex items-center gap-3 text-[10px] font-mono text-brand uppercase tracking-[0.2em]">
                 <span className="w-1 h-px bg-brand"></span>
@@ -477,7 +473,7 @@ export default function Home() {
             <div className="lg:col-span-5">
               <h4 className="text-2xl font-bold text-white uppercase mb-4 tracking-tight">Structured Session Detail</h4>
               <p className="text-slate-400 font-light leading-relaxed mb-6">
-                Execution requires precision. Dive into exact session timelines with warmup breakdowns, main set pacing targets, and coach-level session notes detailing the 'why', technical focus, and mistakes to avoid.
+                Execution requires precision. Dive into exact session timelines with warmup breakdowns, main set pacing targets, and coach-level session notes detailing the &apos;why&apos;, technical focus, and mistakes to avoid.
               </p>
               <div className="flex items-center gap-3 text-[10px] font-mono text-brand uppercase tracking-[0.2em]">
                 <span className="w-1 h-px bg-brand"></span>
@@ -501,7 +497,7 @@ export default function Home() {
             details={
               <>
                 <p>
-                  Most programs fail hybrid athletes by blindly stacking a running plan on top of a strength program. This leads to massive cumulative fatigue and physiological interference—your body doesn't know if it's supposed to build muscle or endurance.
+                  Most programs fail hybrid athletes by blindly stacking a running plan on top of a strength program. This leads to massive cumulative fatigue and physiological interference—your body doesn&apos;t know if it&apos;s supposed to build muscle or endurance.
                 </p>
                 <p>
                   RESILIENTO actively monitors the interference effect. It strategically buffers high-intensity interval runs away from heavy squat days, ensuring neuromuscular recovery. Furthermore, it shifts your lifting volume into maintenance mode precisely when your endurance blocks peak, preventing structural breakdown while allowing you to preserve absolute strength.
@@ -515,7 +511,7 @@ export default function Home() {
             details={
               <>
                 <p>
-                  You know enough about training to know that pre-written 12-week templates are fundamentally flawed because they don't respond to real life. When you get sick, travel, or miss a workout, a PDF can't recalculate your macrocycle.
+                  You know enough about training to know that pre-written 12-week templates are fundamentally flawed because they don&apos;t respond to real life. When you get sick, travel, or miss a workout, a PDF can&apos;t recalculate your macrocycle.
                 </p>
                 <p>
                   The engine serves as a responsive algorithm that thinks like a master coach. It tracks your Acute-to-Chronic Workload Ratio (ACWR), predicts injury risk probabilities, and auto-regulates your daily prescribed TSS based precisely on the physiological data it ingests from your connected devices and subjective feedback loop.
@@ -523,6 +519,54 @@ export default function Home() {
               </>
             }
           />
+        </div>
+      </section>
+
+      {/* Gateway Section - Sport Specific Intents */}
+      <section className="py-20 sm:py-32 bg-[#050505] border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center mb-16">
+          <h2 className="text-[10px] sm:text-xs font-mono tracking-[0.3em] uppercase text-brand mb-4">
+            Specialized Modalities
+          </h2>
+          <h3 className="text-3xl sm:text-5xl font-bold tracking-tighter text-white uppercase">
+            Built For Your Sport
+          </h3>
+        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
+          <Link href="/triathlon" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Triathlon</h4>
+            <p className="text-slate-400 font-light mb-8">An adaptive plan coordinating swim, bike, run, and structural strength without breaking your body.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
+          <Link href="/hyrox" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">HYROX</h4>
+            <p className="text-slate-400 font-light mb-8">Master the sleds and wall balls. Blending compromise running with heavy erg conditioning.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
+          <Link href="/running" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Hybrid Running</h4>
+            <p className="text-slate-400 font-light mb-8">Run fast, lift heavy. A running plan that algorithmically separates track days from heavy lifting.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 sm:py-32 border-b border-border">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tighter text-white uppercase">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <div className="space-y-8">
+            {landingFaqs.map((faq, idx) => (
+              <div key={idx} className="border border-border p-8">
+                <h4 className="text-xl font-bold text-white mb-4">{faq.question}</h4>
+                <p className="text-slate-400 font-light leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

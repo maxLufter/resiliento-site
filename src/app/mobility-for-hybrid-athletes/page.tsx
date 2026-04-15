@@ -45,7 +45,7 @@ export default function MobilityPage() {
                   Passive stretching without context does not fix biomechanical restrictions. To actually improve <strong>position tolerance</strong> (e.g., staying low on a TT bike without destroying your lower back) or <strong>movement quality</strong> (e.g., maintaining healthy hip extension during hour three of a marathon), mobility must be highly specific.
                 </p>
                 <p>
-                  A generic yoga routine won't fix the damage done by hundreds of miles on a bike saddle. It must address the exact deficits created by your primary sport, and it must counteract the posture you actively hold during your workday.
+                  A generic yoga routine won&apos;t fix the damage done by hundreds of miles on a bike saddle. It must address the exact deficits created by your primary sport, and it must counteract the posture you actively hold during your workday.
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ export default function MobilityPage() {
               </div>
               <h4 className="text-2xl font-bold text-white uppercase mb-4 tracking-tight">Phase 1: Brief Activation</h4>
                <p className="text-slate-400 font-light text-sm leading-relaxed mb-6">
-                When you are fresh and about to tackle an intense training session, mobility operates as "Brief Activation." 
+                When you are fresh and about to tackle an intense training session, mobility operates as &quot;Brief Activation.&quot; 
               </p>
               <div className="bg-black border border-border p-5">
                 <strong className="block text-white mb-2 text-sm uppercase font-mono tracking-widest text-[10px]">The Goal</strong>
@@ -102,7 +102,7 @@ export default function MobilityPage() {
                <div className="bg-black border border-border p-5">
                 <strong className="block text-white mb-2 text-sm uppercase font-mono tracking-widest text-[10px]">The Goal</strong>
                 <p className="text-slate-500 text-sm leading-relaxed">
-                  The engine dynamically allocates formal time for "Longer Restoration." This involves deep tissue quality work, prolonged isometric holds, and down-regulating the central nervous system to clear accumulated biomechanical distress. Execution time: 15-25 minutes.
+                  The engine dynamically allocates formal time for &quot;Longer Restoration.&quot; This involves deep tissue quality work, prolonged isometric holds, and down-regulating the central nervous system to clear accumulated biomechanical distress. Execution time: 15-25 minutes.
                 </p>
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function MobilityPage() {
             Build A Bulletproof Chassis.
           </h2>
           <p className="text-xl text-slate-400 font-light mb-10 max-w-2xl mx-auto">
-            Stop waiting until you're genuinely injured to work on your structural tissue quality. Integrate protective movement into the daily engine.
+            Stop waiting until you&apos;re genuinely injured to work on your structural tissue quality. Integrate protective movement into the daily engine.
           </p>
           <Link 
             href="/waitlist" 

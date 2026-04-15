@@ -16,7 +16,7 @@ export function MovementVisualizer() {
 
   useEffect(() => {
     if (videoRef.current) {
-      setIsTransitioning(true);
+      setTimeout(() => setIsTransitioning(true), 0);
       // Wait for fade out
       setTimeout(() => {
         if (videoRef.current) {

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
-import { MovementVisualizer } from "@/components/MovementVisualizer";
 import { ExpandableCard } from "@/components/ExpandableCard";
 import { ExpandableListItem } from "@/components/ExpandableListItem";
+import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "Adaptive Triathlon Training Program & Coaching App | RESILIENTO",
@@ -10,28 +10,9 @@ export const metadata = {
 };
 
 export default function TriathlonPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "RESILIENTO Triathlon Engine",
-    "applicationCategory": "HealthAndFitnessApplication",
-    "operatingSystem": "Web",
-    "url": "https://resiliento.app/triathlon",
-    "description": "The adaptive triathlon training program that balances swim, bike, run, and heavy strength training simultaneously.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/PreOrder"
-    }
-  };
-
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SoftwareApplicationJsonLd sport="Triathlon" specificDescription="The adaptive triathlon training program that balances swim, bike, run, and heavy strength training simultaneously." />
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col justify-end pb-32 overflow-hidden border-b border-border">
         <div className="absolute top-1/4 right-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform rotate-45 opacity-50 pointer-events-none" />
@@ -86,14 +67,14 @@ export default function TriathlonPage() {
                 <ExpandableListItem 
                   label="Failure Point 01"
                   title="Schedule Fragility"
-                  summary="If your 90-minute bike session shrinks to 40 minutes because of work, static plans fail. RESILIENTO cleanly compresses the daily physiological target so you don't lose the structural benefit of the day."
+                  summary="If your 90-minute bike session shrinks to 40 minutes because of work, static plans fail. RESILIENTO cleanly compresses the daily physiological target so you don&apos;t lose the structural benefit of the day."
                   details={
                     <>
                       <p>
-                        A rigid plan isn't a strategy; it's a liability. When life abruptly cuts your training window, merely skipping the last half of your prescribed workout means you miss the crucial interval adaptations, ruining the structural integrity of the session.
+                        A rigid plan isn&apos;t a strategy; it&apos;s a liability. When life abruptly cuts your training window, merely skipping the last half of your prescribed workout means you miss the crucial interval adaptations, ruining the structural integrity of the session.
                       </p>
                       <p>
-                        With algorithmic <strong>Dynamic Compression</strong>, our engine doesn't just cut the workout in half. It instantly recalculates the interval-to-rest ratio, trims the warm-up protocol, and safely condenses the most critical physiological stimulus into your available 40 minutes. You achieve your daily TSS target and maintain periodization momentum.
+                        With algorithmic <strong>Dynamic Compression</strong>, our engine doesn&apos;t just cut the workout in half. It instantly recalculates the interval-to-rest ratio, trims the warm-up protocol, and safely condenses the most critical physiological stimulus into your available 40 minutes. You achieve your daily TSS target and maintain periodization momentum.
                       </p>
                     </>
                   }
@@ -147,7 +128,7 @@ export default function TriathlonPage() {
             details={
               <>
                 <p>
-                  Short-course racing isn't just about finishing; it's about redlining from the gun. This build profile aggressively loads <strong>VO2 Max intervals</strong> and anaerobic capacity work, while maintaining a higher frequency of heavy strength sessions to build explosive power.
+                  Short-course racing isn&apos;t just about finishing; it&apos;s about redlining from the gun. This build profile aggressively loads <strong>VO2 Max intervals</strong> and anaerobic capacity work, while maintaining a higher frequency of heavy strength sessions to build explosive power.
                 </p>
                 <p>
                   Because the overall aerobic volume is lower than an Ironman build, the engine dynamically fills the recovered capacity with intense mobility and transition-specific drills. You will run off the bike more frequently, but with drastically shorter, higher-intensity intervals to condition violent pacing shifts.

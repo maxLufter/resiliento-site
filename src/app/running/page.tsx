@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { ExpandableListItem } from "@/components/ExpandableListItem";
+import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "Adaptive Running Training Program & Plan | RESILIENTO",
@@ -8,28 +9,9 @@ export const metadata = {
 };
 
 export default function RunningPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "RESILIENTO Running Engine",
-    "applicationCategory": "HealthAndFitnessApplication",
-    "operatingSystem": "Web",
-    "url": "https://resiliento.app/running",
-    "description": "The adaptive running training program for hybrid athletes who want to run fast and lift heavy.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/PreOrder"
-    }
-  };
-
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SoftwareApplicationJsonLd sport="Running" specificDescription="The adaptive running training program for hybrid athletes who want to run fast and lift heavy." />
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col justify-end pb-32 overflow-hidden border-b border-border">
         <div className="absolute top-1/4 right-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform rotate-45 opacity-50 pointer-events-none" />
@@ -88,7 +70,7 @@ export default function RunningPage() {
                   details={
                     <>
                       <p>
-                        Concurrent training presents a biological bottleneck: your body cannot optimally build maximum aerobic capacity and maximal force production in the exact same localized timezone. Running hard interval sessions on fatigued legs from yesterday's heavy squats blunts the neuromuscular stimulus of the sprint.
+                        Concurrent training presents a biological bottleneck: your body cannot optimally build maximum aerobic capacity and maximal force production in the exact same localized timezone. Running hard interval sessions on fatigued legs from yesterday&apos;s heavy squats blunts the neuromuscular stimulus of the sprint.
                       </p>
                       <p>
                         RESILIENTO structurally shields your key running workouts by enforcing a mandatory 48-hour buffer window between heavy lower-body lifts and Zone 4/5 track sessions. This dramatically drops the rate of lower-limb tendinopathy and stress fractures typically seen in hybrid athletes trying to do everything at once.

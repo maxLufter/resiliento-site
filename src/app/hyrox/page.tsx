@@ -2,6 +2,7 @@ import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { MovementVisualizer } from "@/components/MovementVisualizer";
 import { ExpandableListItem } from "@/components/ExpandableListItem";
+import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "Adaptive HYROX Training Program & AI Plan | RESILIENTO",
@@ -9,28 +10,9 @@ export const metadata = {
 };
 
 export default function HyroxPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "RESILIENTO HYROX Engine",
-    "applicationCategory": "HealthAndFitnessApplication",
-    "operatingSystem": "Web",
-    "url": "https://resiliento.app/hyrox",
-    "description": "The adaptive HYROX training program for modern athletes. Unifying sled conditioning, wall balls, compromise running, and structural mobility.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/PreOrder"
-    }
-  };
-
   return (
     <div className="flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SoftwareApplicationJsonLd sport="HYROX" specificDescription="The adaptive HYROX training program for modern athletes. Unifying sled conditioning, wall balls, compromise running, and structural mobility." />
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col justify-end pb-32 overflow-hidden border-b border-border">
         <div className="absolute top-1/4 right-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform rotate-45 opacity-50 pointer-events-none" />
@@ -79,21 +61,21 @@ export default function HyroxPage() {
           <div className="space-y-24">
             <div>
               <p className="text-2xl text-slate-300 leading-relaxed font-light mb-12">
-                HYROX demands both raw strength and aerobic capacity. When your run coach doesn't talk to your strength log, you absorb the collision.
+                HYROX demands both raw strength and aerobic capacity. When your run coach doesn&apos;t talk to your strength log, you absorb the collision.
               </p>
               
               <div className="space-y-12">
                 <ExpandableListItem 
                   label="Failure Point 01"
                   title="Fried Legs, Blind Pacing"
-                  summary="Your HYROX plan demands a threshold run or erg sprint today. It has zero awareness of the neuromuscular damage from yesterday's heavy wall balls and sled pulls."
+                  summary="Your HYROX plan demands a threshold run or erg sprint today. It has zero awareness of the neuromuscular damage from yesterday&apos;s heavy wall balls and sled pulls."
                   details={
                     <>
                       <p>
                         HYROX is unique in that the structural damage from the stations directly ruins the precise mechanics needed for efficient running. If you are doing isolated 1km running intervals without simulating the pre-fatigue of a 150kg sled push, you are not actually training for the race format.
                       </p>
                       <p>
-                        RESILIENTO engineers <strong>"Compromise Running"</strong> directly into the heart of your plan. Track days are carefully orchestrated, but your engine-building days intentionally spike your legs with heavy station work before forcing you to hold your threshold pace, precisely simulating race-day leg drain.
+                        RESILIENTO engineers <strong>&quot;Compromise Running&quot;</strong> directly into the heart of your plan. Track days are carefully orchestrated, but your engine-building days intentionally spike your legs with heavy station work before forcing you to hold your threshold pace, precisely simulating race-day leg drain.
                       </p>
                     </>
                   }
