@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     ]
   },
   title: {
-    default: "RESILIENTO | Hybrid Training Engine for Triathlon, HYROX & Hybrid Athletes",
+    default: "Adaptive Training App for Triathlon, HYROX & Hybrid Athletes | RESILIENTO",
     template: "%s | RESILIENTO"
   },
   description: "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one dynamic system.",
   keywords: ["hybrid athlete", "concurrent training", "triathlon strength planner", "hyrox training", "hyrox plan", "adaptive training engine", "endurance sports", "mobility for athletes", "adaptive training plan"],
   openGraph: {
     title: {
-      default: "RESILIENTO | Hybrid Training Engine",
+      default: "Adaptive Training App for Triathlon, HYROX & Hybrid Athletes | RESILIENTO",
       template: "%s | RESILIENTO"
     },
     description: "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, and recovery into one system.",

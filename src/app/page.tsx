@@ -37,12 +37,15 @@ export default function Home() {
               <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
             </div>
             
-            <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
+            <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-6 leading-[0.9] uppercase">
               The Hybrid <br className="hidden sm:block"/> Training Engine.
             </h1>
             
-            <p className="text-lg sm:text-2xl lg:text-3xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] sm:leading-[1.4] max-w-3xl font-light tracking-tight">
-              The adaptive training app for triathlon, HYROX, and hybrid athletes. One system coordinating endurance, strength, mobility, and recovery with dynamic adaptation.
+            <p className="text-xl sm:text-3xl lg:text-4xl text-white mb-6 leading-[1.4] max-w-4xl font-semibold tracking-tight">
+              Adaptive training app for triathlon, HYROX, running, and hybrid athletes.
+            </p>
+            <p className="text-lg sm:text-xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] max-w-3xl font-light tracking-tight">
+              One central system coordinating endurance, strength, mobility, and recovery with dynamic adaptation. Built for those who demand systematic logic, not blind compliance.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-8">
@@ -57,6 +60,35 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Gateway Section - Sport Specific Intents */}
+      <section className="py-20 sm:py-32 bg-[#050505] border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center mb-16">
+          <h2 className="text-[10px] sm:text-xs font-mono tracking-[0.3em] uppercase text-brand mb-4">
+            Specialized Modalities
+          </h2>
+          <h3 className="text-3xl sm:text-5xl font-bold tracking-tighter text-white uppercase">
+            Built For Your Sport
+          </h3>
+        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
+          <Link href="/triathlon" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Triathlon</h4>
+            <p className="text-slate-400 font-light mb-8">An adaptive plan coordinating swim, bike, run, and structural strength without breaking your body.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
+          <Link href="/hyrox" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">HYROX</h4>
+            <p className="text-slate-400 font-light mb-8">Master the sleds and wall balls. Blending compromise running with heavy erg conditioning.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
+          <Link href="/running" className="border border-border p-10 hover:border-brand transition-colors group">
+            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Hybrid Running</h4>
+            <p className="text-slate-400 font-light mb-8">Run fast, lift heavy. A running plan that algorithmically separates track days from heavy lifting.</p>
+            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
+          </Link>
         </div>
       </section>
 
@@ -519,35 +551,6 @@ export default function Home() {
               </>
             }
           />
-        </div>
-      </section>
-
-      {/* Gateway Section - Sport Specific Intents */}
-      <section className="py-20 sm:py-32 bg-[#050505] border-b border-border">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center mb-16">
-          <h2 className="text-[10px] sm:text-xs font-mono tracking-[0.3em] uppercase text-brand mb-4">
-            Specialized Modalities
-          </h2>
-          <h3 className="text-3xl sm:text-5xl font-bold tracking-tighter text-white uppercase">
-            Built For Your Sport
-          </h3>
-        </div>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
-          <Link href="/triathlon" className="border border-border p-10 hover:border-brand transition-colors group">
-            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Triathlon</h4>
-            <p className="text-slate-400 font-light mb-8">An adaptive plan coordinating swim, bike, run, and structural strength without breaking your body.</p>
-            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
-          </Link>
-          <Link href="/hyrox" className="border border-border p-10 hover:border-brand transition-colors group">
-            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">HYROX</h4>
-            <p className="text-slate-400 font-light mb-8">Master the sleds and wall balls. Blending compromise running with heavy erg conditioning.</p>
-            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
-          </Link>
-          <Link href="/running" className="border border-border p-10 hover:border-brand transition-colors group">
-            <h4 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-brand transition-colors">Hybrid Running</h4>
-            <p className="text-slate-400 font-light mb-8">Run fast, lift heavy. A running plan that algorithmically separates track days from heavy lifting.</p>
-            <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-brand">View Module →</span>
-          </Link>
         </div>
       </section>
 
