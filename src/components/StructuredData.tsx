@@ -4,7 +4,7 @@ export const OrganizationJsonLd = () => {
     "@type": "Organization",
     "name": "RESILIENTO",
     "url": "https://resiliento.app",
-    "logo": "https://resiliento.app/logo-picture.png",
+    "logo": "https://resiliento.app/favicon.svg",
     "sameAs": [
       // Add social links if available, e.g., "https://twitter.com/resiliento"
     ]
