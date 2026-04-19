@@ -26,7 +26,8 @@ export const WebSiteJsonLd = () => {
     "description": "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one dynamic system.",
     "publisher": {
       "@type": "Organization",
-      "name": "RESILIENTO"
+      "name": "RESILIENTO",
+      "logo": "https://resiliento.app/favicon.svg"
     }
   };
   return (

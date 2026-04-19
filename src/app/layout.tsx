@@ -27,13 +27,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.svg', type: 'image/svg+xml' }
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' }
     ],
     apple: [
-      { url: '/logo-picture.png' }
+      { url: '/favicon.svg', type: 'image/svg+xml' }
     ]
   },
+  manifest: '/manifest.json',
   title: {
     default: "Adaptive Training App for Triathlon, HYROX & Hybrid Athletes | RESILIENTO",
     template: "%s | RESILIENTO"
