@@ -22,13 +22,9 @@ export const WebSiteJsonLd = () => {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "RESILIENTO",
-    "url": "https://resiliento.app",
-    "description": "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one dynamic system.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "RESILIENTO",
-      "logo": "https://resiliento.app/favicon.svg"
-    }
+    "alternateName": ["Resiliento", "RESILIENTO App"],
+    "url": "https://resiliento.app/",
+    "description": "The adaptive training app for modern athletes. Unifying triathlon, running, HYROX, strength, mobility, and recovery into one dynamic system."
   };
   return (
     <script

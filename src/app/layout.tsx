@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   verification: {
     google: '-FShNqe8nHwXMbQSPb95SdYBHEkbgZRpShgO7maQfc0',
   },
+  applicationName: 'RESILIENTO',
+  appleWebApp: {
+    title: 'RESILIENTO',
+    statusBarStyle: 'default',
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' }
