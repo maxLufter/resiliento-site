@@ -30,6 +30,11 @@ export function Footer() {
               <h3 className="text-[10px] font-mono tracking-[0.2em] uppercase text-brand mb-6">Engine</h3>
               <ul role="list" className="space-y-4">
                 <li>
+                  <Link href="/tools" className="text-sm text-slate-400 hover:text-white transition-colors">
+                    Calculators & Tools
+                  </Link>
+                </li>
+                <li>
                   <Link href="/hybrid-training-engine" className="text-sm text-slate-400 hover:text-white transition-colors">
                     Theory
                   </Link>
