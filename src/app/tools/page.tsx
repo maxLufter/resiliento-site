@@ -25,6 +25,18 @@ const tools = [
     href: '/tools/hybrid-split-builder',
     tag: 'Hybrid',
   },
+  {
+    title: 'Optimal Tyre Pressure',
+    description: 'A highly sophisticated physics-based calculator that optimizes your casing tension against surface impedance for maximum speed.',
+    href: '/tools/optimal-tyre-pressure',
+    tag: 'Physics',
+  },
+  {
+    title: 'Running Pace Calculator',
+    description: 'Calculate your required pace, predict finish times, and convert running pace to equivalent speed (km/h and mph).',
+    href: '/tools/running-pace-calculator',
+    tag: 'Running',
+  },
 ];
 
 export default function ToolsIndexPage() {
@@ -39,7 +51,7 @@ export default function ToolsIndexPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {tools.map((tool) => (
           <Link
             key={tool.href}
