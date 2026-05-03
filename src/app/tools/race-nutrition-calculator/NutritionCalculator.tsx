@@ -230,6 +230,9 @@ export default function NutritionCalculator() {
         ))}
       </div>
 
+      {/* ── Race Execution Timeline ─────────────────────────────────────── */}
+      <FuelingTimeline plan={plan} totalRaceMin={totalRaceMin} useCaffeine={useCaffeine} bodyMass={bodyMass} totals={totals} />
+
       {/* ── Practical Guide ─────────────────────────────────────────────── */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-4">Practical Fueling Guide</h3>
@@ -304,4 +307,121 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
       {total && <span className="text-[10px] text-neutral-600">{total}</span>}
     </div>
   );
+}
+
+// ─── Fueling Timeline Component ──────────────────────────────────────────────
+function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals }: { plan: LegPlan[], totalRaceMin: number, useCaffeine: boolean, bodyMass: number, totals: any }) {
+  let cumTime = 0;
+  
+  return (
+    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
+      <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-6 flex items-center gap-2">
+        <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        Race Execution Timeline
+      </h3>
+
+      {/* Proportional Bar */}
+      <div className="relative h-4 w-full rounded-full overflow-hidden mb-10 flex bg-black/50 border border-neutral-800">
+        {plan.map(leg => {
+          const pct = (leg.durationMin / totalRaceMin) * 100;
+          const color = leg.name === 'Swim' ? 'bg-cyan-500/80' : leg.name === 'Bike' ? 'bg-brand/80' : 'bg-orange-500/80';
+          if (pct === 0) return null;
+          return (
+            <div key={leg.name} style={{ width: `${pct}%` }} className={`${color} h-full border-r border-black/50 flex items-center justify-center`}>
+              {pct > 10 && <span className="text-[9px] font-bold text-black/80 uppercase tracking-widest">{leg.name}</span>}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Vertical Timeline */}
+      <div className="relative border-l-2 border-neutral-800 ml-3 md:ml-6 space-y-8 pb-4">
+        
+        {/* T-15 */}
+        <TimelineNode time="T -0:15" title="Pre-Race Prep" color="bg-neutral-500" textColor="text-neutral-400">
+          <p className="text-xs text-neutral-400">
+            Drink <strong className="text-blue-400">300ml fluid</strong>. 
+            {useCaffeine && <span> Take <strong className="text-green-400">{Math.round(bodyMass * 3)}mg caffeine</strong>.</span>}
+            <br />Eat 1 energy gel 5 mins before start (if gut trained).
+          </p>
+        </TimelineNode>
+
+        {plan.map(leg => {
+          const startTime = cumTime;
+          cumTime += leg.durationMin;
+          const isSwim = !leg.canFuel;
+          
+          if (leg.durationMin === 0) return null;
+
+          const dotColor = leg.name === 'Swim' ? 'bg-cyan-500' : leg.name === 'Bike' ? 'bg-brand' : 'bg-orange-500';
+          const txtColor = leg.name === 'Swim' ? 'text-cyan-500' : leg.name === 'Bike' ? 'text-brand' : 'text-orange-500';
+
+          return (
+            <TimelineNode 
+              key={leg.name}
+              time={`T +${formatTime(startTime)}`} 
+              title={`${leg.name} Start`} 
+              color={dotColor}
+              textColor={txtColor}
+            >
+              {isSwim ? (
+                <p className="text-xs text-neutral-500 italic">No fueling. Focus on pacing and sighting.</p>
+              ) : (
+                <div className="space-y-3 mt-2">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400 font-mono tracking-wide">Target: {leg.carbGPerH}g Carbs/h</span>
+                    <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] text-blue-400 font-mono tracking-wide">Target: {leg.fluidMlPerH}ml Fluid/h</span>
+                  </div>
+                  
+                  <div className="bg-black/30 rounded-lg p-3 border border-neutral-800 text-xs text-neutral-400 space-y-2.5">
+                    <div className="flex gap-3">
+                      <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 20m</span>
+                      <span>Drink <strong className="text-blue-400">~{Math.round(leg.fluidMlPerH / 3)}ml</strong> fluid + <strong className="text-amber-400">~{Math.round(leg.carbGPerH / 3)}g</strong> carbs <span className="text-neutral-500">(approx {Math.round(leg.carbGPerH/3/25 * 10)/10} gels)</span></span>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 45m</span>
+                      <span>Take 1 salt capsule (<strong className="text-rose-400">{Math.round(leg.sodiumMgPerH * 0.75)}mg sodium</strong>)</span>
+                    </div>
+                    {useCaffeine && leg.name === 'Run' && totalRaceMin > 180 && (
+                      <div className="flex gap-3 mt-2 pt-2 border-t border-neutral-800/50">
+                        <span className="text-green-500/70 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">T2/Early</span>
+                        <span className="text-green-400 font-semibold">Take {Math.round(bodyMass * 1.5)}mg caffeine top-up</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </TimelineNode>
+          );
+        })}
+
+        <TimelineNode time={`T +${formatTime(totalRaceMin)}`} title="Finish Line" color="bg-green-500" textColor="text-green-400">
+          <p className="text-xs text-neutral-400">Great job! Start recovery hydration and <strong className="text-white">{Math.round(bodyMass * 0.3)}g of protein</strong> within 30 minutes.</p>
+        </TimelineNode>
+
+      </div>
+    </div>
+  );
+}
+
+function TimelineNode({ time, title, color, textColor, children }: { time: string, title: string, color: string, textColor: string, children: React.ReactNode }) {
+  return (
+    <div className="relative pl-6 md:pl-8">
+      {/* Node Dot */}
+      <div className={`absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full ${color} shadow-[0_0_8px_currentColor]`} />
+      
+      {/* Content */}
+      <div className="mb-1 flex items-center gap-3">
+        <span className={`text-[10px] font-bold font-mono tracking-widest ${textColor}`}>{time}</span>
+        <h4 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat">{title}</h4>
+      </div>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function formatTime(mins: number) {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${h}:${m.toString().padStart(2, '0')}`;
 }
