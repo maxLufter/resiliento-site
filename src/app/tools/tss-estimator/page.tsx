@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Estimator from './Estimator';
+import { Activity } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Training Stress Score (TSS) Estimator | RESILIENTO Tools',
@@ -29,9 +30,12 @@ export default function TSSEstimatorPage() {
       />
       <div className="max-w-4xl mx-auto px-6 py-24 sm:py-32 pt-32 sm:pt-40">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat">
-            Training <span className="text-brand">Stress Score (TSS)</span>
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <Activity size={40} className="text-brand" strokeWidth={2} />
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat m-0">
+              Training <span className="text-brand">Stress Score (TSS)</span>
+            </h1>
+          </div>
           <p className="text-lg leading-8 text-neutral-300 font-inter max-w-2xl mx-auto">
             Calculate the physiological impact of a session based on duration and Rate of Perceived Exertion (RPE). Discover how a single heavy session drains your readiness runway.
           </p>

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Builder from './Builder';
+import { Calendar } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Hybrid Athlete Training Split Builder | Concurrent Training Planner',
@@ -29,9 +30,12 @@ export default function HybridSplitBuilderPage() {
       />
       <div className="max-w-5xl mx-auto px-6 py-24 sm:py-32 pt-32 sm:pt-40">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat">
-            Hybrid Athlete <span className="text-brand">Split Builder</span>
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <Calendar size={40} className="text-brand" strokeWidth={2} />
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat m-0">
+              Hybrid Athlete <span className="text-brand">Split Builder</span>
+            </h1>
+          </div>
           <p className="text-lg leading-8 text-neutral-300 font-inter max-w-2xl mx-auto">
             Concurrent training causes physiological interference (AMPK vs mTOR). Input your target volumes below to generate a baseline schedule structured specifically to minimize negative adaptations.
           </p>

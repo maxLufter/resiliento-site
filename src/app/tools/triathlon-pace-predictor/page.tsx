@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Predictor from './Predictor';
+import { Timer } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Triathlon Race Pace Predictor | Sprint to Ironman Time Estimator',
@@ -29,9 +30,12 @@ export default function TriathlonPacePredictorPage() {
       />
       <div className="max-w-4xl mx-auto px-6 py-24 sm:py-32 pt-32 sm:pt-40">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat">
-            Triathlon Pace <span className="text-brand">Predictor</span>
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <Timer size={40} className="text-brand" strokeWidth={2} />
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat m-0">
+              Race Pace <span className="text-brand">Predictor</span>
+            </h1>
+          </div>
           <p className="text-lg leading-8 text-neutral-300 font-inter max-w-2xl mx-auto">
             Input your current standalone times. We factor in physiological endurance degradation (Riegel curve) and multi-sport fatigue to predict your race day splits and overall time.
           </p>

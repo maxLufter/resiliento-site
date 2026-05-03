@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import NutritionCalculator from './NutritionCalculator';
+import { Zap } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Race Nutrition Calculator — Carbs, Sodium, Caffeine & Fluid Plan | RESILIENTO',
@@ -11,9 +12,12 @@ export default function NutritionPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32 lg:px-8 pt-32 sm:pt-40">
       <div className="max-w-3xl text-center mx-auto mb-16">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-6 uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat">
-          Race <span className="text-brand">Nutrition</span> Calculator
-        </h1>
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <Zap size={40} className="text-brand" strokeWidth={2} />
+          <h1 className="text-4xl font-bold tracking-tight text-white uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat m-0">
+            Race <span className="text-brand">Nutrition</span> Calculator
+          </h1>
+        </div>
         <p className="text-lg leading-8 text-neutral-300 font-inter">
           Evidence-based fueling strategy for your next race. Calculate carbohydrate, sodium, fluid, and caffeine targets — then see exactly what to consume and when.
         </p>
