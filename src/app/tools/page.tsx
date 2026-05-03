@@ -37,6 +37,12 @@ const tools = [
     href: '/tools/running-pace-calculator',
     tag: 'Running',
   },
+  {
+    title: 'Race Day Checklist',
+    description: 'Smart packing planner that adapts to your event distance and weather conditions. Never forget essential gear again.',
+    href: '/tools/triathlon-checklist',
+    tag: 'Race Prep',
+  },
 ];
 
 export default function ToolsIndexPage() {
