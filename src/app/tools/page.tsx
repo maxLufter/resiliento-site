@@ -43,6 +43,12 @@ const tools = [
     href: '/tools/triathlon-checklist',
     tag: 'Race Prep',
   },
+  {
+    title: 'Race Nutrition Calculator',
+    description: 'Evidence-based carbohydrate, sodium, fluid, and caffeine targets for triathlon, cycling, and running events.',
+    href: '/tools/race-nutrition-calculator',
+    tag: 'Nutrition',
+  },
 ];
 
 export default function ToolsIndexPage() {
