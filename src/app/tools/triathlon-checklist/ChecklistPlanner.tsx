@@ -236,7 +236,7 @@ export default function ChecklistPlanner() {
       if (item.excludeConditions.some(c => conditions.has(c))) return false;
     }
     return true;
-  }, [eventType, conditions]);
+  }, [eventType, conditions, hiddenItems]);
 
   // Compute visible items and progress
   const { visibleCategories, totalVisible, totalChecked } = useMemo(() => {
