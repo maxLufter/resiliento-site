@@ -50,6 +50,8 @@ const CATEGORIES: Category[] = [
       { id: 'swim_cap', label: 'Swim cap (personal)', tip: 'Race usually provides one, but bring your own underneath' },
       { id: 'wetsuit', label: 'Wetsuit', conditions: ['wetsuit'] },
       { id: 'wetsuit_lubricant', label: 'Wetsuit lubricant / Body Glide', conditions: ['wetsuit'], tip: 'Apply to neck, wrists, ankles for easy removal' },
+      { id: 'aero_calf_sleeves', label: 'Aero calf sleeves', conditions: ['wetsuit'], tip: 'Wear under wetsuit; very hard to put on wet legs in T1' },
+      { id: 'aero_kinesio_tape', label: 'Aero bubbles / aero kinesio tape', tip: 'Apply to shins before the race for aerodynamic gains' },
       { id: 'anti_fog', label: 'Anti-fog spray' },
       { id: 'ear_plugs', label: 'Ear plugs (optional)', conditions: ['cold'] },
       { id: 'neoprene_cap', label: 'Neoprene swim cap', conditions: ['cold'], tip: 'Double cap for cold open water' },
@@ -157,6 +159,7 @@ export default function ChecklistPlanner() {
   const [eventType, setEventType] = useState<EventType>('olympic');
   const [conditions, setConditions] = useState<Set<Condition>>(new Set(['wetsuit']));
   const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [hiddenItems, setHiddenItems] = useState<Set<string>>(new Set());
   const [expandedTips, setExpandedTips] = useState<Set<string>>(new Set());
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
@@ -169,6 +172,7 @@ export default function ChecklistPlanner() {
         if (data.eventType) setEventType(data.eventType);
         if (data.conditions) setConditions(new Set(data.conditions));
         if (data.checked) setChecked(new Set(data.checked));
+        if (data.hiddenItems) setHiddenItems(new Set(data.hiddenItems));
       }
     } catch { /* ignore parse errors */ }
   }, []);
@@ -180,9 +184,10 @@ export default function ChecklistPlanner() {
         eventType,
         conditions: Array.from(conditions),
         checked: Array.from(checked),
+        hiddenItems: Array.from(hiddenItems),
       }));
     } catch { /* ignore storage errors */ }
-  }, [eventType, conditions, checked]);
+  }, [eventType, conditions, checked, hiddenItems]);
 
   const toggleCondition = (c: Condition) => {
     setConditions(prev => {
@@ -208,8 +213,18 @@ export default function ChecklistPlanner() {
     });
   };
 
+  const hideItem = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setHiddenItems(prev => {
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  };
+
   // Filter items based on current event + conditions
   const isItemVisible = useCallback((item: ChecklistItem): boolean => {
+    if (hiddenItems.has(item.id)) return false;
     // Distance filter
     if (item.minDistance && distIdx(eventType) < distIdx(item.minDistance)) return false;
     // Condition include filter (show only if at least one condition matches)
@@ -241,6 +256,10 @@ export default function ChecklistPlanner() {
 
   const resetChecklist = () => {
     setChecked(new Set());
+  };
+
+  const resetHiddenItems = () => {
+    setHiddenItems(new Set());
   };
 
   // ─── Export Helpers ──────────────────────────────────────────────────────────
@@ -364,6 +383,14 @@ export default function ChecklistPlanner() {
           </div>
           <div className="flex items-center gap-4">
             <span className={`text-sm font-bold font-mono ${progressPct === 100 ? 'text-green-400' : 'text-brand'}`}>{progressPct}%</span>
+            {hiddenItems.size > 0 && (
+              <button
+                onClick={resetHiddenItems}
+                className="text-[10px] uppercase tracking-widest text-neutral-600 hover:text-neutral-300 transition-colors mr-2"
+              >
+                Restore Hidden ({hiddenItems.size})
+              </button>
+            )}
             <button
               onClick={resetChecklist}
               className="text-[10px] uppercase tracking-widest text-neutral-600 hover:text-red-400 transition-colors"
@@ -439,7 +466,7 @@ export default function ChecklistPlanner() {
                   const hasTip = !!item.tip;
                   const tipOpen = expandedTips.has(item.id);
                   return (
-                    <div key={item.id} className={`transition-all ${isChecked ? 'bg-brand/[0.03]' : 'hover:bg-white/[0.02]'}`}>
+                    <div key={item.id} className={`group transition-all ${isChecked ? 'bg-brand/[0.03]' : 'hover:bg-white/[0.02]'}`}>
                       <div className="flex items-center gap-4 px-6 py-3.5 cursor-pointer" onClick={() => toggleCheck(item.id)}>
                         {/* Checkbox */}
                         <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-all ${isChecked ? 'bg-brand border-brand' : 'border-neutral-700 hover:border-neutral-500'}`}>
@@ -476,6 +503,16 @@ export default function ChecklistPlanner() {
                             💡
                           </button>
                         )}
+
+                        {/* Hide button */}
+                        <button
+                          onClick={(e) => hideItem(item.id, e)}
+                          className="opacity-0 group-hover:opacity-100 text-neutral-600 hover:text-red-400 transition-all text-xs flex-shrink-0 ml-1"
+                          aria-label="Remove item"
+                          title="Remove item from list"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
                       </div>
 
                       {/* Tip content */}
