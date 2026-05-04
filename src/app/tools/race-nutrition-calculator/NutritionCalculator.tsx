@@ -363,39 +363,51 @@ function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals, nu
     });
 
     if (leg.canFuel) {
-      let tick = startTime + 20;
-      let saltCounter = 0;
-      while (tick < endTime - 5) {
-        saltCounter += 20;
-        const items = [];
-        
-        const carbVal = (leg.carbGPerH / 3 / carbPerUnit).toFixed(1);
-        const fluidVal = Math.round(leg.fluidMlPerH / 3);
-        
-        items.push({ icon: '⚡', text: `${carbVal} ${unitName}${carbVal !== '1.0' ? 's' : ''}` });
-        items.push({ icon: '💧', text: `${fluidVal}ml fluid` });
-        
-        if (saltCounter >= 45) {
-          items.push({ icon: '💊', text: '1 salt cap' });
-          saltCounter = 0;
-        }
-        
-        if (leg.name === 'Run' && tick === startTime + 20 && totalRaceMin > 180 && useCaffeine) {
-          items.push({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
-        }
+      const drinkInterval = 20;
+      const saltInterval = 45;
+      
+      const legEvents = new Map<number, any[]>();
 
+      for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
+         if (!legEvents.has(t)) legEvents.set(t, []);
+         legEvents.get(t)!.push({ icon: '💧', text: `${Math.round(leg.fluidMlPerH / (60/drinkInterval))}ml fluid` });
+      }
+
+      if (leg.carbGPerH > 0) {
+        const carbInterval = Math.max(10, Math.round((carbPerUnit / leg.carbGPerH) * 60 / 5) * 5);
+        for (let t = carbInterval; t < leg.durationMin - 5; t += carbInterval) {
+           if (!legEvents.has(t)) legEvents.set(t, []);
+           legEvents.get(t)!.push({ icon: '⚡', text: `1 ${unitName}` });
+        }
+      }
+
+      if (leg.sodiumMgPerH > 0) {
+        for (let t = saltInterval; t < leg.durationMin - 5; t += saltInterval) {
+           if (!legEvents.has(t)) legEvents.set(t, []);
+           legEvents.get(t)!.push({ icon: '💊', text: `1 salt cap` });
+        }
+      }
+      
+      if (leg.name === 'Run' && totalRaceMin > 180 && useCaffeine) {
+         const t = 15;
+         if (!legEvents.has(t)) legEvents.set(t, []);
+         // Put caffeine at the top if it aligns with another tick
+         legEvents.get(t)!.unshift({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
+      }
+
+      const sortedTicks = Array.from(legEvents.keys()).sort((a,b) => a - b);
+      
+      sortedTicks.forEach(tick => {
         events.push({
-          time: tick,
-          label: formatTime(tick),
+          time: startTime + tick,
+          label: formatTime(startTime + tick),
           title: '',
           isMajor: false,
           bgColor: 'bg-neutral-800',
           borderColor: leg.name === 'Bike' ? 'border-brand/40' : 'border-orange-500/40',
-          items
+          items: legEvents.get(tick)
         });
-
-        tick += 20;
-      }
+      });
     }
     cumTime = endTime;
   });
@@ -424,7 +436,7 @@ function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals, nu
       <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-neutral-900 to-transparent pointer-events-none z-20" />
       <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-neutral-900 to-transparent pointer-events-none z-20" />
 
-      <div className="overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent snap-x snap-mandatory">
+      <div className="overflow-x-auto pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div className="flex min-w-max items-start pt-2 px-4">
           {events.map((ev, i) => (
             <div key={i} className="relative flex flex-col items-center w-32 sm:w-40 flex-shrink-0 snap-start">
