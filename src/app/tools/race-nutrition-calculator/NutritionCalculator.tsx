@@ -6,6 +6,7 @@ import { useState, useMemo } from 'react';
 type RaceType = 'tri_sprint' | 'tri_olympic' | 'tri_703' | 'tri_ironman' | 'bike' | 'run';
 type HeatLevel = 'cool' | 'moderate' | 'hot';
 type GutLevel = 'beginner' | 'moderate' | 'advanced';
+type NutritionType = 'gels' | 'bars' | 'drink_mix';
 
 interface LegPlan {
   name: string;
@@ -38,6 +39,12 @@ const GUT_LABELS: Record<GutLevel, string> = {
   advanced: 'Advanced — trained gut, dual-transport carbs (cap ~120 g/h)',
 };
 
+const NUTRITION_LABELS: Record<NutritionType, string> = {
+  gels: 'Energy Gels (~25g)',
+  bars: 'Energy Bars (~40g)',
+  drink_mix: 'Drink Mix (~30g/scoop)',
+};
+
 const FLUID_RANGE: Record<HeatLevel, [number, number]> = { cool: [350, 500], moderate: [500, 700], hot: [700, 1000] };
 const SODIUM_RANGE: Record<HeatLevel, [number, number]> = { cool: [300, 500], moderate: [500, 700], hot: [700, 1000] };
 
@@ -57,6 +64,7 @@ export default function NutritionCalculator() {
   const [gutLevel, setGutLevel] = useState<GutLevel>('moderate');
   const [heat, setHeat] = useState<HeatLevel>('moderate');
   const [useCaffeine, setUseCaffeine] = useState<boolean>(true);
+  const [nutritionType, setNutritionType] = useState<NutritionType>('gels');
   const [legDurations, setLegDurations] = useState<number[]>([]);
 
   const preset = RACE_PRESETS[raceType];
@@ -124,8 +132,9 @@ export default function NutritionCalculator() {
     caffeine: plan.reduce((a, l) => a + l.caffeineMg, 0),
   }), [plan]);
 
-  const gelCount = Math.ceil(totals.carbs / 25); // ~25g per gel
-  const barCount = Math.floor(totals.carbs / 40); // ~40g per bar alternative
+  const unitName = nutritionType === 'gels' ? 'gels' : nutritionType === 'bars' ? 'bars' : 'scoops';
+  const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
+  const unitCount = Math.ceil(totals.carbs / carbPerUnit);
 
   return (
     <div className="font-inter space-y-6">
@@ -160,7 +169,7 @@ export default function NutritionCalculator() {
         </div>
 
         {/* Athlete & Conditions Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
             <div className="relative">
@@ -175,6 +184,14 @@ export default function NutritionCalculator() {
             <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
               className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
               {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fuel Type</label>
+            <select value={nutritionType} onChange={e => setNutritionType(e.target.value as NutritionType)}
+              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </div>
 
@@ -202,7 +219,7 @@ export default function NutritionCalculator() {
 
       {/* ── Results: Totals Summary ─────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <ResultCard label="Total Carbs" value={`${totals.carbs} g`} sub={`≈ ${gelCount} gels or ${barCount} bars`} color="text-amber-400" />
+        <ResultCard label="Total Carbs" value={`${totals.carbs} g`} sub={`≈ ${unitCount} ${unitName}`} color="text-amber-400" />
         <ResultCard label="Total Fluid" value={`${(totals.fluid / 1000).toFixed(1)} L`} sub={`${totals.fluid} mL`} color="text-blue-400" />
         <ResultCard label="Total Sodium" value={`${totals.sodium} mg`} sub={`${Math.round(totals.sodium / 215)} salt caps`} color="text-rose-400" />
         <ResultCard label="Caffeine" value={`${totals.caffeine} mg`} sub={useCaffeine ? `${(totals.caffeine / bodyMass).toFixed(1)} mg/kg` : 'disabled'} color="text-green-400" />
@@ -231,7 +248,7 @@ export default function NutritionCalculator() {
       </div>
 
       {/* ── Race Execution Timeline ─────────────────────────────────────── */}
-      <FuelingTimeline plan={plan} totalRaceMin={totalRaceMin} useCaffeine={useCaffeine} bodyMass={bodyMass} totals={totals} />
+      <FuelingTimeline plan={plan} totalRaceMin={totalRaceMin} useCaffeine={useCaffeine} bodyMass={bodyMass} totals={totals} nutritionType={nutritionType} />
 
       {/* ── Practical Guide ─────────────────────────────────────────────── */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
@@ -240,9 +257,7 @@ export default function NutritionCalculator() {
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Carbohydrate Products</span>
             <ul className="space-y-1.5">
-              <li>• <span className="text-neutral-300">{gelCount} energy gels</span> (~25g carbs each)</li>
-              <li>• Or <span className="text-neutral-300">{barCount} energy bars</span> (~40g each) + {Math.max(0, gelCount - barCount * 2)} gels</li>
-              <li>• Or {Math.ceil(totals.carbs / 30)} scoops drink mix (~30g each)</li>
+              <li>• <span className="text-neutral-300">{unitCount} {unitName}</span> (~{carbPerUnit}g carbs each)</li>
               <li className="text-neutral-600 pt-1 italic">Use glucose:fructose 2:1 ratio for {'>'} 60g/h</li>
             </ul>
           </div>
@@ -310,8 +325,10 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
 }
 
 // ─── Fueling Timeline Component ──────────────────────────────────────────────
-function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals }: { plan: LegPlan[], totalRaceMin: number, useCaffeine: boolean, bodyMass: number, totals: any }) {
+function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals, nutritionType }: { plan: LegPlan[], totalRaceMin: number, useCaffeine: boolean, bodyMass: number, totals: any, nutritionType: NutritionType }) {
   let cumTime = 0;
+  const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
+  const unitName = nutritionType === 'gels' ? 'gels' : nutritionType === 'bars' ? 'bars' : 'scoops';
   
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
@@ -321,14 +338,23 @@ function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals }: 
       </h3>
 
       {/* Proportional Bar */}
-      <div className="relative h-4 w-full rounded-full overflow-hidden mb-10 flex bg-black/50 border border-neutral-800">
+      <div className="relative h-5 w-full rounded-full overflow-hidden mb-10 flex bg-black/50 border border-neutral-800">
         {plan.map(leg => {
           const pct = (leg.durationMin / totalRaceMin) * 100;
           const color = leg.name === 'Swim' ? 'bg-cyan-500/80' : leg.name === 'Bike' ? 'bg-brand/80' : 'bg-orange-500/80';
           if (pct === 0) return null;
           return (
-            <div key={leg.name} style={{ width: `${pct}%` }} className={`${color} h-full border-r border-black/50 flex items-center justify-center`}>
-              {pct > 10 && <span className="text-[9px] font-bold text-black/80 uppercase tracking-widest">{leg.name}</span>}
+            <div key={leg.name} style={{ width: `${pct}%` }} className={`${color} h-full border-r border-black/50 flex items-center justify-center relative`}>
+              {pct > 10 && <span className="text-[9px] font-bold text-black/80 uppercase tracking-widest relative z-10">{leg.name}</span>}
+              {/* Ticks overlay for fueling (every 20m) */}
+              {leg.canFuel && Array.from({ length: Math.floor(leg.durationMin / 20) }).map((_, i) => {
+                 const tickPct = ((i + 1) * 20 / leg.durationMin) * 100;
+                 return (
+                   <div key={i} style={{ left: `${tickPct}%` }} className="absolute top-0 bottom-0 w-px bg-white/20 flex flex-col items-center justify-center pointer-events-none">
+                     <span className="text-[7px] text-amber-900 bg-amber-400 px-0.5 rounded-sm shadow-sm absolute transform -translate-x-1/2 opacity-75">⚡</span>
+                   </div>
+                 )
+              })}
             </div>
           );
         })}
@@ -376,7 +402,7 @@ function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals }: 
                   <div className="bg-black/30 rounded-lg p-3 border border-neutral-800 text-xs text-neutral-400 space-y-2.5">
                     <div className="flex gap-3">
                       <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 20m</span>
-                      <span>Drink <strong className="text-blue-400">~{Math.round(leg.fluidMlPerH / 3)}ml</strong> fluid + <strong className="text-amber-400">~{Math.round(leg.carbGPerH / 3)}g</strong> carbs <span className="text-neutral-500">(approx {Math.round(leg.carbGPerH/3/25 * 10)/10} gels)</span></span>
+                      <span>Drink <strong className="text-blue-400">~{Math.round(leg.fluidMlPerH / 3)}ml</strong> fluid + <strong className="text-amber-400">~{Math.round(leg.carbGPerH / 3)}g</strong> carbs <span className="text-neutral-500">(approx {(leg.carbGPerH/3/carbPerUnit).toFixed(1)} {unitName})</span></span>
                     </div>
                     <div className="flex gap-3">
                       <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 45m</span>
