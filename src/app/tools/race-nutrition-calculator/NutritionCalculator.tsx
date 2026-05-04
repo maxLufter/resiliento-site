@@ -64,7 +64,8 @@ export default function NutritionCalculator() {
   const [gutLevel, setGutLevel] = useState<GutLevel>('moderate');
   const [heat, setHeat] = useState<HeatLevel>('moderate');
   const [useCaffeine, setUseCaffeine] = useState<boolean>(true);
-  const [nutritionType, setNutritionType] = useState<NutritionType>('gels');
+  const [bikeFuelType, setBikeFuelType] = useState<NutritionType>('drink_mix');
+  const [runFuelType, setRunFuelType] = useState<NutritionType>('gels');
   const [legDurations, setLegDurations] = useState<number[]>([]);
 
   const preset = RACE_PRESETS[raceType];
@@ -132,10 +133,6 @@ export default function NutritionCalculator() {
     caffeine: plan.reduce((a, l) => a + l.caffeineMg, 0),
   }), [plan]);
 
-  const unitName = nutritionType === 'gels' ? 'gels' : nutritionType === 'bars' ? 'bars' : 'scoops';
-  const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
-  const unitCount = Math.ceil(totals.carbs / carbPerUnit);
-
   return (
     <div className="font-inter space-y-6">
       {/* ── Inputs Panel ────────────────────────────────────────────────── */}
@@ -168,8 +165,8 @@ export default function NutritionCalculator() {
           <p className="text-[10px] text-neutral-600 mt-2">Total race: <span className="text-neutral-400 font-mono">{Math.floor(totalRaceMin / 60)}h {totalRaceMin % 60}m</span></p>
         </div>
 
-        {/* Athlete & Conditions Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Athlete Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
             <div className="relative">
@@ -184,14 +181,6 @@ export default function NutritionCalculator() {
             <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
               className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
               {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fuel Type</label>
-            <select value={nutritionType} onChange={e => setNutritionType(e.target.value as NutritionType)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </div>
 
@@ -215,11 +204,29 @@ export default function NutritionCalculator() {
             </button>
           </div>
         </div>
+
+        {/* Fueling Preferences Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-800/50">
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
+            <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
+              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
+            <select value={runFuelType} onChange={e => setRunFuelType(e.target.value as NutritionType)}
+              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* ── Results: Totals Summary ─────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <ResultCard label="Total Carbs" value={`${totals.carbs} g`} sub={`≈ ${unitCount} ${unitName}`} color="text-amber-400" />
+        <ResultCard label="Total Carbs" value={`${totals.carbs} g`} sub="See plan for products" color="text-amber-400" />
         <ResultCard label="Total Fluid" value={`${(totals.fluid / 1000).toFixed(1)} L`} sub={`${totals.fluid} mL`} color="text-blue-400" />
         <ResultCard label="Total Sodium" value={`${totals.sodium} mg`} sub={`${Math.round(totals.sodium / 215)} salt caps`} color="text-rose-400" />
         <ResultCard label="Caffeine" value={`${totals.caffeine} mg`} sub={useCaffeine ? `${(totals.caffeine / bodyMass).toFixed(1)} mg/kg` : 'disabled'} color="text-green-400" />
@@ -247,17 +254,33 @@ export default function NutritionCalculator() {
         ))}
       </div>
 
-      {/* ── Race Execution Timeline ─────────────────────────────────────── */}
-      <FuelingTimeline plan={plan} totalRaceMin={totalRaceMin} useCaffeine={useCaffeine} bodyMass={bodyMass} totals={totals} nutritionType={nutritionType} />
+      {/* ── Race Execution Timelines (Per Leg) ─────────────────────────── */}
+      <div className="space-y-8 mt-8">
+        {plan.filter(l => l.canFuel).map(leg => (
+          <FuelingTimeline 
+            key={leg.name} 
+            leg={leg} 
+            totalRaceMin={totalRaceMin} 
+            useCaffeine={useCaffeine} 
+            bodyMass={bodyMass} 
+            nutritionType={leg.name === 'Bike' ? bikeFuelType : runFuelType} 
+          />
+        ))}
+      </div>
 
       {/* ── Practical Guide ─────────────────────────────────────────────── */}
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-4">Practical Fueling Guide</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-neutral-400">
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Carbohydrate Products</span>
             <ul className="space-y-1.5">
-              <li>• <span className="text-neutral-300">{unitCount} {unitName}</span> (~{carbPerUnit}g carbs each)</li>
+              {plan.filter(l => l.canFuel && l.carbTotal > 0).map(leg => {
+                const fType = leg.name === 'Bike' ? bikeFuelType : runFuelType;
+                const cPU = fType === 'gels' ? 25 : fType === 'bars' ? 40 : 30;
+                const uName = fType === 'gels' ? 'gels' : fType === 'bars' ? 'bars' : 'scoops mix';
+                return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{Math.ceil(leg.carbTotal / cPU)} {uName}</span></li>;
+              })}
               <li className="text-neutral-600 pt-1 italic">Use glucose:fructose 2:1 ratio for {'>'} 60g/h</li>
             </ul>
           </div>
@@ -325,110 +348,87 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
 }
 
 // ─── Fueling Timeline Component ──────────────────────────────────────────────
-function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals, nutritionType }: { plan: LegPlan[], totalRaceMin: number, useCaffeine: boolean, bodyMass: number, totals: any, nutritionType: NutritionType }) {
+function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType }) {
   const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
   const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   
   const events: any[] = [];
   
-  const preRaceItems = [
-    { icon: '💧', text: '300ml fluid' }
-  ];
-  if (useCaffeine) preRaceItems.push({ icon: '☕', text: `${Math.round(bodyMass * 3)}mg caffeine` });
-  preRaceItems.push({ icon: '⚡', text: `1 ${unitName}` });
-  
+  // Start node
   events.push({
-    time: -15,
-    label: 'T -15m',
-    title: 'Pre-Race',
+    time: 0,
+    label: '0:00',
+    title: `${leg.name} Start`,
     isMajor: true,
-    bgColor: 'bg-neutral-500',
-    items: preRaceItems
+    bgColor: leg.name === 'Bike' ? 'bg-brand' : 'bg-orange-500',
+    items: []
   });
 
-  let cumTime = 0;
-  plan.forEach(leg => {
-    if (leg.durationMin === 0) return;
-    const startTime = cumTime;
-    const endTime = cumTime + leg.durationMin;
-    
-    // Leg Start
-    events.push({
-      time: startTime,
-      label: formatTime(startTime),
-      title: `${leg.name} Start`,
-      isMajor: true,
-      bgColor: leg.name === 'Swim' ? 'bg-cyan-500' : leg.name === 'Bike' ? 'bg-brand' : 'bg-orange-500',
-      items: !leg.canFuel ? [{ icon: leg.name === 'Swim' ? '🏊' : '⏱️', text: 'Pacing focus' }] : []
-    });
+  const drinkInterval = 20;
+  const saltInterval = 45;
+  const legEvents = new Map<number, any[]>();
 
-    if (leg.canFuel) {
-      const drinkInterval = 20;
-      const saltInterval = 45;
-      
-      const legEvents = new Map<number, any[]>();
+  for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
+     if (!legEvents.has(t)) legEvents.set(t, []);
+     legEvents.get(t)!.push({ icon: '💧', text: `${Math.round(leg.fluidMlPerH / (60/drinkInterval))}ml fluid` });
+  }
 
-      for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
+  if (leg.carbGPerH > 0) {
+    if (nutritionType === 'drink_mix') {
+       for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
          if (!legEvents.has(t)) legEvents.set(t, []);
-         legEvents.get(t)!.push({ icon: '💧', text: `${Math.round(leg.fluidMlPerH / (60/drinkInterval))}ml fluid` });
-      }
-
-      if (leg.carbGPerH > 0) {
-        const carbInterval = Math.max(10, Math.round((carbPerUnit / leg.carbGPerH) * 60 / 5) * 5);
-        for (let t = carbInterval; t < leg.durationMin - 5; t += carbInterval) {
-           if (!legEvents.has(t)) legEvents.set(t, []);
-           legEvents.get(t)!.push({ icon: '⚡', text: `1 ${unitName}` });
-        }
-      }
-
-      if (leg.sodiumMgPerH > 0) {
-        for (let t = saltInterval; t < leg.durationMin - 5; t += saltInterval) {
-           if (!legEvents.has(t)) legEvents.set(t, []);
-           legEvents.get(t)!.push({ icon: '💊', text: `1 salt cap` });
-        }
-      }
-      
-      if (leg.name === 'Run' && totalRaceMin > 180 && useCaffeine) {
-         const t = 15;
-         if (!legEvents.has(t)) legEvents.set(t, []);
-         // Put caffeine at the top if it aligns with another tick
-         legEvents.get(t)!.unshift({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
-      }
-
-      const sortedTicks = Array.from(legEvents.keys()).sort((a,b) => a - b);
-      
-      sortedTicks.forEach(tick => {
-        events.push({
-          time: startTime + tick,
-          label: formatTime(startTime + tick),
-          title: '',
-          isMajor: false,
-          bgColor: 'bg-neutral-800',
-          borderColor: leg.name === 'Bike' ? 'border-brand/40' : 'border-orange-500/40',
-          items: legEvents.get(tick)
-        });
-      });
+         legEvents.get(t)!.unshift({ icon: '⚡', text: `Sip ~${Math.round(leg.carbGPerH / (60/drinkInterval))}g carbs (mix)` });
+       }
+    } else {
+       const carbInterval = Math.max(10, Math.round((carbPerUnit / leg.carbGPerH) * 60 / 5) * 5);
+       for (let t = carbInterval; t < leg.durationMin - 5; t += carbInterval) {
+          if (!legEvents.has(t)) legEvents.set(t, []);
+          legEvents.get(t)!.push({ icon: '⚡', text: `1 ${unitName}` });
+       }
     }
-    cumTime = endTime;
+  }
+
+  if (leg.sodiumMgPerH > 0) {
+    for (let t = saltInterval; t < leg.durationMin - 5; t += saltInterval) {
+       if (!legEvents.has(t)) legEvents.set(t, []);
+       legEvents.get(t)!.push({ icon: '💊', text: `1 salt cap` });
+    }
+  }
+
+  if (leg.name === 'Run' && totalRaceMin > 180 && useCaffeine) {
+     const t = 15;
+     if (!legEvents.has(t)) legEvents.set(t, []);
+     legEvents.get(t)!.unshift({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
+  }
+
+  const sortedTicks = Array.from(legEvents.keys()).sort((a,b) => a - b);
+  
+  sortedTicks.forEach(tick => {
+    events.push({
+      time: tick,
+      label: formatTime(tick),
+      title: '',
+      isMajor: false,
+      bgColor: 'bg-neutral-800',
+      borderColor: leg.name === 'Bike' ? 'border-brand/40' : 'border-orange-500/40',
+      items: legEvents.get(tick)
+    });
   });
 
   events.push({
-    time: cumTime,
-    label: formatTime(cumTime),
-    title: 'Finish',
+    time: leg.durationMin,
+    label: formatTime(leg.durationMin),
+    title: `${leg.name} End`,
     isMajor: true,
-    bgColor: 'bg-green-500',
-    items: [
-      { icon: '🏁', text: 'Recovery' },
-      { icon: '🍗', text: `${Math.round(bodyMass * 0.3)}g protein` }
-    ]
+    bgColor: 'bg-neutral-700',
+    items: []
   });
 
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8 overflow-hidden relative">
+    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl overflow-hidden relative">
       <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-1 flex items-center gap-2">
         <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        Race Execution Timeline
+        {leg.name} Fueling Timeline
       </h3>
       <p className="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest font-mono">Scroll horizontally to view full plan ➔</p>
 
