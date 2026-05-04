@@ -326,122 +326,139 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
 
 // ─── Fueling Timeline Component ──────────────────────────────────────────────
 function FuelingTimeline({ plan, totalRaceMin, useCaffeine, bodyMass, totals, nutritionType }: { plan: LegPlan[], totalRaceMin: number, useCaffeine: boolean, bodyMass: number, totals: any, nutritionType: NutritionType }) {
-  let cumTime = 0;
   const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
-  const unitName = nutritionType === 'gels' ? 'gels' : nutritionType === 'bars' ? 'bars' : 'scoops';
+  const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   
+  const events: any[] = [];
+  
+  const preRaceItems = [
+    { icon: '💧', text: '300ml fluid' }
+  ];
+  if (useCaffeine) preRaceItems.push({ icon: '☕', text: `${Math.round(bodyMass * 3)}mg caffeine` });
+  preRaceItems.push({ icon: '⚡', text: `1 ${unitName}` });
+  
+  events.push({
+    time: -15,
+    label: 'T -15m',
+    title: 'Pre-Race',
+    isMajor: true,
+    bgColor: 'bg-neutral-500',
+    items: preRaceItems
+  });
+
+  let cumTime = 0;
+  plan.forEach(leg => {
+    if (leg.durationMin === 0) return;
+    const startTime = cumTime;
+    const endTime = cumTime + leg.durationMin;
+    
+    // Leg Start
+    events.push({
+      time: startTime,
+      label: formatTime(startTime),
+      title: `${leg.name} Start`,
+      isMajor: true,
+      bgColor: leg.name === 'Swim' ? 'bg-cyan-500' : leg.name === 'Bike' ? 'bg-brand' : 'bg-orange-500',
+      items: !leg.canFuel ? [{ icon: leg.name === 'Swim' ? '🏊' : '⏱️', text: 'Pacing focus' }] : []
+    });
+
+    if (leg.canFuel) {
+      let tick = startTime + 20;
+      let saltCounter = 0;
+      while (tick < endTime - 5) {
+        saltCounter += 20;
+        const items = [];
+        
+        const carbVal = (leg.carbGPerH / 3 / carbPerUnit).toFixed(1);
+        const fluidVal = Math.round(leg.fluidMlPerH / 3);
+        
+        items.push({ icon: '⚡', text: `${carbVal} ${unitName}${carbVal !== '1.0' ? 's' : ''}` });
+        items.push({ icon: '💧', text: `${fluidVal}ml fluid` });
+        
+        if (saltCounter >= 45) {
+          items.push({ icon: '💊', text: '1 salt cap' });
+          saltCounter = 0;
+        }
+        
+        if (leg.name === 'Run' && tick === startTime + 20 && totalRaceMin > 180 && useCaffeine) {
+          items.push({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
+        }
+
+        events.push({
+          time: tick,
+          label: formatTime(tick),
+          title: '',
+          isMajor: false,
+          bgColor: 'bg-neutral-800',
+          borderColor: leg.name === 'Bike' ? 'border-brand/40' : 'border-orange-500/40',
+          items
+        });
+
+        tick += 20;
+      }
+    }
+    cumTime = endTime;
+  });
+
+  events.push({
+    time: cumTime,
+    label: formatTime(cumTime),
+    title: 'Finish',
+    isMajor: true,
+    bgColor: 'bg-green-500',
+    items: [
+      { icon: '🏁', text: 'Recovery' },
+      { icon: '🍗', text: `${Math.round(bodyMass * 0.3)}g protein` }
+    ]
+  });
+
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
-      <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-6 flex items-center gap-2">
+    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8 overflow-hidden relative">
+      <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-1 flex items-center gap-2">
         <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         Race Execution Timeline
       </h3>
+      <p className="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest font-mono">Scroll horizontally to view full plan ➔</p>
 
-      {/* Proportional Bar */}
-      <div className="relative h-5 w-full rounded-full overflow-hidden mb-10 flex bg-black/50 border border-neutral-800">
-        {plan.map(leg => {
-          const pct = (leg.durationMin / totalRaceMin) * 100;
-          const color = leg.name === 'Swim' ? 'bg-cyan-500/80' : leg.name === 'Bike' ? 'bg-brand/80' : 'bg-orange-500/80';
-          if (pct === 0) return null;
-          return (
-            <div key={leg.name} style={{ width: `${pct}%` }} className={`${color} h-full border-r border-black/50 flex items-center justify-center relative`}>
-              {pct > 10 && <span className="text-[9px] font-bold text-black/80 uppercase tracking-widest relative z-10">{leg.name}</span>}
-              {/* Ticks overlay for fueling (every 20m) */}
-              {leg.canFuel && Array.from({ length: Math.floor(leg.durationMin / 20) }).map((_, i) => {
-                 const tickPct = ((i + 1) * 20 / leg.durationMin) * 100;
-                 return (
-                   <div key={i} style={{ left: `${tickPct}%` }} className="absolute top-0 bottom-0 w-px bg-white/20 flex flex-col items-center justify-center pointer-events-none">
-                     <span className="text-[7px] text-amber-900 bg-amber-400 px-0.5 rounded-sm shadow-sm absolute transform -translate-x-1/2 opacity-75">⚡</span>
-                   </div>
-                 )
-              })}
-            </div>
-          );
-        })}
-      </div>
+      {/* Horizontal Gradient Fades */}
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-neutral-900 to-transparent pointer-events-none z-20" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-neutral-900 to-transparent pointer-events-none z-20" />
 
-      {/* Vertical Timeline */}
-      <div className="relative border-l-2 border-neutral-800 ml-3 md:ml-6 space-y-8 pb-4">
-        
-        {/* T-15 */}
-        <TimelineNode time="T -0:15" title="Pre-Race Prep" color="bg-neutral-500" textColor="text-neutral-400">
-          <p className="text-xs text-neutral-400">
-            Drink <strong className="text-blue-400">300ml fluid</strong>. 
-            {useCaffeine && <span> Take <strong className="text-green-400">{Math.round(bodyMass * 3)}mg caffeine</strong>.</span>}
-            <br />Eat 1 energy gel 5 mins before start (if gut trained).
-          </p>
-        </TimelineNode>
+      <div className="overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-neutral-700 scrollbar-track-transparent snap-x snap-mandatory">
+        <div className="flex min-w-max items-start pt-2 px-4">
+          {events.map((ev, i) => (
+            <div key={i} className="relative flex flex-col items-center w-32 sm:w-40 flex-shrink-0 snap-start">
+              {/* Horizontal Line connecting nodes */}
+              {i < events.length - 1 && (
+                <div className="absolute top-[40px] left-1/2 w-full h-0.5 bg-neutral-800 -z-10" />
+              )}
+              
+              {/* Time label above */}
+              <div className="h-10 flex flex-col items-center justify-end mb-2">
+                {ev.title && <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-white mb-0.5 text-center px-1 leading-tight">{ev.title}</span>}
+                <span className={`text-[9px] sm:text-[10px] font-mono tracking-widest ${ev.isMajor ? 'text-brand' : 'text-neutral-500'}`}>
+                  {ev.label}
+                </span>
+              </div>
 
-        {plan.map(leg => {
-          const startTime = cumTime;
-          cumTime += leg.durationMin;
-          const isSwim = !leg.canFuel;
-          
-          if (leg.durationMin === 0) return null;
+              {/* Node Dot */}
+              <div className={`w-3.5 h-3.5 rounded-full border-[3px] border-neutral-900 ${ev.bgColor} z-10 mb-3 shadow-[0_0_8px_rgba(0,0,0,0.5)] transition-transform hover:scale-125`} />
 
-          const dotColor = leg.name === 'Swim' ? 'bg-cyan-500' : leg.name === 'Bike' ? 'bg-brand' : 'bg-orange-500';
-          const txtColor = leg.name === 'Swim' ? 'text-cyan-500' : leg.name === 'Bike' ? 'text-brand' : 'text-orange-500';
-
-          return (
-            <TimelineNode 
-              key={leg.name}
-              time={`T +${formatTime(startTime)}`} 
-              title={`${leg.name} Start`} 
-              color={dotColor}
-              textColor={txtColor}
-            >
-              {isSwim ? (
-                <p className="text-xs text-neutral-500 italic">No fueling. Focus on pacing and sighting.</p>
-              ) : (
-                <div className="space-y-3 mt-2">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400 font-mono tracking-wide">Target: {leg.carbGPerH}g Carbs/h</span>
-                    <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] text-blue-400 font-mono tracking-wide">Target: {leg.fluidMlPerH}ml Fluid/h</span>
-                  </div>
-                  
-                  <div className="bg-black/30 rounded-lg p-3 border border-neutral-800 text-xs text-neutral-400 space-y-2.5">
-                    <div className="flex gap-3">
-                      <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 20m</span>
-                      <span>Drink <strong className="text-blue-400">~{Math.round(leg.fluidMlPerH / 3)}ml</strong> fluid + <strong className="text-amber-400">~{Math.round(leg.carbGPerH / 3)}g</strong> carbs <span className="text-neutral-500">(approx {(leg.carbGPerH/3/carbPerUnit).toFixed(1)} {unitName})</span></span>
+              {/* Content Box */}
+              {ev.items.length > 0 && (
+                <div className={`w-[90%] bg-black/50 border ${ev.isMajor ? 'border-neutral-700 bg-neutral-800/50' : ev.borderColor || 'border-neutral-800'} rounded-xl p-2.5 sm:p-3 flex flex-col gap-2 shadow-xl`}>
+                  {ev.items.map((item: any, idx: number) => (
+                    <div key={idx} className="flex items-start gap-1.5 text-[10px] sm:text-[11px] text-neutral-300">
+                      <span className="flex-shrink-0 text-xs sm:text-sm leading-none mt-0.5">{item.icon}</span>
+                      <span className="leading-tight font-medium">{item.text}</span>
                     </div>
-                    <div className="flex gap-3">
-                      <span className="text-neutral-500 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">Every 45m</span>
-                      <span>Take 1 salt capsule (<strong className="text-rose-400">{Math.round(leg.sodiumMgPerH * 0.75)}mg sodium</strong>)</span>
-                    </div>
-                    {useCaffeine && leg.name === 'Run' && totalRaceMin > 180 && (
-                      <div className="flex gap-3 mt-2 pt-2 border-t border-neutral-800/50">
-                        <span className="text-green-500/70 w-16 flex-shrink-0 font-mono text-[10px] uppercase pt-0.5">T2/Early</span>
-                        <span className="text-green-400 font-semibold">Take {Math.round(bodyMass * 1.5)}mg caffeine top-up</span>
-                      </div>
-                    )}
-                  </div>
+                  ))}
                 </div>
               )}
-            </TimelineNode>
-          );
-        })}
-
-        <TimelineNode time={`T +${formatTime(totalRaceMin)}`} title="Finish Line" color="bg-green-500" textColor="text-green-400">
-          <p className="text-xs text-neutral-400">Great job! Start recovery hydration and <strong className="text-white">{Math.round(bodyMass * 0.3)}g of protein</strong> within 30 minutes.</p>
-        </TimelineNode>
-
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
-
-function TimelineNode({ time, title, color, textColor, children }: { time: string, title: string, color: string, textColor: string, children: React.ReactNode }) {
-  return (
-    <div className="relative pl-6 md:pl-8">
-      {/* Node Dot */}
-      <div className={`absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full ${color} shadow-[0_0_8px_currentColor]`} />
-      
-      {/* Content */}
-      <div className="mb-1 flex items-center gap-3">
-        <span className={`text-[10px] font-bold font-mono tracking-widest ${textColor}`}>{time}</span>
-        <h4 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat">{title}</h4>
-      </div>
-      <div>{children}</div>
     </div>
   );
 }
