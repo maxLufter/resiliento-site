@@ -3,9 +3,9 @@ import NutritionCalculator from './NutritionCalculator';
 import { Zap } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Race Nutrition Calculator — Carbs, Sodium, Caffeine & Fluid Plan | RESILIENTO',
+  title: 'Race Nutrition Planner — Carbs, Sodium, Caffeine & Fluid Plan | RESILIENTO',
   description: 'Evidence-based race nutrition planner for triathlon, cycling, and running. Calculate carbohydrate, sodium, fluid, and caffeine targets based on your event distance, body mass, gut tolerance, and conditions.',
-  keywords: 'race nutrition calculator, triathlon nutrition plan, ironman nutrition strategy, carb intake calculator, race fueling plan, sodium electrolyte calculator',
+  keywords: 'race nutrition planner, triathlon nutrition plan, ironman nutrition strategy, carb intake calculator, race fueling plan, sodium electrolyte calculator',
 };
 
 export default function NutritionPage() {
@@ -15,7 +15,7 @@ export default function NutritionPage() {
         <div className="flex items-center justify-center gap-4 mb-6">
           <Zap size={40} className="text-brand" strokeWidth={2} />
           <h1 className="text-4xl font-bold tracking-tight text-white uppercase border-b-2 border-brand/30 pb-4 inline-block font-montserrat m-0">
-            Race <span className="text-brand">Nutrition</span> Calculator
+            Race <span className="text-brand">Nutrition</span> Planner
           </h1>
         </div>
         <p className="text-lg leading-8 text-neutral-300 font-inter">
