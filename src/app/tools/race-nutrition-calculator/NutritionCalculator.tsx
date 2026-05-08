@@ -230,7 +230,7 @@ export default function NutritionCalculator() {
           <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-2"><span className="text-brand">1.</span> Event Profile</h2>
           
           <div className="mb-6">
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Race Type</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-3">Race Type</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {(Object.entries(RACE_PRESETS) as [RaceType, typeof RACE_PRESETS[RaceType]][]).map(([key, val]) => (
                 <button key={key} onClick={() => handleRaceChange(key)}
@@ -242,7 +242,7 @@ export default function NutritionCalculator() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Expected Leg Durations (minutes)</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-3">Expected Leg Durations (minutes)</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {preset.legs.map((leg, i) => (
                 <div key={leg.name}>
@@ -252,7 +252,7 @@ export default function NutritionCalculator() {
                 </div>
               ))}
             </div>
-            <p className="text-[10px] text-neutral-600 mt-2">Total race: <span className="text-neutral-400 font-mono">{Math.floor(totalRaceMin / 60)}h {totalRaceMin % 60}m</span></p>
+            <p className="text-xs text-neutral-600 mt-2">Total race: <span className="text-neutral-400 font-mono">{Math.floor(totalRaceMin / 60)}h {totalRaceMin % 60}m</span></p>
           </div>
         </div>
 
@@ -262,7 +262,7 @@ export default function NutritionCalculator() {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
               <div className="relative">
                 <input type="number" value={bodyMass} onChange={e => setBodyMass(Number(e.target.value) || 60)}
                   className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
@@ -271,11 +271,11 @@ export default function NutritionCalculator() {
             </div>
 
             <div className="col-span-2 lg:col-span-2">
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Conditions</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Conditions</label>
               <div className="flex gap-1 h-10">
                 {(['cool', 'moderate', 'hot'] as HeatLevel[]).map(h => (
                   <button key={h} onClick={() => setHeat(h)}
-                    className={`flex-1 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                    className={`flex-1 text-xs font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
                     {h}
                   </button>
                 ))}
@@ -283,10 +283,10 @@ export default function NutritionCalculator() {
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
               <div className="flex gap-2">
                 <button onClick={() => setUseCaffeine(!useCaffeine)}
-                  className={`px-4 h-10 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                  className={`px-4 h-10 text-xs font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
                   {useCaffeine ? 'Yes' : 'No'}
                 </button>
                 {useCaffeine && (
@@ -299,7 +299,7 @@ export default function NutritionCalculator() {
             </div>
 
             <div className="col-span-2 lg:col-span-2">
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
               <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
                 className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -307,7 +307,7 @@ export default function NutritionCalculator() {
             </div>
             
             <div className="col-span-2 lg:col-span-2">
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
               <select value={strategy} onChange={e => setStrategy(e.target.value as FuelingStrategy)}
                 className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(STRATEGY_LABELS) as [FuelingStrategy, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -322,14 +322,14 @@ export default function NutritionCalculator() {
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
               <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
                 className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Bottles Setup</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Bottles Setup</label>
               <div className="flex gap-2">
                 <input type="number" value={bikeBottleCount} onChange={e => setBikeBottleCount(Number(e.target.value) || 1)}
                     className="w-16 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
@@ -350,7 +350,7 @@ export default function NutritionCalculator() {
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
               <select value={runFuelType} onChange={e => setRunFuelType(e.target.value as NutritionType)}
                 className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -359,46 +359,46 @@ export default function NutritionCalculator() {
           </div>
 
           <div className="pt-6 border-t border-neutral-800/50">
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-4">Product Nutrition Profiles (Carbs & Sodium per unit)</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400 mb-4">Product Nutrition Profiles (Carbs & Sodium per unit)</label>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Gel</span>
+                <span className="text-xs text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Gel</span>
                 <div className="flex gap-2">
                   <div className="w-1/2 relative">
                     <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
-                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                    <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">g</span>
                   </div>
                   <div className="w-1/2 relative">
                     <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
-                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                    <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">mg</span>
                   </div>
                 </div>
               </div>
               <div>
-                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Drink Scoop</span>
+                <span className="text-xs text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Drink Scoop</span>
                 <div className="flex gap-2">
                   <div className="w-1/2 relative">
                     <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
-                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                    <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">g</span>
                   </div>
                   <div className="w-1/2 relative">
                     <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
-                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                    <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">mg</span>
                   </div>
                 </div>
               </div>
               <div>
-                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Bar / Solid</span>
+                <span className="text-xs text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Bar / Solid</span>
                 <div className="relative w-full">
                   <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
-                  <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                  <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">g</span>
                 </div>
               </div>
               <div>
-                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
+                <span className="text-xs text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
                 <div className="relative w-full">
                   <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
-                  <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                  <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">mg</span>
                 </div>
               </div>
             </div>
@@ -470,9 +470,9 @@ export default function NutritionCalculator() {
       {/* ── Practical Guide ─────────────────────────────────────────────── */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-4">Practical Fueling Guide</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 text-xs text-neutral-400">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 text-sm text-neutral-400">
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
-            <span className="text-brand font-bold uppercase tracking-widest text-[10px] block mb-2">Pre-Race (Morning)</span>
+            <span className="text-brand font-bold uppercase tracking-widest text-xs block mb-2">Pre-Race (Morning)</span>
             <ul className="space-y-1.5">
               <li>• Breakfast: <span className="text-neutral-300">1.5 - 2.5g carbs / kg</span> (~{Math.round(bodyMass * 2)}g) 2-3h prior</li>
               <li>• Fluid: <span className="text-neutral-300">500-750mL</span> with electrolytes upon waking</li>
@@ -480,7 +480,7 @@ export default function NutritionCalculator() {
             </ul>
           </div>
             <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
-            <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Carbohydrate Products</span>
+            <span className="text-amber-400 font-bold uppercase tracking-widest text-xs block mb-2">Carbohydrate Products</span>
             <ul className="space-y-1.5">
               {plan.filter(l => l.canFuel && l.carbTotal > 0).map(leg => {
                 const fType = leg.name === 'Bike' ? bikeFuelType : runFuelType;
@@ -501,7 +501,7 @@ export default function NutritionCalculator() {
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
-            <span className="text-blue-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Hydration Strategy</span>
+            <span className="text-blue-400 font-bold uppercase tracking-widest text-xs block mb-2">Hydration Strategy</span>
             <ul className="space-y-1.5">
               <li>• Target range: <span className="text-neutral-300">500–750 ml/h</span>. Start at 600 ml/h.</li>
               <li>• Bike: <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span></li>
@@ -510,16 +510,16 @@ export default function NutritionCalculator() {
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
-            <span className="text-rose-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Sodium / Electrolytes</span>
+            <span className="text-rose-400 font-bold uppercase tracking-widest text-xs block mb-2">Sodium / Electrolytes</span>
             <ul className="space-y-1.5">
               <li>• Total required: <span className="text-neutral-300">{totals.sodium} mg</span></li>
               <li>• Already in products: <span className="text-neutral-300">{sodiumAccounting.sodiumFromProducts} mg</span></li>
               <li>• Additional needed: <span className="text-neutral-300">{sodiumAccounting.additionalSodium} mg</span> (~{sodiumAccounting.additionalCaps} capsules)</li>
-              <li className="text-neutral-600 pt-1 text-[9px] italic leading-tight">Supports replacement of sweat sodium and fluid retention. May reduce risk of sodium depletion in long/hot races, but does not guarantee cramp prevention.</li>
+              <li className="text-neutral-600 pt-1 text-[10px] italic leading-tight">Supports replacement of sweat sodium and fluid retention. May reduce risk of sodium depletion in long/hot races, but does not guarantee cramp prevention.</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
-            <span className="text-green-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Caffeine Timing</span>
+            <span className="text-green-400 font-bold uppercase tracking-widest text-xs block mb-2">Caffeine Timing</span>
             {useCaffeine ? (
               <ul className="space-y-1.5">
                 <li>• Total dose: <span className="text-neutral-300">{totals.caffeine} mg</span> ({(totals.caffeine / bodyMass).toFixed(1)} mg/kg)</li>
@@ -535,7 +535,7 @@ export default function NutritionCalculator() {
       </div>
 
       {/* ── Evidence disclaimer ─────────────────────────────────────────── */}
-      <p className="text-[10px] text-neutral-600 text-center px-8">
+      <p className="text-xs text-neutral-600 text-center px-8">
         Targets derived from Jeukendrup (2014), ACSM Position Stand, Precision Hydration, and Burke (2008) caffeine meta-analysis. Individual needs vary — always practice your race nutrition in training.
       </p>
     </div>
@@ -547,9 +547,9 @@ function ResultCard({ label, value, sub, color }: { label: string; value: string
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 text-center shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-0.5 bg-current opacity-30" style={{ color: 'inherit' }}></div>
-      <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 block mb-1">{label}</span>
+      <span className="text-xs font-bold uppercase tracking-widest text-neutral-500 block mb-1">{label}</span>
       <div className={`text-2xl font-bold font-mono ${color}`}>{value}</div>
-      <span className="text-[10px] text-neutral-600 block mt-1">{sub}</span>
+      <span className="text-xs text-neutral-600 block mt-1">{sub}</span>
     </div>
   );
 }
@@ -557,9 +557,9 @@ function ResultCard({ label, value, sub, color }: { label: string; value: string
 function LegStat({ label, rate, total, color }: { label: string; rate: string; total: string; color: string }) {
   return (
     <div className="px-4 py-4 text-center">
-      <span className={`text-[10px] font-bold uppercase tracking-widest ${color} block mb-1`}>{label}</span>
-      <div className="text-sm font-mono text-white">{rate}</div>
-      {total && <span className="text-[10px] text-neutral-600">{total}</span>}
+      <span className={`text-xs font-bold uppercase tracking-widest ${color} block mb-1`}>{label}</span>
+      <div className="text-base font-mono text-white">{rate}</div>
+      {total && <span className="text-xs text-neutral-600">{total}</span>}
     </div>
   );
 }
@@ -685,7 +685,7 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
         <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         {leg.name} Fueling Timeline
       </h3>
-      <p className="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest font-mono">Scroll horizontally to view full plan ➔</p>
+      <p className="text-xs text-neutral-500 mb-6 uppercase tracking-widest font-mono">Scroll horizontally to view full plan ➔</p>
 
       {/* Horizontal Gradient Fades */}
       <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-neutral-900 to-transparent pointer-events-none z-20" />
@@ -702,8 +702,8 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
               
               {/* Time label above */}
               <div className="h-10 flex flex-col items-center justify-end mb-2">
-                {ev.title && <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-white mb-0.5 text-center px-1 leading-tight">{ev.title}</span>}
-                <span className={`text-[9px] sm:text-[10px] font-mono tracking-widest ${ev.isMajor ? 'text-brand' : 'text-neutral-500'}`}>
+                {ev.title && <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white mb-0.5 text-center px-1 leading-tight">{ev.title}</span>}
+                <span className={`text-[10px] sm:text-xs font-mono tracking-widest ${ev.isMajor ? 'text-brand' : 'text-neutral-500'}`}>
                   {ev.label}
                 </span>
               </div>
@@ -715,8 +715,8 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
               {ev.items.length > 0 && (
                 <div className={`w-[90%] bg-black/50 border ${ev.isMajor ? 'border-neutral-700 bg-neutral-800/50' : ev.borderColor || 'border-neutral-800'} rounded-xl p-2.5 sm:p-3 flex flex-col gap-2 shadow-xl`}>
                   {ev.items.map((item: any, idx: number) => (
-                    <div key={idx} className="flex items-start gap-1.5 text-[10px] sm:text-[11px] text-neutral-300">
-                      <span className="flex-shrink-0 text-xs sm:text-sm leading-none mt-0.5">{item.icon}</span>
+                    <div key={idx} className="flex items-start gap-1.5 text-xs sm:text-sm text-neutral-300">
+                      <span className="flex-shrink-0 text-sm sm:text-base leading-none mt-0.5">{item.icon}</span>
                       <span className="leading-tight font-medium">{item.text}</span>
                     </div>
                   ))}
