@@ -66,6 +66,8 @@ export default function NutritionCalculator() {
   const [useCaffeine, setUseCaffeine] = useState<boolean>(true);
   const [bikeFuelType, setBikeFuelType] = useState<NutritionType>('drink_mix');
   const [runFuelType, setRunFuelType] = useState<NutritionType>('gels');
+  const [bikeBottleCount, setBikeBottleCount] = useState<number>(2);
+  const [bikeBottleVolume, setBikeBottleVolume] = useState<number>(750);
   const [legDurations, setLegDurations] = useState<number[]>([]);
 
   const preset = RACE_PRESETS[raceType];
@@ -109,7 +111,7 @@ export default function NutritionCalculator() {
       let cafMg = 0;
       if (useCaffeine && !caffeineUsed) {
         cafMg = caffeineDose;
-        cafNote = leg.name === 'Bike' ? `${cafMg} mg — take in first 30 min of bike` : `${cafMg} mg — take 15 min before start`;
+        cafNote = `${cafMg} mg — take 30-45 min before race start`;
         caffeineUsed = true;
       } else if (useCaffeine && isRun && totalRaceMin > 180) {
         cafMg = Math.round(caffeineDose * 0.5);
@@ -206,13 +208,34 @@ export default function NutritionCalculator() {
         </div>
 
         {/* Fueling Preferences Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-800/50">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-neutral-800/50">
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
             <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
               className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
               {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
+          </div>
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Bottles Setup</label>
+            <div className="flex gap-2">
+              <input type="number" value={bikeBottleCount} onChange={e => setBikeBottleCount(Number(e.target.value) || 1)}
+                  className="w-16 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+              <div className="relative flex-1">
+                <select value={bikeBottleVolume} onChange={e => setBikeBottleVolume(Number(e.target.value) || 500)}
+                  className="w-full bg-black border border-neutral-800 rounded-lg pl-3 pr-6 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer appearance-none">
+                  <option value={500}>500 mL</option>
+                  <option value={600}>600 mL</option>
+                  <option value={700}>700 mL</option>
+                  <option value={750}>750 mL</option>
+                  <option value={900}>900 mL</option>
+                  <option value={1000}>1000 mL</option>
+                </select>
+                <div className="absolute right-2 top-0 bottom-0 flex items-center pointer-events-none">
+                  <svg className="w-3 h-3 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </div>
+            </div>
           </div>
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
@@ -264,6 +287,8 @@ export default function NutritionCalculator() {
             useCaffeine={useCaffeine} 
             bodyMass={bodyMass} 
             nutritionType={leg.name === 'Bike' ? bikeFuelType : runFuelType} 
+            bikeBottleCount={bikeBottleCount}
+            bikeBottleVolume={bikeBottleVolume}
           />
         ))}
       </div>
@@ -271,15 +296,32 @@ export default function NutritionCalculator() {
       {/* ── Practical Guide ─────────────────────────────────────────────── */}
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mt-8">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest font-montserrat mb-4">Practical Fueling Guide</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-neutral-400">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 text-xs text-neutral-400">
+          <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
+            <span className="text-brand font-bold uppercase tracking-widest text-[10px] block mb-2">Pre-Race (Morning)</span>
+            <ul className="space-y-1.5">
+              <li>• Breakfast: <span className="text-neutral-300">1.5 - 2.5g carbs / kg</span> (~{Math.round(bodyMass * 2)}g) 2-3h prior</li>
+              <li>• Fluid: <span className="text-neutral-300">500-750mL</span> with electrolytes upon waking</li>
+              <li>• Primer: <span className="text-neutral-300">1 gel</span> 15 mins before swim start</li>
+            </ul>
+          </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Carbohydrate Products</span>
             <ul className="space-y-1.5">
               {plan.filter(l => l.canFuel && l.carbTotal > 0).map(leg => {
                 const fType = leg.name === 'Bike' ? bikeFuelType : runFuelType;
-                const cPU = fType === 'gels' ? 25 : fType === 'bars' ? 40 : 30;
-                const uName = fType === 'gels' ? 'gels' : fType === 'bars' ? 'bars' : 'scoops mix';
-                return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{Math.ceil(leg.carbTotal / cPU)} {uName}</span></li>;
+                if (fType === 'drink_mix' && leg.name === 'Bike') {
+                  const carbsPerBottle = Math.round(leg.carbTotal / Math.max(1, bikeBottleCount));
+                  return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span> (Dissolve ~{carbsPerBottle}g carbs/bottle)</li>;
+                } else if (fType === 'drink_mix') {
+                  const bottles = Math.max(1, Math.ceil(leg.fluidTotal / 600));
+                  const carbsPerBottle = Math.round(leg.carbTotal / bottles);
+                  return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{bottles} × 600mL bottles</span> (Dissolve ~{carbsPerBottle}g carbs/bottle)</li>;
+                } else {
+                  const cPU = fType === 'gels' ? 25 : 40;
+                  const uName = fType === 'gels' ? 'gels' : 'bars';
+                  return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{Math.ceil(leg.carbTotal / cPU)} {uName}</span></li>;
+                }
               })}
               <li className="text-neutral-600 pt-1 italic">Use glucose:fructose 2:1 ratio for {'>'} 60g/h</li>
             </ul>
@@ -287,10 +329,10 @@ export default function NutritionCalculator() {
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-blue-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Hydration Strategy</span>
             <ul className="space-y-1.5">
-              <li>• <span className="text-neutral-300">{Math.ceil(totals.fluid / 500)} × 500mL bottles</span></li>
+              <li>• Bike: <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span></li>
+              {plan.some(l => l.name === 'Run' && l.canFuel) && <li>• Run: <span className="text-neutral-300">{((plan.find(l => l.name === 'Run')?.fluidTotal || 0) / 1000).toFixed(1)}L</span> via aid stations</li>}
               <li>• Drink every <span className="text-neutral-300">15-20 minutes</span>, not in large gulps</li>
-              <li>• {heat === 'hot' ? 'Hot conditions: Pre-load 500mL in final 2h before start' : 'Start hydrating 2-3h before race'}</li>
-              <li>• Add {Math.round(totals.sodium / Math.ceil(totals.fluid / 500))} mg sodium per bottle</li>
+              <li>• Add {Math.round((plan.find(l => l.name === 'Bike')?.sodiumTotal || 0) / Math.max(1, bikeBottleCount))} mg sodium per bike bottle</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
@@ -306,7 +348,7 @@ export default function NutritionCalculator() {
             {useCaffeine ? (
               <ul className="space-y-1.5">
                 <li>• Total dose: <span className="text-neutral-300">{totals.caffeine} mg</span> ({(totals.caffeine / bodyMass).toFixed(1)} mg/kg)</li>
-                <li>• Primary dose: <span className="text-neutral-300">30-45 min before bike leg</span></li>
+                <li>• Primary dose: <span className="text-neutral-300">30-45 min before race start</span></li>
                 {totalRaceMin > 180 && <li>• Top-up: <span className="text-neutral-300">Early in run leg</span> (half dose)</li>}
                 <li className="text-neutral-600 pt-1 italic">Practice in training — never try new dosing on race day</li>
               </ul>
@@ -347,8 +389,7 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
   );
 }
 
-// ─── Fueling Timeline Component ──────────────────────────────────────────────
-function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType }) {
+function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number }) {
   const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
   const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   
@@ -367,19 +408,40 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
   const drinkInterval = 20;
   const saltInterval = 45;
   const legEvents = new Map<number, any[]>();
+  
+  let fluidPerInterval = Math.round(leg.fluidMlPerH / (60/drinkInterval));
+  let mixPerInterval = fluidPerInterval;
+  let waterPerInterval = 0;
+
+  if (leg.name === 'Bike' && nutritionType === 'drink_mix' && bikeBottleCount && bikeBottleVolume) {
+     const totalMixVol = bikeBottleCount * bikeBottleVolume;
+     const mixMlPerH = totalMixVol / (leg.durationMin / 60);
+     mixPerInterval = Math.round(mixMlPerH / (60/drinkInterval));
+     if (fluidPerInterval > mixPerInterval) {
+         waterPerInterval = fluidPerInterval - mixPerInterval;
+     }
+  }
+
+  const sipsMix = Math.max(1, Math.round(mixPerInterval / 35));
+  const sipsWater = Math.max(1, Math.round(waterPerInterval / 35));
+  const sipsTotal = Math.max(1, Math.round(fluidPerInterval / 35));
 
   for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
      if (!legEvents.has(t)) legEvents.set(t, []);
-     legEvents.get(t)!.push({ icon: '💧', text: `${Math.round(leg.fluidMlPerH / (60/drinkInterval))}ml fluid` });
+     
+     if (leg.carbGPerH > 0 && nutritionType === 'drink_mix') {
+       if (waterPerInterval > 0) {
+         legEvents.get(t)!.unshift({ icon: '💧⚡', text: `Take ~${sipsMix} sips mix (${mixPerInterval}ml) & ~${sipsWater} sips water (${waterPerInterval}ml)` });
+       } else {
+         legEvents.get(t)!.unshift({ icon: '💧⚡', text: `Take ~${sipsMix} sips mixed bottle (${mixPerInterval}ml)` });
+       }
+     } else if (leg.fluidMlPerH > 0) {
+       legEvents.get(t)!.push({ icon: '💧', text: `Take ~${sipsTotal} sips fluid (${fluidPerInterval}ml)` });
+     }
   }
 
   if (leg.carbGPerH > 0) {
-    if (nutritionType === 'drink_mix') {
-       for (let t = drinkInterval; t < leg.durationMin - 5; t += drinkInterval) {
-         if (!legEvents.has(t)) legEvents.set(t, []);
-         legEvents.get(t)!.unshift({ icon: '⚡', text: `Sip ~${Math.round(leg.carbGPerH / (60/drinkInterval))}g carbs (mix)` });
-       }
-    } else {
+    if (nutritionType !== 'drink_mix') {
        const carbInterval = Math.max(10, Math.round((carbPerUnit / leg.carbGPerH) * 60 / 5) * 5);
        for (let t = carbInterval; t < leg.durationMin - 5; t += carbInterval) {
           if (!legEvents.has(t)) legEvents.set(t, []);
