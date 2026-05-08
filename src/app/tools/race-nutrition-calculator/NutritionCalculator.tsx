@@ -99,7 +99,6 @@ export default function NutritionCalculator() {
   const [sodiumPerGel, setSodiumPerGel] = useState<number>(50);
   const [sodiumPerScoop, setSodiumPerScoop] = useState<number>(300);
   const [sodiumPerCap, setSodiumPerCap] = useState<number>(215);
-  const [caffeinePerGel, setCaffeinePerGel] = useState<number>(0);
 
   const preset = RACE_PRESETS[raceType];
   const durations = preset.legs.map((leg, i) => legDurations[i] ?? leg.defaultMin);
@@ -199,33 +198,46 @@ export default function NutritionCalculator() {
     });
     // Carrying capacity
     const bikeLeg = plan.find(l => l.name === 'Bike' && l.canFuel);
-    if (bikeLeg && bikeBottleCount * bikeBottleVolume < bikeLeg.fluidTotal * 0.7) {
-      w.push({ type: 'caution', text: `Your ${bikeBottleCount} bottles hold ${bikeBottleCount * bikeBottleVolume}mL but your plan calls for ${bikeLeg.fluidTotal}mL. Plan for aid station refills or add more bottles.` });
+    if (bikeLeg && bikeBottleCount > 0 && bikeBottleVolume > 0) {
+      const capVol = bikeBottleCount * bikeBottleVolume;
+      const targetVol = bikeLeg.fluidTotal;
+      if (targetVol > 0) {
+        const ratio = capVol / targetVol;
+        if (ratio < 0.7) {
+          w.push({ type: 'danger', text: `Your ${bikeBottleCount} bottles hold ${capVol}mL but your plan calls for ${targetVol}mL. Serious under-capacity — plan for multiple aid station refills.` });
+        } else if (ratio < 0.85) {
+          w.push({ type: 'caution', text: `Your ${bikeBottleCount} bottles hold ${capVol}mL (target: ${targetVol}mL). Refill required.` });
+        } else if (ratio < 1.0) {
+          w.push({ type: 'info', text: `Your ${bikeBottleCount} bottles hold ${capVol}mL (target: ${targetVol}mL). Small shortfall — refill optional or use aid station.` });
+        }
+      }
     }
     return w;
   }, [plan, totals, bodyMass, useCaffeine, bikeFuelType, bikeBottleCount, bikeBottleVolume]);
 
-  // --- Sodium accounting (P0: prevent double-counting) ---
   const sodiumAccounting = useMemo(() => {
     const bikeLeg = plan.find(l => l.name === 'Bike' && l.canFuel);
     const runLeg = plan.find(l => l.name === 'Run' && l.canFuel);
 
     const getLegCaps = (leg: LegPlan | undefined, fuelType: NutritionType) => {
-      if (!leg) return 0;
+      if (!leg) return { productSodium: 0, caps: 0 };
       let prodSodium = 0;
       if (fuelType === 'drink_mix') {
         prodSodium = Math.ceil(leg.carbTotal / carbsPerScoop) * sodiumPerScoop;
       } else if (fuelType === 'gels') {
         prodSodium = Math.ceil(leg.carbTotal / carbsPerGel) * sodiumPerGel;
       }
-      return Math.max(0, Math.round((leg.sodiumTotal - prodSodium) / sodiumPerCap));
+      const deficit = Math.max(0, leg.sodiumTotal - prodSodium);
+      const caps = deficit > 0 ? Math.ceil(deficit / sodiumPerCap) : 0;
+      return { productSodium: prodSodium, caps };
     };
 
-    const bikeCaps = getLegCaps(bikeLeg, bikeFuelType);
-    const runCaps = getLegCaps(runLeg, runFuelType);
-    const additionalCaps = bikeCaps + runCaps;
+    const bikeSodium = getLegCaps(bikeLeg, bikeFuelType);
+    const runSodium = getLegCaps(runLeg, runFuelType);
+    const totalProductSodium = bikeSodium.productSodium + runSodium.productSodium;
+    const additionalCaps = bikeSodium.caps + runSodium.caps;
     
-    return { sodiumFromProducts: totals.sodium - (additionalCaps * sodiumPerCap), additionalCaps, bikeCaps, runCaps };
+    return { sodiumFromProducts: totalProductSodium, additionalCaps, bikeCaps: bikeSodium.caps, runCaps: runSodium.caps };
   }, [plan, totals, bikeFuelType, runFuelType, carbsPerGel, carbsPerScoop, sodiumPerGel, sodiumPerScoop, sodiumPerCap]);
 
   return (
@@ -511,9 +523,9 @@ export default function NutritionCalculator() {
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-blue-400 font-bold uppercase tracking-widest text-xs block mb-2">Hydration Strategy</span>
             <ul className="space-y-1.5">
-              <li>• Target range: <span className="text-neutral-300">500–750 ml/h</span>. Start at 600 ml/h.</li>
+              <li>• Target range: <span className="text-neutral-300">{FLUID_RANGE[heat][0]}–{FLUID_RANGE[heat][1]} ml/h</span>. Current plan starts at {avg(FLUID_RANGE[heat])} ml/h.</li>
               <li>• Bike: <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span></li>
-              {plan.some(l => l.name === 'Run' && l.canFuel) && <li>• Run: <span className="text-neutral-300">{((plan.find(l => l.name === 'Run')?.fluidTotal || 0) / 1000).toFixed(1)}L</span> via aid stations</li>}
+              {plan.some(l => l.name === 'Run' && l.canFuel) && <li>• Run: <span className="text-neutral-300">{((plan.find(l => l.name === 'Run')?.fluidTotal || 0) / 1000).toFixed(1)}L</span> via aid stations (target: {Math.round(avg(FLUID_RANGE[heat]) * 0.85)} ml/h)</li>}
               <li>• Adjust down if stomach sloshing; adjust up if hot/high sweat rate.</li>
             </ul>
           </div>
@@ -598,7 +610,8 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
 
   if (leg.name === 'Bike' && nutritionType === 'drink_mix' && bikeBottleCount && bikeBottleVolume) {
      const totalMixVol = bikeBottleCount * bikeBottleVolume;
-     const mixMlPerH = totalMixVol / (leg.durationMin / 60);
+     const plannedDrinkMl = Math.min(totalMixVol, leg.fluidTotal);
+     const mixMlPerH = plannedDrinkMl / (leg.durationMin / 60);
      mixPerInterval = Math.round(mixMlPerH / (60/drinkInterval));
      if (fluidPerInterval > mixPerInterval) {
          waterPerInterval = fluidPerInterval - mixPerInterval;
@@ -697,7 +710,10 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
         <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         {leg.name} Fueling Timeline
       </h3>
-      <p className="text-xs text-neutral-500 mb-6 uppercase tracking-widest font-mono">Scroll horizontally to view full plan ➔</p>
+      {leg.name === 'Bike' && nutritionType === 'drink_mix' && !!bikeBottleCount && !!bikeBottleVolume && (bikeBottleCount * bikeBottleVolume > leg.fluidTotal) && (
+        <p className="text-[10px] sm:text-xs text-amber-400 mb-2 italic px-1">Note: Do not necessarily finish all bottles; target is {(leg.fluidTotal/1000).toFixed(1)}L of the {((bikeBottleCount * bikeBottleVolume)/1000).toFixed(1)}L carried.</p>
+      )}
+      <p className="text-xs text-neutral-500 mb-6 uppercase tracking-widest font-mono mt-1">Scroll horizontally to view full plan ➔</p>
 
       {/* Horizontal Gradient Fades */}
       <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-neutral-900 to-transparent pointer-events-none z-20" />
