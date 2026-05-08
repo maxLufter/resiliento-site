@@ -634,6 +634,8 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
     return '';
   };
 
+  const sortedTicks = Array.from(legEvents.keys()).sort((a,b) => a - b);
+
   sortedTicks.forEach(tick => {
     const distStr = getRunDistance(tick);
     events.push({
