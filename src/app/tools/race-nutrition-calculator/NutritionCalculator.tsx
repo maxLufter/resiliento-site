@@ -7,6 +7,8 @@ type RaceType = 'tri_sprint' | 'tri_olympic' | 'tri_703' | 'tri_ironman' | 'bike
 type HeatLevel = 'cool' | 'moderate' | 'hot';
 type GutLevel = 'beginner' | 'moderate' | 'advanced';
 type NutritionType = 'gels' | 'bars' | 'drink_mix';
+type FuelingStrategy = 'conservative' | 'standard' | 'aggressive';
+type CaffeineSensitivity = 'low' | 'normal' | 'high';
 
 interface LegPlan {
   name: string;
@@ -34,25 +36,44 @@ const RACE_PRESETS: Record<RaceType, { label: string; legs: { name: string; defa
 
 const GUT_CARB_CEILING: Record<GutLevel, number> = { beginner: 60, moderate: 80, advanced: 120 };
 const GUT_LABELS: Record<GutLevel, string> = {
-  beginner: 'Beginner — haven\'t practiced race fueling much (cap ~60 g/h)',
-  moderate: 'Moderate — regular gel/drink training (cap ~80 g/h)',
-  advanced: 'Advanced — trained gut, dual-transport carbs (cap ~120 g/h)',
+  beginner: 'Beginner — haven\'t practiced race fueling much',
+  moderate: 'Moderate — regular gel/drink training',
+  advanced: 'Advanced — trained gut, dual-transport carbs',
+};
+
+// Strategy multiplier applied to base carb rate
+const STRATEGY_MULT: Record<FuelingStrategy, number> = { conservative: 0.85, standard: 1.0, aggressive: 1.15 };
+const STRATEGY_LABELS: Record<FuelingStrategy, string> = {
+  conservative: 'Conservative — lower risk',
+  standard: 'Standard — balanced',
+  aggressive: 'Aggressive — max performance',
+};
+
+const CAFFEINE_DOSE: Record<CaffeineSensitivity, number> = { low: 2, normal: 3, high: 5 };
+const CAFFEINE_LABELS: Record<CaffeineSensitivity, string> = {
+  low: 'Low (2 mg/kg)',
+  normal: 'Normal (3 mg/kg)',
+  high: 'High (5 mg/kg)',
 };
 
 const NUTRITION_LABELS: Record<NutritionType, string> = {
-  gels: 'Energy Gels (~25g)',
-  bars: 'Energy Bars (~40g)',
-  drink_mix: 'Drink Mix (~30g/scoop)',
+  gels: 'Energy Gels',
+  bars: 'Energy Bars',
+  drink_mix: 'Drink Mix',
 };
 
 const FLUID_RANGE: Record<HeatLevel, [number, number]> = { cool: [350, 500], moderate: [500, 700], hot: [700, 1000] };
 const SODIUM_RANGE: Record<HeatLevel, [number, number]> = { cool: [300, 500], moderate: [500, 700], hot: [700, 1000] };
 
-function carbRateForDuration(totalRaceMin: number, gutCeiling: number): number {
+// Base carb rate by race duration, then clamped to gut ceiling and scaled by strategy
+function carbRateForDuration(totalRaceMin: number, gutCeiling: number, strategy: FuelingStrategy): number {
   if (totalRaceMin < 60) return 0;
-  if (totalRaceMin < 120) return Math.min(45, gutCeiling);
-  if (totalRaceMin < 180) return Math.min(60, gutCeiling);
-  return Math.min(90, gutCeiling);
+  let base: number;
+  if (totalRaceMin < 120) base = 45;
+  else if (totalRaceMin < 180) base = 60;
+  else if (totalRaceMin < 300) base = 80; // 70.3 range
+  else base = 90; // Ironman range
+  return Math.min(Math.round(base * STRATEGY_MULT[strategy]), gutCeiling);
 }
 
 function avg(range: [number, number]): number { return Math.round((range[0] + range[1]) / 2); }
@@ -63,12 +84,22 @@ export default function NutritionCalculator() {
   const [bodyMass, setBodyMass] = useState<number>(75);
   const [gutLevel, setGutLevel] = useState<GutLevel>('moderate');
   const [heat, setHeat] = useState<HeatLevel>('moderate');
+  const [strategy, setStrategy] = useState<FuelingStrategy>('standard');
   const [useCaffeine, setUseCaffeine] = useState<boolean>(true);
+  const [caffeineSensitivity, setCaffeineSensitivity] = useState<CaffeineSensitivity>('normal');
   const [bikeFuelType, setBikeFuelType] = useState<NutritionType>('drink_mix');
   const [runFuelType, setRunFuelType] = useState<NutritionType>('gels');
   const [bikeBottleCount, setBikeBottleCount] = useState<number>(2);
   const [bikeBottleVolume, setBikeBottleVolume] = useState<number>(750);
   const [legDurations, setLegDurations] = useState<number[]>([]);
+  // Product customization
+  const [carbsPerGel, setCarbsPerGel] = useState<number>(25);
+  const [carbsPerBar, setCarbsPerBar] = useState<number>(40);
+  const [carbsPerScoop, setCarbsPerScoop] = useState<number>(30);
+  const [sodiumPerGel, setSodiumPerGel] = useState<number>(50);
+  const [sodiumPerScoop, setSodiumPerScoop] = useState<number>(300);
+  const [sodiumPerCap, setSodiumPerCap] = useState<number>(215);
+  const [caffeinePerGel, setCaffeinePerGel] = useState<number>(0);
 
   const preset = RACE_PRESETS[raceType];
   const durations = preset.legs.map((leg, i) => legDurations[i] ?? leg.defaultMin);
@@ -90,10 +121,11 @@ export default function NutritionCalculator() {
   // Compute plan
   const plan = useMemo((): LegPlan[] => {
     const gutCeiling = GUT_CARB_CEILING[gutLevel];
-    const baseCarb = carbRateForDuration(totalRaceMin, gutCeiling);
+    const baseCarb = carbRateForDuration(totalRaceMin, gutCeiling, strategy);
     const fluidPerH = avg(FLUID_RANGE[heat]);
     const sodiumPerH = avg(SODIUM_RANGE[heat]);
-    const caffeineDose = useCaffeine ? Math.round(bodyMass * 3) : 0; // 3mg/kg conservative
+    const cafDosePerKg = useCaffeine ? CAFFEINE_DOSE[caffeineSensitivity] : 0;
+    const caffeineDose = useCaffeine ? Math.round(bodyMass * cafDosePerKg) : 0;
     let caffeineUsed = false;
 
     return preset.legs.map((leg, i) => {
@@ -126,7 +158,7 @@ export default function NutritionCalculator() {
         caffeineNote: cafNote, caffeineMg: cafMg,
       };
     });
-  }, [preset, durations, totalRaceMin, gutLevel, heat, bodyMass, useCaffeine]);
+  }, [preset, durations, totalRaceMin, gutLevel, strategy, heat, bodyMass, useCaffeine, caffeineSensitivity]);
 
   const totals = useMemo(() => ({
     carbs: plan.reduce((a, l) => a + l.carbTotal, 0),
@@ -134,6 +166,59 @@ export default function NutritionCalculator() {
     sodium: plan.reduce((a, l) => a + l.sodiumTotal, 0),
     caffeine: plan.reduce((a, l) => a + l.caffeineMg, 0),
   }), [plan]);
+
+  // --- Warnings engine (P0) ---
+  const warnings = useMemo(() => {
+    const w: { type: 'danger' | 'caution' | 'info'; text: string }[] = [];
+    // Caffeine threshold
+    if (useCaffeine && totals.caffeine / bodyMass > 6) {
+      w.push({ type: 'danger', text: `Caffeine dose is ${(totals.caffeine / bodyMass).toFixed(1)} mg/kg — above the 6 mg/kg safety ceiling. Reduce dose or consult a sports dietitian.` });
+    } else if (useCaffeine && totals.caffeine / bodyMass > 4.5) {
+      w.push({ type: 'caution', text: `Caffeine dose is ${(totals.caffeine / bodyMass).toFixed(1)} mg/kg — moderate-high. Only use if well-practiced in training.` });
+    }
+    // Bottle concentration
+    plan.filter(l => l.name === 'Bike' && l.canFuel).forEach(leg => {
+      if (bikeFuelType === 'drink_mix' && bikeBottleCount > 0) {
+        const carbsPerBottle = Math.round(leg.carbTotal / bikeBottleCount);
+        const concGPerL = Math.round((carbsPerBottle / bikeBottleVolume) * 1000);
+        if (concGPerL > 160) {
+          w.push({ type: 'danger', text: `Bottle concentration is ~${concGPerL}g/L — extremely high GI risk. Use smaller bottles as concentrates and chase with water, or add more bottles.` });
+        } else if (concGPerL > 120) {
+          w.push({ type: 'caution', text: `Bottle concentration is ~${concGPerL}g/L — treat as concentrate and chase each sip with plain water.` });
+        } else if (concGPerL > 80) {
+          w.push({ type: 'info', text: `Bottle concentration is ~${concGPerL}g/L — dense but manageable if practiced. If you experience GI issues, dilute further.` });
+        }
+      }
+    });
+    // Carrying capacity
+    const bikeLeg = plan.find(l => l.name === 'Bike' && l.canFuel);
+    if (bikeLeg && bikeBottleCount * bikeBottleVolume < bikeLeg.fluidTotal * 0.7) {
+      w.push({ type: 'caution', text: `Your ${bikeBottleCount} bottles hold ${bikeBottleCount * bikeBottleVolume}mL but your plan calls for ${bikeLeg.fluidTotal}mL. Plan for aid station refills or add more bottles.` });
+    }
+    return w;
+  }, [plan, totals, bodyMass, useCaffeine, bikeFuelType, bikeBottleCount, bikeBottleVolume]);
+
+  // --- Sodium accounting (P0: prevent double-counting) ---
+  const sodiumAccounting = useMemo(() => {
+    const bikeLeg = plan.find(l => l.name === 'Bike' && l.canFuel);
+    const runLeg = plan.find(l => l.name === 'Run' && l.canFuel);
+    // Sodium already in products
+    let sodiumFromProducts = 0;
+    if (bikeLeg && bikeFuelType === 'drink_mix') {
+      const scoops = Math.ceil((bikeLeg.carbTotal) / carbsPerScoop);
+      sodiumFromProducts += scoops * sodiumPerScoop;
+    } else if (bikeLeg && bikeFuelType === 'gels') {
+      const gels = Math.ceil(bikeLeg.carbTotal / carbsPerGel);
+      sodiumFromProducts += gels * sodiumPerGel;
+    }
+    if (runLeg && runFuelType === 'gels') {
+      const gels = Math.ceil(runLeg.carbTotal / carbsPerGel);
+      sodiumFromProducts += gels * sodiumPerGel;
+    }
+    const additionalSodium = Math.max(0, totals.sodium - sodiumFromProducts);
+    const additionalCaps = Math.max(0, Math.round(additionalSodium / sodiumPerCap));
+    return { sodiumFromProducts, additionalSodium, additionalCaps };
+  }, [plan, totals, bikeFuelType, runFuelType, carbsPerGel, carbsPerScoop, sodiumPerGel, sodiumPerScoop, sodiumPerCap]);
 
   return (
     <div className="font-inter space-y-6">
@@ -168,7 +253,7 @@ export default function NutritionCalculator() {
         </div>
 
         {/* Athlete Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
             <div className="relative">
@@ -176,14 +261,6 @@ export default function NutritionCalculator() {
                 className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
               <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">kg</span>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training</label>
-            <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
           </div>
 
           <div>
@@ -200,10 +277,37 @@ export default function NutritionCalculator() {
 
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
-            <button onClick={() => setUseCaffeine(!useCaffeine)}
-              className={`w-full py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
-              {useCaffeine ? 'Yes — Using Caffeine' : 'No Caffeine'}
-            </button>
+            <div className="flex gap-2">
+              <button onClick={() => setUseCaffeine(!useCaffeine)}
+                className={`py-2 px-4 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                {useCaffeine ? 'Yes' : 'No'}
+              </button>
+              {useCaffeine && (
+                <select value={caffeineSensitivity} onChange={e => setCaffeineSensitivity(e.target.value as CaffeineSensitivity)}
+                  className="flex-1 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                  {(Object.entries(CAFFEINE_LABELS) as [CaffeineSensitivity, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </select>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Strategy Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 pt-4 border-t border-neutral-800/50">
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
+            <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
+              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+              {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
+            <select value={strategy} onChange={e => setStrategy(e.target.value as FuelingStrategy)}
+              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+              {(Object.entries(STRATEGY_LABELS) as [FuelingStrategy, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
           </div>
         </div>
 
@@ -245,13 +349,59 @@ export default function NutritionCalculator() {
             </select>
           </div>
         </div>
+
+        {/* Product Customization */}
+        <div className="mt-4 pt-4 border-t border-neutral-800/50">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Product Nutrition (Carbs / Sodium per unit)</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div>
+              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Gel</span>
+              <div className="flex gap-1">
+                <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+                <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+              </div>
+            </div>
+            <div>
+              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Drink Scoop</span>
+              <div className="flex gap-1">
+                <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+                <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+              </div>
+            </div>
+            <div>
+              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Bar / Solid</span>
+              <div className="flex gap-1">
+                <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+              </div>
+            </div>
+            <div>
+              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Salt Cap</span>
+              <div className="flex gap-1">
+                <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+              </div>
+            </div>
+          </div>
+          <p className="text-[9px] text-neutral-600 mt-2 italic">* First box is Carbs (g), second box is Sodium (mg)</p>
+        </div>
       </div>
+
+      {/* ── Warnings ────────────────────────────────────────────────────── */}
+      {warnings.length > 0 && (
+        <div className="space-y-2">
+          {warnings.map((w, i) => (
+            <div key={i} className={`p-4 rounded-xl border flex items-start gap-3 ${w.type === 'danger' ? 'bg-red-500/10 border-red-500/30 text-red-200' : w.type === 'caution' ? 'bg-amber-500/10 border-amber-500/30 text-amber-200' : 'bg-blue-500/10 border-blue-500/30 text-blue-200'}`}>
+              <span className="mt-0.5">{w.type === 'danger' ? '🚨' : w.type === 'caution' ? '⚠️' : 'ℹ️'}</span>
+              <p className="text-xs">{w.text}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* ── Results: Totals Summary ─────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <ResultCard label="Total Carbs" value={`${totals.carbs} g`} sub="See plan for products" color="text-amber-400" />
         <ResultCard label="Total Fluid" value={`${(totals.fluid / 1000).toFixed(1)} L`} sub={`${totals.fluid} mL`} color="text-blue-400" />
-        <ResultCard label="Total Sodium" value={`${totals.sodium} mg`} sub={`${Math.round(totals.sodium / 215)} salt caps`} color="text-rose-400" />
+        <ResultCard label="Total Sodium" value={`${totals.sodium} mg`} sub={`${sodiumAccounting.additionalCaps} caps + products`} color="text-rose-400" />
         <ResultCard label="Caffeine" value={`${totals.caffeine} mg`} sub={useCaffeine ? `${(totals.caffeine / bodyMass).toFixed(1)} mg/kg` : 'disabled'} color="text-green-400" />
       </div>
 
@@ -289,6 +439,9 @@ export default function NutritionCalculator() {
             nutritionType={leg.name === 'Bike' ? bikeFuelType : runFuelType} 
             bikeBottleCount={bikeBottleCount}
             bikeBottleVolume={bikeBottleVolume}
+            raceType={raceType}
+            carbsPerGel={carbsPerGel}
+            carbsPerBar={carbsPerBar}
           />
         ))}
       </div>
@@ -305,7 +458,7 @@ export default function NutritionCalculator() {
               <li>• Primer: <span className="text-neutral-300">1 gel</span> 15 mins before swim start</li>
             </ul>
           </div>
-          <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
+            <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Carbohydrate Products</span>
             <ul className="space-y-1.5">
               {plan.filter(l => l.canFuel && l.carbTotal > 0).map(leg => {
@@ -318,7 +471,7 @@ export default function NutritionCalculator() {
                   const carbsPerBottle = Math.round(leg.carbTotal / bottles);
                   return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{bottles} × 600mL bottles</span> (Dissolve ~{carbsPerBottle}g carbs/bottle)</li>;
                 } else {
-                  const cPU = fType === 'gels' ? 25 : 40;
+                  const cPU = fType === 'gels' ? carbsPerGel : carbsPerBar;
                   const uName = fType === 'gels' ? 'gels' : 'bars';
                   return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{Math.ceil(leg.carbTotal / cPU)} {uName}</span></li>;
                 }
@@ -329,18 +482,19 @@ export default function NutritionCalculator() {
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-blue-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Hydration Strategy</span>
             <ul className="space-y-1.5">
+              <li>• Target range: <span className="text-neutral-300">500–750 ml/h</span>. Start at 600 ml/h.</li>
               <li>• Bike: <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span></li>
               {plan.some(l => l.name === 'Run' && l.canFuel) && <li>• Run: <span className="text-neutral-300">{((plan.find(l => l.name === 'Run')?.fluidTotal || 0) / 1000).toFixed(1)}L</span> via aid stations</li>}
-              <li>• Drink every <span className="text-neutral-300">15-20 minutes</span>, not in large gulps</li>
-              <li>• Add {Math.round((plan.find(l => l.name === 'Bike')?.sodiumTotal || 0) / Math.max(1, bikeBottleCount))} mg sodium per bike bottle</li>
+              <li>• Adjust down if stomach sloshing; adjust up if hot/high sweat rate. Avoid drinking beyond thirst plus plan.</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
             <span className="text-rose-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Sodium / Electrolytes</span>
             <ul className="space-y-1.5">
-              <li>• <span className="text-neutral-300">{Math.round(totals.sodium / 215)} electrolyte / salt capsules</span> (~215mg each)</li>
-              <li>• Take every <span className="text-neutral-300">30-45 minutes</span> during bike and run</li>
-              <li>• {heat === 'hot' ? 'Critical in heat — prevents cramping and hyponatremia' : 'Prevents late-race cramping'}</li>
+              <li>• Total required: <span className="text-neutral-300">{totals.sodium} mg</span></li>
+              <li>• Already in products: <span className="text-neutral-300">{sodiumAccounting.sodiumFromProducts} mg</span></li>
+              <li>• Additional needed: <span className="text-neutral-300">{sodiumAccounting.additionalSodium} mg</span> (~{sodiumAccounting.additionalCaps} capsules)</li>
+              <li className="text-neutral-600 pt-1 text-[9px] italic leading-tight">Supports replacement of sweat sodium and fluid retention. May reduce risk of sodium depletion in long/hot races, but does not guarantee cramp prevention.</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
@@ -389,8 +543,8 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
   );
 }
 
-function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number }) {
-  const carbPerUnit = nutritionType === 'gels' ? 25 : nutritionType === 'bars' ? 40 : 30;
+function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume, raceType, carbsPerGel, carbsPerBar }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number, raceType: RaceType, carbsPerGel: number, carbsPerBar: number }) {
+  const carbPerUnit = nutritionType === 'gels' ? carbsPerGel : nutritionType === 'bars' ? carbsPerBar : 30;
   const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   
   const events: any[] = [];
@@ -463,13 +617,29 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
      legEvents.get(t)!.unshift({ icon: '☕', text: `${Math.round(bodyMass * 1.5)}mg caf top-up` });
   }
 
-  const sortedTicks = Array.from(legEvents.keys()).sort((a,b) => a - b);
-  
+  const getRunDistance = (tick: number) => {
+    if (leg.name !== 'Run') return '';
+    let totalDist = 0;
+    if (raceType === 'tri_sprint') totalDist = 5;
+    else if (raceType === 'tri_olympic') totalDist = 10;
+    else if (raceType === 'tri_703') totalDist = 21.1;
+    else if (raceType === 'tri_ironman') totalDist = 42.2;
+    else if (raceType === 'run' && leg.durationMin > 180) totalDist = 42.2;
+    else if (raceType === 'run') totalDist = 21.1;
+
+    if (totalDist > 0) {
+      const distAtTick = (tick / leg.durationMin) * totalDist;
+      return `~${distAtTick.toFixed(1)} km`;
+    }
+    return '';
+  };
+
   sortedTicks.forEach(tick => {
+    const distStr = getRunDistance(tick);
     events.push({
       time: tick,
       label: formatTime(tick),
-      title: '',
+      title: distStr,
       isMajor: false,
       bgColor: 'bg-neutral-800',
       borderColor: leg.name === 'Bike' ? 'border-brand/40' : 'border-orange-500/40',
