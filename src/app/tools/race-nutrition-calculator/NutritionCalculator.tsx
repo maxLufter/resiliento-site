@@ -522,8 +522,8 @@ export default function NutritionCalculator() {
             <ul className="space-y-1.5">
               <li>• Total required: <span className="text-neutral-300">{totals.sodium} mg</span></li>
               <li>• Already in products: <span className="text-neutral-300">{sodiumAccounting.sodiumFromProducts} mg</span></li>
-              <li>• Additional needed: <span className="text-neutral-300">{sodiumAccounting.additionalSodium} mg</span> (~{sodiumAccounting.additionalCaps} capsules)</li>
-              <li className="text-neutral-600 pt-1 text-[10px] italic leading-tight">Supports replacement of sweat sodium and fluid retention. May reduce risk of sodium depletion in long/hot races, but does not guarantee cramp prevention.</li>
+              <li>• Additional needed: <span className="text-neutral-300">{totals.sodium - sodiumAccounting.sodiumFromProducts} mg</span> (~{sodiumAccounting.additionalCaps} capsules)</li>
+              <li className="text-neutral-600 pt-1 text-xs italic leading-tight">Supports replacement of sweat sodium and fluid retention. May reduce risk of sodium depletion in long/hot races, but does not guarantee cramp prevention.</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
