@@ -222,166 +222,186 @@ export default function NutritionCalculator() {
 
   return (
     <div className="font-inter space-y-6">
-      {/* ── Inputs Panel ────────────────────────────────────────────────── */}
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
-        {/* Race Type */}
-        <div className="mb-6">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Race Type</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {(Object.entries(RACE_PRESETS) as [RaceType, typeof RACE_PRESETS[RaceType]][]).map(([key, val]) => (
-              <button key={key} onClick={() => handleRaceChange(key)}
-                className={`py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all border ${raceType === key ? 'bg-brand/20 border-brand/50 text-brand shadow-[0_0_15px_rgba(var(--brand-rgb),0.2)]' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}`}>
-                {val.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Leg Durations */}
-        <div className="mb-6">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Expected Leg Durations (minutes)</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {preset.legs.map((leg, i) => (
-              <div key={leg.name}>
-                <span className="text-xs text-neutral-500 mb-1 block">{leg.name}</span>
-                <input type="number" value={durations[i]} onChange={e => setLegDuration(i, Number(e.target.value) || 0)}
-                  className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-              </div>
-            ))}
-          </div>
-          <p className="text-[10px] text-neutral-600 mt-2">Total race: <span className="text-neutral-400 font-mono">{Math.floor(totalRaceMin / 60)}h {totalRaceMin % 60}m</span></p>
-        </div>
-
-        {/* Athlete Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
-            <div className="relative">
-              <input type="number" value={bodyMass} onChange={e => setBodyMass(Number(e.target.value) || 60)}
-                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-              <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">kg</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Conditions</label>
-            <div className="flex gap-1">
-              {(['cool', 'moderate', 'hot'] as HeatLevel[]).map(h => (
-                <button key={h} onClick={() => setHeat(h)}
-                  className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
-                  {h}
+      {/* ── Inputs ──────────────────────────────────────────────────────── */}
+      <div className="space-y-4">
+        {/* 1. Event Profile */}
+        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-2"><span className="text-brand">1.</span> Event Profile</h2>
+          
+          <div className="mb-6">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Race Type</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {(Object.entries(RACE_PRESETS) as [RaceType, typeof RACE_PRESETS[RaceType]][]).map(([key, val]) => (
+                <button key={key} onClick={() => handleRaceChange(key)}
+                  className={`py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all border ${raceType === key ? 'bg-brand/20 border-brand/50 text-brand shadow-[0_0_15px_rgba(var(--brand-rgb),0.2)]' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}`}>
+                  {val.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
-            <div className="flex gap-2">
-              <button onClick={() => setUseCaffeine(!useCaffeine)}
-                className={`py-2 px-4 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
-                {useCaffeine ? 'Yes' : 'No'}
-              </button>
-              {useCaffeine && (
-                <select value={caffeineSensitivity} onChange={e => setCaffeineSensitivity(e.target.value as CaffeineSensitivity)}
-                  className="flex-1 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-                  {(Object.entries(CAFFEINE_LABELS) as [CaffeineSensitivity, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                </select>
-              )}
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Expected Leg Durations (minutes)</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {preset.legs.map((leg, i) => (
+                <div key={leg.name}>
+                  <span className="text-xs text-neutral-500 mb-1 block">{leg.name}</span>
+                  <input type="number" value={durations[i]} onChange={e => setLegDuration(i, Number(e.target.value) || 0)}
+                    className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-neutral-600 mt-2">Total race: <span className="text-neutral-400 font-mono">{Math.floor(totalRaceMin / 60)}h {totalRaceMin % 60}m</span></p>
+          </div>
+        </div>
+
+        {/* 2. Athlete & Strategy */}
+        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-2"><span className="text-brand">2.</span> Athlete Profile & Strategy</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
+              <div className="relative">
+                <input type="number" value={bodyMass} onChange={e => setBodyMass(Number(e.target.value) || 60)}
+                  className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">kg</span>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Conditions</label>
+              <div className="flex gap-1">
+                {(['cool', 'moderate', 'hot'] as HeatLevel[]).map(h => (
+                  <button key={h} onClick={() => setHeat(h)}
+                    className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                    {h}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
+              <div className="flex gap-2">
+                <button onClick={() => setUseCaffeine(!useCaffeine)}
+                  className={`py-2 px-4 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                  {useCaffeine ? 'Yes' : 'No'}
+                </button>
+                {useCaffeine && (
+                  <select value={caffeineSensitivity} onChange={e => setCaffeineSensitivity(e.target.value as CaffeineSensitivity)}
+                    className="flex-1 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                    {(Object.entries(CAFFEINE_LABELS) as [CaffeineSensitivity, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                )}
+              </div>
+            </div>
+
+            <div className="md:col-span-2 lg:col-span-1">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
+              <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
+            
+            <div className="md:col-span-2 lg:col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
+              <select value={strategy} onChange={e => setStrategy(e.target.value as FuelingStrategy)}
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                {(Object.entries(STRATEGY_LABELS) as [FuelingStrategy, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Strategy Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 pt-4 border-t border-neutral-800/50">
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
-            <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          </div>
+        {/* 3. Gear & Products */}
+        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-2"><span className="text-brand">3.</span> Gear & Nutrition Products</h2>
           
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
-            <select value={strategy} onChange={e => setStrategy(e.target.value as FuelingStrategy)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(STRATEGY_LABELS) as [FuelingStrategy, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
+              <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Bottles Setup</label>
+              <div className="flex gap-2">
+                <input type="number" value={bikeBottleCount} onChange={e => setBikeBottleCount(Number(e.target.value) || 1)}
+                    className="w-16 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <div className="relative flex-1">
+                  <select value={bikeBottleVolume} onChange={e => setBikeBottleVolume(Number(e.target.value) || 500)}
+                    className="w-full bg-black border border-neutral-800 rounded-lg pl-3 pr-6 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer appearance-none">
+                    <option value={500}>500 mL</option>
+                    <option value={600}>600 mL</option>
+                    <option value={700}>700 mL</option>
+                    <option value={750}>750 mL</option>
+                    <option value={900}>900 mL</option>
+                    <option value={1000}>1000 mL</option>
+                  </select>
+                  <div className="absolute right-2 top-0 bottom-0 flex items-center pointer-events-none">
+                    <svg className="w-3 h-3 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
+              <select value={runFuelType} onChange={e => setRunFuelType(e.target.value as NutritionType)}
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              </select>
+            </div>
           </div>
-        </div>
 
-        {/* Fueling Preferences Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-neutral-800/50">
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
-            <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Bottles Setup</label>
-            <div className="flex gap-2">
-              <input type="number" value={bikeBottleCount} onChange={e => setBikeBottleCount(Number(e.target.value) || 1)}
-                  className="w-16 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-              <div className="relative flex-1">
-                <select value={bikeBottleVolume} onChange={e => setBikeBottleVolume(Number(e.target.value) || 500)}
-                  className="w-full bg-black border border-neutral-800 rounded-lg pl-3 pr-6 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer appearance-none">
-                  <option value={500}>500 mL</option>
-                  <option value={600}>600 mL</option>
-                  <option value={700}>700 mL</option>
-                  <option value={750}>750 mL</option>
-                  <option value={900}>900 mL</option>
-                  <option value={1000}>1000 mL</option>
-                </select>
-                <div className="absolute right-2 top-0 bottom-0 flex items-center pointer-events-none">
-                  <svg className="w-3 h-3 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          <div className="pt-6 border-t border-neutral-800/50">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-4">Product Nutrition Profiles (Carbs & Sodium per unit)</label>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Gel</span>
+                <div className="flex gap-1">
+                  <div className="w-1/2 relative">
+                    <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                  </div>
+                  <div className="w-1/2 relative">
+                    <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Drink Scoop</span>
+                <div className="flex gap-1">
+                  <div className="w-1/2 relative">
+                    <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                  </div>
+                  <div className="w-1/2 relative">
+                    <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Bar / Solid</span>
+                <div className="relative">
+                  <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
+                  <span className="absolute right-2 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                </div>
+              </div>
+              <div>
+                <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
+                <div className="relative">
+                  <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
+                  <span className="absolute right-2 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
-            <select value={runFuelType} onChange={e => setRunFuelType(e.target.value as NutritionType)}
-              className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
-              {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          </div>
-        </div>
-
-        {/* Product Customization */}
-        <div className="mt-4 pt-4 border-t border-neutral-800/50">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Product Nutrition (Carbs / Sodium per unit)</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div>
-              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Gel</span>
-              <div className="flex gap-1">
-                <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-                <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-              </div>
-            </div>
-            <div>
-              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Drink Scoop</span>
-              <div className="flex gap-1">
-                <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-                <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-1/2 bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-              </div>
-            </div>
-            <div>
-              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Bar / Solid</span>
-              <div className="flex gap-1">
-                <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-              </div>
-            </div>
-            <div>
-              <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider">Salt Cap</span>
-              <div className="flex gap-1">
-                <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-              </div>
-            </div>
-          </div>
-          <p className="text-[9px] text-neutral-600 mt-2 italic">* First box is Carbs (g), second box is Sodium (mg)</p>
         </div>
       </div>
 
