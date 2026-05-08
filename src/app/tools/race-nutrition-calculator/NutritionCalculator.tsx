@@ -389,14 +389,14 @@ export default function NutritionCalculator() {
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Bar / Solid</span>
-                <div className="relative w-1/2">
+                <div className="relative w-full">
                   <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
                   <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
                 </div>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
-                <div className="relative w-1/2">
+                <div className="relative w-full">
                   <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
                   <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
                 </div>
@@ -410,9 +410,9 @@ export default function NutritionCalculator() {
       {warnings.length > 0 && (
         <div className="space-y-2">
           {warnings.map((w, i) => (
-            <div key={i} className={`p-4 rounded-xl border flex items-start gap-3 ${w.type === 'danger' ? 'bg-red-500/10 border-red-500/30 text-red-200' : w.type === 'caution' ? 'bg-amber-500/10 border-amber-500/30 text-amber-200' : 'bg-blue-500/10 border-blue-500/30 text-blue-200'}`}>
-              <span className="mt-0.5">{w.type === 'danger' ? '🚨' : w.type === 'caution' ? '⚠️' : 'ℹ️'}</span>
-              <p className="text-xs">{w.text}</p>
+            <div key={i} className={`p-4 rounded-xl border flex items-center gap-3 ${w.type === 'danger' ? 'bg-red-500/10 border-red-500/30 text-red-200' : w.type === 'caution' ? 'bg-amber-500/10 border-amber-500/30 text-amber-200' : 'bg-blue-500/10 border-blue-500/30 text-blue-200'}`}>
+              <span className="text-base leading-none">{w.type === 'danger' ? '🚨' : w.type === 'caution' ? '⚠️' : 'ℹ️'}</span>
+              <p className="text-xs m-0">{w.text}</p>
             </div>
           ))}
         </div>
