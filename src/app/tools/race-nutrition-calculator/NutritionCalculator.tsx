@@ -171,10 +171,11 @@ export default function NutritionCalculator() {
   const warnings = useMemo(() => {
     const w: { type: 'danger' | 'caution' | 'info'; text: string }[] = [];
     // Caffeine threshold
-    if (useCaffeine && totals.caffeine / bodyMass > 6) {
-      w.push({ type: 'danger', text: `Caffeine dose is ${(totals.caffeine / bodyMass).toFixed(1)} mg/kg — above the 6 mg/kg safety ceiling. Reduce dose or consult a sports dietitian.` });
-    } else if (useCaffeine && totals.caffeine / bodyMass > 4.5) {
-      w.push({ type: 'caution', text: `Caffeine dose is ${(totals.caffeine / bodyMass).toFixed(1)} mg/kg — moderate-high. Only use if well-practiced in training.` });
+    const cafRatio = totals.caffeine / bodyMass;
+    if (useCaffeine && cafRatio > 6.0) {
+      w.push({ type: 'danger', text: `Caffeine dose is ${cafRatio.toFixed(1)} mg/kg — above the 6 mg/kg safety ceiling. Reduce dose or consult a sports dietitian.` });
+    } else if (useCaffeine && cafRatio >= 5.0) {
+      w.push({ type: 'caution', text: `Caffeine dose is ${cafRatio.toFixed(1)} mg/kg — high. Only use if well-practiced in training.` });
     }
     // Bottle concentration
     plan.filter(l => l.name === 'Bike' && l.canFuel).forEach(leg => {
@@ -233,7 +234,7 @@ export default function NutritionCalculator() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {(Object.entries(RACE_PRESETS) as [RaceType, typeof RACE_PRESETS[RaceType]][]).map(([key, val]) => (
                 <button key={key} onClick={() => handleRaceChange(key)}
-                  className={`py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all border ${raceType === key ? 'bg-brand/20 border-brand/50 text-brand shadow-[0_0_15px_rgba(var(--brand-rgb),0.2)]' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}`}>
+                  className={`py-2.5 text-sm font-bold uppercase tracking-widest rounded-lg transition-all border ${raceType === key ? 'bg-brand/20 border-brand/50 text-brand shadow-[0_0_15px_rgba(var(--brand-rgb),0.2)]' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'}`}>
                   {val.label}
                 </button>
               ))}
@@ -259,22 +260,22 @@ export default function NutritionCalculator() {
         <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
           <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-2"><span className="text-brand">2.</span> Athlete Profile & Strategy</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Body Mass</label>
               <div className="relative">
                 <input type="number" value={bodyMass} onChange={e => setBodyMass(Number(e.target.value) || 60)}
                   className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">kg</span>
+                <span className="absolute right-3 top-2.5 text-sm text-neutral-500 font-mono">kg</span>
               </div>
             </div>
 
-            <div>
+            <div className="col-span-2 lg:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Conditions</label>
-              <div className="flex gap-1">
+              <div className="flex gap-1 h-10">
                 {(['cool', 'moderate', 'hot'] as HeatLevel[]).map(h => (
                   <button key={h} onClick={() => setHeat(h)}
-                    className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                    className={`flex-1 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${heat === h ? (h === 'hot' ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : h === 'cool' ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-brand/20 border-brand/50 text-brand') : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
                     {h}
                   </button>
                 ))}
@@ -285,30 +286,30 @@ export default function NutritionCalculator() {
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Caffeine</label>
               <div className="flex gap-2">
                 <button onClick={() => setUseCaffeine(!useCaffeine)}
-                  className={`py-2 px-4 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
+                  className={`px-4 h-10 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all border ${useCaffeine ? 'bg-green-500/20 border-green-500/50 text-green-400' : 'bg-black/40 border-neutral-800 text-neutral-500 hover:border-neutral-600'}`}>
                   {useCaffeine ? 'Yes' : 'No'}
                 </button>
                 {useCaffeine && (
                   <select value={caffeineSensitivity} onChange={e => setCaffeineSensitivity(e.target.value as CaffeineSensitivity)}
-                    className="flex-1 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                    className="flex-1 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                     {(Object.entries(CAFFEINE_LABELS) as [CaffeineSensitivity, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 )}
               </div>
             </div>
 
-            <div className="md:col-span-2 lg:col-span-1">
+            <div className="col-span-2 lg:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Gut Training (Carb Ceiling)</label>
               <select value={gutLevel} onChange={e => setGutLevel(e.target.value as GutLevel)}
-                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(GUT_LABELS) as [GutLevel, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             
-            <div className="md:col-span-2 lg:col-span-2">
+            <div className="col-span-2 lg:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Fueling Strategy</label>
               <select value={strategy} onChange={e => setStrategy(e.target.value as FuelingStrategy)}
-                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(STRATEGY_LABELS) as [FuelingStrategy, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
@@ -323,7 +324,7 @@ export default function NutritionCalculator() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Bike Fuel Type</label>
               <select value={bikeFuelType} onChange={e => setBikeFuelType(e.target.value as NutritionType)}
-                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
@@ -334,7 +335,7 @@ export default function NutritionCalculator() {
                     className="w-16 bg-black border border-neutral-800 rounded-lg px-3 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                 <div className="relative flex-1">
                   <select value={bikeBottleVolume} onChange={e => setBikeBottleVolume(Number(e.target.value) || 500)}
-                    className="w-full bg-black border border-neutral-800 rounded-lg pl-3 pr-6 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer appearance-none">
+                    className="w-full bg-black border border-neutral-800 rounded-lg pl-3 pr-6 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer appearance-none">
                     <option value={500}>500 mL</option>
                     <option value={600}>600 mL</option>
                     <option value={700}>700 mL</option>
@@ -351,7 +352,7 @@ export default function NutritionCalculator() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Run Fuel Type</label>
               <select value={runFuelType} onChange={e => setRunFuelType(e.target.value as NutritionType)}
-                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-xs focus:border-brand outline-none cursor-pointer">
+                className="w-full bg-black border border-neutral-800 rounded-lg px-3 h-10 text-neutral-300 text-sm focus:border-brand outline-none cursor-pointer">
                 {(Object.entries(NUTRITION_LABELS) as [NutritionType, string][]).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
@@ -362,42 +363,42 @@ export default function NutritionCalculator() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Gel</span>
-                <div className="flex gap-1">
+                <div className="flex gap-2">
                   <div className="w-1/2 relative">
-                    <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                    <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
+                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
                   </div>
                   <div className="w-1/2 relative">
-                    <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                    <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
+                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
                   </div>
                 </div>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Drink Scoop</span>
-                <div className="flex gap-1">
+                <div className="flex gap-2">
                   <div className="w-1/2 relative">
-                    <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                    <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
+                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
                   </div>
                   <div className="w-1/2 relative">
-                    <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-                    <span className="absolute right-1 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                    <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
+                    <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
                   </div>
                 </div>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Bar / Solid</span>
-                <div className="relative">
-                  <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Carbs (g)" />
-                  <span className="absolute right-2 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
+                <div className="relative w-1/2">
+                  <input type="number" value={carbsPerBar} onChange={e => setCarbsPerBar(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Carbs (g)" />
+                  <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">g</span>
                 </div>
               </div>
               <div>
                 <span className="text-[10px] text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
-                <div className="relative">
-                  <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-8 text-white font-mono text-xs text-center" title="Sodium (mg)" />
-                  <span className="absolute right-2 top-2 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                <div className="relative w-1/2">
+                  <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
+                  <span className="absolute right-2 top-2.5 text-[9px] text-neutral-600 font-mono pointer-events-none">mg</span>
                 </div>
               </div>
             </div>
