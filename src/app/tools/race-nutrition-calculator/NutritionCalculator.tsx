@@ -146,8 +146,14 @@ export default function NutritionCalculator() {
         cafNote = `${cafMg} mg — take 30-45 min before race start`;
         caffeineUsed = true;
       } else if (useCaffeine && isRun && totalRaceMin > 180) {
-        cafMg = Math.round(caffeineDose * 0.5);
-        cafNote = `${cafMg} mg top-up — early in run leg`;
+        // Safety cap: don't exceed 6.0 mg/kg total
+        const maxTopUp = Math.round(bodyMass * 6.0) - caffeineDose;
+        cafMg = Math.min(Math.round(caffeineDose * 0.5), Math.max(0, maxTopUp));
+        if (cafMg > 0) {
+          cafNote = `${cafMg} mg top-up — early in run leg`;
+        } else {
+          cafNote = 'Skip top-up (already at caffeine ceiling)';
+        }
       }
 
       return {
@@ -203,22 +209,23 @@ export default function NutritionCalculator() {
   const sodiumAccounting = useMemo(() => {
     const bikeLeg = plan.find(l => l.name === 'Bike' && l.canFuel);
     const runLeg = plan.find(l => l.name === 'Run' && l.canFuel);
-    // Sodium already in products
-    let sodiumFromProducts = 0;
-    if (bikeLeg && bikeFuelType === 'drink_mix') {
-      const scoops = Math.ceil((bikeLeg.carbTotal) / carbsPerScoop);
-      sodiumFromProducts += scoops * sodiumPerScoop;
-    } else if (bikeLeg && bikeFuelType === 'gels') {
-      const gels = Math.ceil(bikeLeg.carbTotal / carbsPerGel);
-      sodiumFromProducts += gels * sodiumPerGel;
-    }
-    if (runLeg && runFuelType === 'gels') {
-      const gels = Math.ceil(runLeg.carbTotal / carbsPerGel);
-      sodiumFromProducts += gels * sodiumPerGel;
-    }
-    const additionalSodium = Math.max(0, totals.sodium - sodiumFromProducts);
-    const additionalCaps = Math.max(0, Math.round(additionalSodium / sodiumPerCap));
-    return { sodiumFromProducts, additionalSodium, additionalCaps };
+
+    const getLegCaps = (leg: LegPlan | undefined, fuelType: NutritionType) => {
+      if (!leg) return 0;
+      let prodSodium = 0;
+      if (fuelType === 'drink_mix') {
+        prodSodium = Math.ceil(leg.carbTotal / carbsPerScoop) * sodiumPerScoop;
+      } else if (fuelType === 'gels') {
+        prodSodium = Math.ceil(leg.carbTotal / carbsPerGel) * sodiumPerGel;
+      }
+      return Math.max(0, Math.round((leg.sodiumTotal - prodSodium) / sodiumPerCap));
+    };
+
+    const bikeCaps = getLegCaps(bikeLeg, bikeFuelType);
+    const runCaps = getLegCaps(runLeg, runFuelType);
+    const additionalCaps = bikeCaps + runCaps;
+    
+    return { sodiumFromProducts: totals.sodium - (additionalCaps * sodiumPerCap), additionalCaps, bikeCaps, runCaps };
   }, [plan, totals, bikeFuelType, runFuelType, carbsPerGel, carbsPerScoop, sodiumPerGel, sodiumPerScoop, sodiumPerCap]);
 
   return (
@@ -395,10 +402,10 @@ export default function NutritionCalculator() {
                 </div>
               </div>
               <div>
-                <span className="text-xs text-neutral-500 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
+                <span className="text-xs text-neutral-400 mb-1 block uppercase tracking-wider font-bold">Salt Cap</span>
                 <div className="relative w-full">
                   <input type="number" value={sodiumPerCap} onChange={e => setSodiumPerCap(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-2 h-10 text-white font-mono text-sm text-center focus:border-brand outline-none" title="Sodium (mg)" />
-                  <span className="absolute right-2 top-2.5 text-[10px] text-neutral-600 font-mono pointer-events-none">mg</span>
+                  <span className="absolute right-2 top-2.5 text-xs text-neutral-500 font-mono pointer-events-none">mg</span>
                 </div>
               </div>
             </div>
@@ -463,6 +470,7 @@ export default function NutritionCalculator() {
             raceType={raceType}
             carbsPerGel={carbsPerGel}
             carbsPerBar={carbsPerBar}
+            sodiumCaps={leg.name === 'Bike' ? sodiumAccounting.bikeCaps : sodiumAccounting.runCaps}
           />
         ))}
       </div>
@@ -497,7 +505,7 @@ export default function NutritionCalculator() {
                   return <li key={leg.name}>• <strong className="text-white">{leg.name}:</strong> <span className="text-neutral-300">{Math.ceil(leg.carbTotal / cPU)} {uName}</span></li>;
                 }
               })}
-              <li className="text-neutral-600 pt-1 italic">Use glucose:fructose 2:1 ratio for {'>'} 60g/h</li>
+              <li className="text-neutral-500 pt-1 italic">Use glucose:fructose 2:1 ratio for {'>'} 60g/h</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
@@ -506,7 +514,7 @@ export default function NutritionCalculator() {
               <li>• Target range: <span className="text-neutral-300">500–750 ml/h</span>. Start at 600 ml/h.</li>
               <li>• Bike: <span className="text-neutral-300">{bikeBottleCount} × {bikeBottleVolume}mL bottles</span></li>
               {plan.some(l => l.name === 'Run' && l.canFuel) && <li>• Run: <span className="text-neutral-300">{((plan.find(l => l.name === 'Run')?.fluidTotal || 0) / 1000).toFixed(1)}L</span> via aid stations</li>}
-              <li>• Adjust down if stomach sloshing; adjust up if hot/high sweat rate. Avoid drinking beyond thirst plus plan.</li>
+              <li>• Adjust down if stomach sloshing; adjust up if hot/high sweat rate.</li>
             </ul>
           </div>
           <div className="bg-black/30 rounded-xl p-4 border border-neutral-800/50">
@@ -564,7 +572,7 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
   );
 }
 
-function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume, raceType, carbsPerGel, carbsPerBar }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number, raceType: RaceType, carbsPerGel: number, carbsPerBar: number }) {
+function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume, raceType, carbsPerGel, carbsPerBar, sodiumCaps }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number, raceType: RaceType, carbsPerGel: number, carbsPerBar: number, sodiumCaps: number }) {
   const carbPerUnit = nutritionType === 'gels' ? carbsPerGel : nutritionType === 'bars' ? carbsPerBar : 30;
   const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   
@@ -625,10 +633,14 @@ function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionTy
     }
   }
 
-  if (leg.sodiumMgPerH > 0) {
-    for (let t = saltInterval; t < leg.durationMin - 5; t += saltInterval) {
-       if (!legEvents.has(t)) legEvents.set(t, []);
-       legEvents.get(t)!.push({ icon: '💊', text: `1 salt cap` });
+  if (sodiumCaps > 0) {
+    const saltInterval = Math.round(leg.durationMin / (sodiumCaps + 1));
+    for (let i = 1; i <= sodiumCaps; i++) {
+       const t = i * saltInterval;
+       if (t < leg.durationMin - 5) {
+         if (!legEvents.has(t)) legEvents.set(t, []);
+         legEvents.get(t)!.push({ icon: '💊', text: `1 salt cap` });
+       }
     }
   }
 
