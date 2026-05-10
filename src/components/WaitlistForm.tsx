@@ -57,6 +57,7 @@ export function WaitlistForm() {
           type="text"
           required
           placeholder="First Name"
+          suppressHydrationWarning
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
         />
       </div>
@@ -73,6 +74,7 @@ export function WaitlistForm() {
           pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
           title="Please enter a valid email address with a domain"
           placeholder="athlete@domain.com"
+          suppressHydrationWarning
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
         />
       </div>
@@ -86,6 +88,7 @@ export function WaitlistForm() {
           name="sport"
           type="text"
           placeholder="Triathlon, HYROX, OCR..."
+          suppressHydrationWarning
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none"
         />
       </div>
@@ -99,6 +102,7 @@ export function WaitlistForm() {
           name="frustration"
           rows={2}
           placeholder="What breaks your consistency?"
+          suppressHydrationWarning
           className="block w-full bg-transparent border-0 p-0 text-white focus:ring-0 sm:text-base placeholder:text-slate-700 font-light focus:outline-none resize-none"
         />
       </div>
