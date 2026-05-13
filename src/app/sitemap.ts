@@ -1,112 +1,117 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
+  const today = '2026-05-13';
+  const toolsUpdate = '2026-05-13';
+  const landingUpdate = '2026-05-13';
+  const staticDate = '2025-12-01';
+
   return [
     {
       url: 'https://resiliento.app',
-      lastModified: new Date(),
+      lastModified: today,
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
       url: 'https://resiliento.app/waitlist',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/hybrid-training-engine',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: 'https://resiliento.app/adaptive-training-planner',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: 'https://resiliento.app/mobility-for-hybrid-athletes',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: 'https://resiliento.app/hyrox',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: 'https://resiliento.app/triathlon',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: 'https://resiliento.app/running',
-      lastModified: new Date(),
+      lastModified: landingUpdate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: 'https://resiliento.app/impressum',
-      lastModified: new Date(),
+      lastModified: staticDate,
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: 'https://resiliento.app/privacy',
-      lastModified: new Date(),
+      lastModified: staticDate,
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: 'https://resiliento.app/tools',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/triathlon-pace-predictor',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/tss-estimator',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/hybrid-split-builder',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/optimal-tyre-pressure',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/running-pace-calculator',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/triathlon-checklist',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: 'https://resiliento.app/tools/race-nutrition-calculator',
-      lastModified: new Date(),
+      lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,
     },

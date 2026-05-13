@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import ChecklistPlanner from './ChecklistPlanner';
 import { ClipboardCheck } from 'lucide-react';
+import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
   title: 'Triathlon Race Day Checklist & Packing Planner | RESILIENTO',
@@ -29,7 +31,15 @@ export default function ChecklistPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <BreadcrumbJsonLd items={[
+        { name: 'Home', url: 'https://resiliento.app' },
+        { name: 'Tools', url: 'https://resiliento.app/tools' },
+        { name: 'Race Day Checklist', url: 'https://resiliento.app/tools/triathlon-checklist' },
+      ]} />
       <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32 lg:px-8 pt-32 sm:pt-40">
+        <div className="mb-8">
+          <Link href="/tools" className="text-xs font-mono tracking-[0.2em] uppercase text-slate-500 hover:text-brand transition-colors">← All Tools</Link>
+        </div>
         <div className="max-w-3xl text-center mx-auto mb-16">
           <div className="flex items-center justify-center gap-4 mb-6">
             <ClipboardCheck size={40} className="text-brand" strokeWidth={2} />

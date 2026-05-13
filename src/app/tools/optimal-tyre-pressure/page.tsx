@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import Calculator from './Calculator';
 import { Gauge } from 'lucide-react';
+import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
   title: 'Optimal Tyre Pressure Calculator (Physics-Based) | RESILIENTO',
@@ -29,7 +31,15 @@ export default function TyrePressurePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <BreadcrumbJsonLd items={[
+        { name: 'Home', url: 'https://resiliento.app' },
+        { name: 'Tools', url: 'https://resiliento.app/tools' },
+        { name: 'Optimal Tyre Pressure', url: 'https://resiliento.app/tools/optimal-tyre-pressure' },
+      ]} />
       <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32 lg:px-8 pt-32 sm:pt-40">
+        <div className="mb-8">
+          <Link href="/tools" className="text-xs font-mono tracking-[0.2em] uppercase text-slate-500 hover:text-brand transition-colors">← All Tools</Link>
+        </div>
         <div className="max-w-3xl text-center mx-auto mb-16">
           <div className="flex items-center justify-center gap-4 mb-6">
             <Gauge size={40} className="text-brand" strokeWidth={2} />
