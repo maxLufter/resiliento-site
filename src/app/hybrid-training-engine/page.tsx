@@ -1,16 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
+import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "RESILIENTO App | The Hybrid Training Engine Architecture",
-  description: "Why fragmented athlete software fails, the danger of the 'more data' trap without decision logic, and how a true hybrid training engine aligns endurance, strength, and recovery into one unified macrocycle.",
+  title: "Hybrid Training Engine Architecture | RESILIENTO",
+  description: "Why fragmented training apps fail hybrid athletes and how a unified engine coordinates endurance, strength, and recovery in one macrocycle.",
+  openGraph: {
+    title: "Hybrid Training Engine Architecture | RESILIENTO",
+    description: "Why fragmented training apps fail hybrid athletes and how a unified engine coordinates endurance, strength, and recovery in one macrocycle.",
+    url: "https://resiliento.app/hybrid-training-engine",
+  },
 };
+
+const hybridEngineFaqs = [
+  {
+    question: "Is this just for elite triathletes?",
+    answer: "No. It is built for any athlete managing concurrent training stress. Whether you are a dedicated powerlifter looking to run an ultra-marathon, a tactical athlete, or a cyclist trying to maintain upper body mass, the engine prevents the structural collision of conflicting adaptations."
+  },
+  {
+    question: "How does it handle my wearable data?",
+    answer: "It pairs your subjective fatigue inputs (how you actually feel) with objective markers (resting HR, HRV trends) to dictate the daily load state (Go, Compress, Downgrade, Recovery). Data acts as an input for the algorithm, driving real-time scheduling changes. It is not just a passive dashboard widget."
+  },
+  {
+    question: "Can I still do my own custom strength program?",
+    answer: "RESILIENTO provides highly structured strength archetypes that must dynamically adjust to your endurance blocks. While you can swap specific biomechanical movements (e.g., swapping a barbell back squat for a safety-bar squat), modifying the core phase-volume blocks manually breaks the integrated load calculation. The entire point of the engine is that everything must remain unified."
+  }
+];
 
 export default function HybridTrainingEnginePage() {
   return (
     <div className="flex flex-col">
       <SoftwareApplicationJsonLd specificDescription="The hybrid training engine architecture integrating endurance, strength, and mobility." />
+      <FAQJsonLd faqs={hybridEngineFaqs} />
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
         <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
@@ -204,7 +225,7 @@ export default function HybridTrainingEnginePage() {
             <div className="border border-border p-8 hover:border-brand/30 transition-colors">
               <h3 className="text-xl font-bold text-white uppercase mb-2">The 70.3 + Powerlifting Hybrid</h3>
               <p className="text-slate-400 text-sm font-light leading-relaxed mb-4">
-                Attempting to maintain a 500lb deadlift while building base volume for a Half-Ironman means your CNS is constantly under assault. The engine staggers peak strength blocks against lower-intensity aerobic build weeks, ensuring you aren&apos;s attempting to hit maximum wattage on the bike the day after maximum absolute strength outputs.
+                Attempting to maintain a 500lb deadlift while building base volume for a Half-Ironman means your CNS is constantly under assault. The engine staggers peak strength blocks against lower-intensity aerobic build weeks, ensuring you aren&apos;t attempting to hit maximum wattage on the bike the day after maximum absolute strength outputs.
               </p>
             </div>
             <div className="border border-border p-8 hover:border-brand/30 transition-colors">

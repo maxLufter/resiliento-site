@@ -2,7 +2,12 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 
 export const metadata = {
   title: "Join Waitlist | RESILIENTO",
-  description: "Secure your access to early architecture phases of RESILIENTO, the hybrid training engine.",
+  description: "Join the waitlist for RESILIENTO — the adaptive training app for triathlon, HYROX, running, and hybrid athletes. Limited closed-cohort access.",
+  openGraph: {
+    title: "Join the RESILIENTO Waitlist",
+    description: "Join the waitlist for RESILIENTO — the adaptive training app for triathlon, HYROX, running, and hybrid athletes. Limited closed-cohort access.",
+    url: "https://resiliento.app/waitlist",
+  },
 };
 
 export default function WaitlistPage() {

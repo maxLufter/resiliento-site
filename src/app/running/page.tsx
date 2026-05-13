@@ -5,7 +5,12 @@ import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "Adaptive Running Training Program & Plan | RESILIENTO",
-  description: "An adaptive running training program designed for runners who also lift heavy. Resiliento buffers your track days from your deadlifts to prevent injury.",
+  description: "Adaptive running plan for athletes who also lift heavy. Algorithmically buffers track sessions from strength days to prevent interference and injury.",
+  openGraph: {
+    title: "Adaptive Running Training Program & Plan | RESILIENTO",
+    description: "Adaptive running plan for athletes who also lift heavy. Algorithmically buffers track sessions from strength days to prevent interference and injury.",
+    url: "https://resiliento.app/running",
+  },
 };
 
 export default function RunningPage() {

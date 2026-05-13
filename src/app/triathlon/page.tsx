@@ -6,7 +6,12 @@ import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
   title: "Adaptive Triathlon Training Program & Coaching App | RESILIENTO",
-  description: "A triathlon training program that adapts to your life. Stop failing static PDF plans. RESILIENTO dynamically balances swim, bike, run, and strength training.",
+  description: "Adaptive triathlon training app that coordinates swim, bike, run, and strength into one system. Dynamically adjusts when life disrupts your schedule.",
+  openGraph: {
+    title: "Adaptive Triathlon Training Program & Coaching App | RESILIENTO",
+    description: "Adaptive triathlon training app that coordinates swim, bike, run, and strength into one system. Dynamically adjusts when life disrupts your schedule.",
+    url: "https://resiliento.app/triathlon",
+  },
 };
 
 export default function TriathlonPage() {

@@ -5,8 +5,13 @@ import { ExpandableListItem } from "@/components/ExpandableListItem";
 import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive HYROX Training Program & AI Plan | RESILIENTO",
-  description: "Stop blowing up on the sleds. RESILIENTO provides an adaptive HYROX training program that balances compromise running, erg conditioning, and heavy strength systemically.",
+  title: "Adaptive HYROX Training Program & Race Plan | RESILIENTO",
+  description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
+  openGraph: {
+    title: "Adaptive HYROX Training Program & Race Plan | RESILIENTO",
+    description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
+    url: "https://resiliento.app/hyrox",
+  },
 };
 
 export default function HyroxPage() {

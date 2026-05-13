@@ -4,7 +4,12 @@ import { Timer, Activity, Calendar, Gauge, Footprints, ClipboardCheck, Zap } fro
 
 export const metadata: Metadata = {
   title: 'Free Endurance & Hybrid Training Tools',
-  description: 'Calculators and estimators for triathlon pacing, Training Stress Score (TSS), hybrid athlete week planning, race nutrition, and gear checklists.',
+  description: 'Free training tools for endurance and hybrid athletes. Triathlon pace predictor, TSS estimator, race nutrition planner, running pace calculator, and more.',
+  openGraph: {
+    title: 'Free Endurance & Hybrid Training Tools | RESILIENTO',
+    description: 'Free training tools for endurance and hybrid athletes. Triathlon pace predictor, TSS estimator, race nutrition planner, running pace calculator, and more.',
+    url: 'https://resiliento.app/tools',
+  },
 };
 
 const tools = [

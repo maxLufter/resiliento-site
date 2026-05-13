@@ -1,16 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
+import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "RESILIENTO App | Adaptive Training Planner Algorithm",
-  description: "Why static PDF plans fail real athletes. Learn the mechanics of smart compression, deterministic recalculation, and how adapting to schedule friction preserves consistency.",
+  title: "Adaptive Training Planner Algorithm | RESILIENTO",
+  description: "Adaptive training planner that reschedules missed workouts and compresses sessions when time is short. No more anxiety from broken static plans.",
+  openGraph: {
+    title: "Adaptive Training Planner Algorithm | RESILIENTO",
+    description: "Adaptive training planner that reschedules missed workouts and compresses sessions when time is short. No more anxiety from broken static plans.",
+    url: "https://resiliento.app/adaptive-training-planner",
+  },
 };
+
+const plannerFaqs = [
+  {
+    question: "If I inherently keep missing sessions, what happens?",
+    answer: "RESILIENTO features a protocol called Horizon Re-Projection. If the engine detects accumulated disruption exceeding a major threshold (e.g., you've consistently missed 40% of the volume over two microcycles), it mathematically accepts that you are off the original trajectory. It automatically shifts the peaking curve and rebuilds the macrocycle closer to your reality, so you aren't perpetually drowning in unattainable load targets."
+  },
+  {
+    question: "Does an adaptive plan mean I can be lazy?",
+    answer: "No. It means zero guesswork when uncontrollable events happen. It relies completely on your discipline to execute the newly adjusted load. If you consistently skip sessions out of apathy, the engine will inevitably de-load your structural expectations entirely to keep you safe from over-reaching when you finally do train."
+  },
+  {
+    question: "Does it adapt strength sessions as well as endurance?",
+    answer: "Yes. Because it functions as a single Hybrid Engine, missing a heavy structural strength day might cause the planner to convert a high-intensity run interval tomorrow into an aerobic recovery run simply to make room for the rescheduled barbell strength block. That is the power of a unified system."
+  }
+];
 
 export default function AdaptiveTrainingPlannerPage() {
   return (
     <div className="flex flex-col">
       <SoftwareApplicationJsonLd specificDescription="Adaptive training planner algorithm that deterministically reschedules missed workouts and handles real-life friction." />
+      <FAQJsonLd faqs={plannerFaqs} />
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
         <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
@@ -195,7 +216,7 @@ export default function AdaptiveTrainingPlannerPage() {
             <div className="border-l-2 border-brand pl-6">
               <h3 className="text-lg font-bold text-white uppercase mb-3">If I inherently keep missing sessions, what happens?</h3>
               <p className="text-slate-400 font-light leading-relaxed">
-                RESILIENTO features a protocol called <strong>Horizon Re-Projection</strong>. If the engine detects accumulated disruption exceeding a major threshold (e.g., you&apos;ve consistently missed 40% of the volume over two microcycles), it mathematically accepts that you are off the original trajectory. It automatically shifts the peaking curve and rebuilds the macrocycle closer to your reality, so you aren&apos;s perpetually drowning in unattainable load targets.
+                RESILIENTO features a protocol called <strong>Horizon Re-Projection</strong>. If the engine detects accumulated disruption exceeding a major threshold (e.g., you&apos;ve consistently missed 40% of the volume over two microcycles), it mathematically accepts that you are off the original trajectory. It automatically shifts the peaking curve and rebuilds the macrocycle closer to your reality, so you aren&apos;t perpetually drowning in unattainable load targets.
               </p>
             </div>
             <div className="border-l-2 border-border pl-6 hover:border-brand transition-colors">

@@ -1,14 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "RESILIENTO App | Structural Mobility Engine",
-  description: "Why random stretching fails hybrid athletes. Learn how to use integrated, context-aware mobility to improve position tolerance, movement quality, and structural durability.",
+  title: "Structural Mobility for Hybrid Athletes | RESILIENTO",
+  description: "Sport-specific mobility for hybrid athletes. Context-aware protocols that activate before lifting and restore after endurance — integrated into your plan.",
+  openGraph: {
+    title: "Structural Mobility for Hybrid Athletes | RESILIENTO",
+    description: "Sport-specific mobility for hybrid athletes. Context-aware protocols that activate before lifting and restore after endurance — integrated into your plan.",
+    url: "https://resiliento.app/mobility-for-hybrid-athletes",
+  },
 };
+
+const mobilityFaqs = [
+  {
+    question: "Do I need extensive, expensive equipment?",
+    answer: "Baseline structural work requires nothing but clear floor space. Advanced restorative protocols use highly accessible tools like a standard foam roller, a lacrosse ball, or a heavy resistance band to dig into deeper fascial tissue when the engine identifies major restrictions."
+  },
+  {
+    question: "Is this just yoga repackaged?",
+    answer: "Not remotely. Yoga is an excellent general practice, but it is not inherently sport-specific. Engine-prescribed mobility is targeted, systematic damage control designed specifically to address the exact biomechanical movements you routinely execute."
+  },
+  {
+    question: "Does mobility scheduling interact with the planner?",
+    answer: "Yes. Because they are unified, if the adaptive planner recognizes that you have missed several key mobility days, it may automatically increase the restorative mobility duration requirement on your next designated rest day to prevent systemic breakdown."
+  }
+];
 
 export default function MobilityPage() {
   return (
     <div className="flex flex-col">
+      <SoftwareApplicationJsonLd specificDescription="Sport-specific mobility engine for hybrid athletes. Context-aware activation and restoration protocols integrated into daily training." />
+      <FAQJsonLd faqs={mobilityFaqs} />
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 border-b border-border overflow-hidden">
         <div className="absolute top-1/4 left-[10%] w-[1px] h-screen bg-gradient-to-b from-brand/20 to-transparent transform -rotate-45 opacity-50 pointer-events-none" />
