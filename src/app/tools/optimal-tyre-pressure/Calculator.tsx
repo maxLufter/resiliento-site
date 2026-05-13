@@ -7,7 +7,7 @@ type SurfaceType = 'track' | 'new_pavement' | 'good_pavement' | 'worn_pavement' 
 type SystemType = 'tubeless_perf' | 'tubeless_std' | 'tubular' | 'latex_tpu' | 'butyl';
 type PaceType = 'relaxed' | 'moderate' | 'fast' | 'race';
 
-const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }: any) => (
+const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }: { label: string; value: number; unit: string; onChange: (val: number) => void; min: number; max: number; step?: number; note?: string }) => (
   <div>
     <label className="flex flex-col mb-2">
       <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-2">{label}</span>

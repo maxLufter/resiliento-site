@@ -56,7 +56,7 @@ export default function TSSEstimatorPage() {
         <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
           <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Fatigue compounds invisibly.</h3>
           <p className="text-neutral-400 font-inter mb-6">
-            Knowing your workout scored 120 TSS is helpful. Knowing your body needs exactly 48 hours before another intense threshold session is game-changing. That's what the RESILIENTO engine handles automatically.
+            Knowing your workout scored 120 TSS is helpful. Knowing your body needs exactly 48 hours before another intense threshold session is game-changing. That&apos;s what the RESILIENTO engine handles automatically.
           </p>
           <a href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
             Join the Adaptive Engine Waitlist

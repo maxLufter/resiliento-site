@@ -93,7 +93,7 @@ export default function HybridTrainingEnginePage() {
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-brand font-mono text-[10px] tracking-[0.2em] uppercase">Interference Example B</span>
                 </div>
-                <h3 className="text-xl font-bold text-white uppercase mb-3">The "More Data" Trap</h3>
+                <h3 className="text-xl font-bold text-white uppercase mb-3">The &quot;More Data&quot; Trap</h3>
                 <p className="text-slate-400 font-light text-sm leading-relaxed">
                   Your smart ring registers a terrible night of sleep, a suppressed HRV, and gives you a 32% &quot;Readiness Score.&quot; But more data is not a solution if there is no algorithmic decision logic attached. A fragmented recovery score just makes you feel guilty while you try to execute the original training plan.
                   <br/><br/>

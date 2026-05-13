@@ -125,7 +125,7 @@ export default function Builder() {
             </li>
             <li className="flex items-start">
               <span className="text-brand mr-2">›</span>
-              Hard run intervals buffered 24h away from heavy lower body lifts to avoid "dead legs".
+              Hard run intervals buffered 24h away from heavy lower body lifts to avoid &quot;dead legs&quot;.
             </li>
             <li className="flex items-start">
               <span className="text-brand mr-2">›</span>

@@ -151,10 +151,11 @@ export default function NutritionCalculator() {
   };
 
   // Sync coffee caffeine when type changes (non-custom only)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (coffeeType !== 'custom') {
-      setCoffeeCaffeine(COFFEE_CAFFEINE[coffeeType]);
+      setTimeout(() => {
+        setCoffeeCaffeine(COFFEE_CAFFEINE[coffeeType]);
+      }, 0);
     }
   }, [coffeeType]);
 
@@ -164,8 +165,6 @@ export default function NutritionCalculator() {
     const baseCarb = carbRateForDuration(totalRaceMin, gutCeiling, strategy);
     const fluidPerH = avg(FLUID_RANGE[heat]);
     const sodiumPerH = avg(SODIUM_RANGE[heat]);
-    const cafDosePerKg = useCaffeine ? STRATEGY_CAFFEINE_DOSE[strategy] : 0;
-    const caffeineDose = useCaffeine ? Math.round(bodyMass * cafDosePerKg) : 0;
 
     return preset.legs.map((leg, i) => {
       const dur = durations[i];
@@ -194,7 +193,7 @@ export default function NutritionCalculator() {
         caffeineNote: cafNote, caffeineMg: 0,
       };
     });
-  }, [preset, durations, totalRaceMin, gutLevel, strategy, heat, bodyMass, useCaffeine, caffeineTablet]);
+  }, [preset, durations, totalRaceMin, gutLevel, strategy, heat, useCaffeine, caffeineTablet]);
 
   const totals = useMemo(() => ({
     carbs: plan.reduce((a, l) => a + l.carbTotal, 0),
@@ -337,7 +336,7 @@ export default function NutritionCalculator() {
       }
     }
     return w;
-  }, [plan, totals, bodyMass, useCaffeine, bikeFuelType, bikeBottleCount, bikeBottleVolume, caffeineAccounting, sodiumAccounting]);
+  }, [plan, useCaffeine, bikeFuelType, bikeBottleCount, bikeBottleVolume, caffeineAccounting, sodiumAccounting]);
 
   return (
     <div className="font-inter space-y-6">
@@ -837,7 +836,7 @@ function LegStat({ label, rate, total, color }: { label: string; rate: string; t
   );
 }
 
-function FuelingTimeline({ leg, totalRaceMin, useCaffeine, bodyMass, nutritionType, bikeBottleCount, bikeBottleVolume, raceType, carbsPerGel, carbsPerBar, sodiumCaps, caffeineTablet, cafGelPattern, cafGelCaffeine }: { leg: LegPlan, totalRaceMin: number, useCaffeine: boolean, bodyMass: number, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number, raceType: RaceType, carbsPerGel: number, carbsPerBar: number, sodiumCaps: number, caffeineTablet: number, cafGelPattern: CafGelPattern, cafGelCaffeine: number }) {
+function FuelingTimeline({ leg, useCaffeine, nutritionType, bikeBottleCount, bikeBottleVolume, raceType, carbsPerGel, carbsPerBar, sodiumCaps, caffeineTablet, cafGelPattern, cafGelCaffeine }: { leg: LegPlan, useCaffeine: boolean, nutritionType: NutritionType, bikeBottleCount?: number, bikeBottleVolume?: number, raceType: RaceType, carbsPerGel: number, carbsPerBar: number, sodiumCaps: number, caffeineTablet: number, cafGelPattern: CafGelPattern, cafGelCaffeine: number }) {
   const carbPerUnit = nutritionType === 'gels' ? carbsPerGel : nutritionType === 'bars' ? carbsPerBar : 30;
   const unitName = nutritionType === 'gels' ? 'gel' : nutritionType === 'bars' ? 'bar' : 'scoop';
   

@@ -56,7 +56,7 @@ export default function TriathlonPacePredictorPage() {
         <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
           <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Knowing the pace is just step one.</h3>
           <p className="text-neutral-400 font-inter mb-6">
-            Predicting a time is useless if your training plan causes burnout or injury before race day. A static plan doesn't care if you get sick. The RESILIENTO engine adapts your daily volume and intensity to get you to your goal time, injury-free.
+            Predicting a time is useless if your training plan causes burnout or injury before race day. A static plan doesn&apos;t care if you get sick. The RESILIENTO engine adapts your daily volume and intensity to get you to your goal time, injury-free.
           </p>
           <a href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
             Join the Adaptive Engine Waitlist

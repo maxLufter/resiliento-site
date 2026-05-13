@@ -53,7 +53,6 @@ export default function Predictor() {
     const cssSec = parseTimeToSec(swimCSS);
     const ftp = parseFloat(bikeFtp) || 200;
     const kg = parseFloat(weight) || 75;
-    const wkg = ftp / kg;
     const r5kSec = parseTimeToSec(run5k);
     const dist = DISTANCES[distance];
 

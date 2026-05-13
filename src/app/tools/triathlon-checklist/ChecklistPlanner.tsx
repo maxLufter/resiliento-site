@@ -176,19 +176,23 @@ export default function ChecklistPlanner() {
 
       if (urlEvent && DIST_ORDER.includes(urlEvent as EventType)) {
         // Shared link takes priority over localStorage
-        setEventType(urlEvent as EventType);
-        if (urlConditions) setConditions(new Set(urlConditions.split(',').filter(Boolean) as Condition[]));
-        if (urlChecked) setChecked(new Set(urlChecked.split(',').filter(Boolean)));
+        setTimeout(() => {
+          setEventType(urlEvent as EventType);
+          if (urlConditions) setConditions(new Set(urlConditions.split(',').filter(Boolean) as Condition[]));
+          if (urlChecked) setChecked(new Set(urlChecked.split(',').filter(Boolean)));
+        }, 0);
         return;
       }
 
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const data = JSON.parse(saved);
-        if (data.eventType) setEventType(data.eventType);
-        if (data.conditions) setConditions(new Set(data.conditions));
-        if (data.checked) setChecked(new Set(data.checked));
-        if (data.hiddenItems) setHiddenItems(new Set(data.hiddenItems));
+        setTimeout(() => {
+          if (data.eventType) setEventType(data.eventType);
+          if (data.conditions) setConditions(new Set(data.conditions));
+          if (data.checked) setChecked(new Set(data.checked));
+          if (data.hiddenItems) setHiddenItems(new Set(data.hiddenItems));
+        }, 0);
       }
     } catch { /* ignore parse errors */ }
   }, []);
@@ -256,15 +260,15 @@ export default function ChecklistPlanner() {
 
   // Compute visible items and progress
   const { visibleCategories, totalVisible, totalChecked } = useMemo(() => {
-    let totalV = 0;
-    let totalC = 0;
     const cats = CATEGORIES.map(cat => {
       const visItems = cat.items.filter(isItemVisible);
       const checkedCount = visItems.filter(i => checked.has(i.id)).length;
-      totalV += visItems.length;
-      totalC += checkedCount;
       return { ...cat, visibleItems: visItems, checkedCount };
     }).filter(cat => cat.visibleItems.length > 0);
+    
+    const totalV = cats.reduce((acc, cat) => acc + cat.visibleItems.length, 0);
+    const totalC = cats.reduce((acc, cat) => acc + cat.checkedCount, 0);
+    
     return { visibleCategories: cats, totalVisible: totalV, totalChecked: totalC };
   }, [isItemVisible, checked]);
 
