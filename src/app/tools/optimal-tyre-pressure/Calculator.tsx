@@ -202,41 +202,56 @@ export default function Calculator() {
             <div className="space-y-6">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">Surface Condition</label>
+                <div className="relative">
                 <select 
                   value={surfaceType}
                   onChange={(e) => setSurfaceType(e.target.value as SurfaceType)}
-                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 text-sm text-white focus:border-brand outline-none appearance-none"
+                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 pr-8 text-sm text-white focus:border-brand outline-none appearance-none cursor-pointer"
                 >
                   {(Object.entries(surfaceData) as [SurfaceType, typeof surfaceData[SurfaceType]][]).map(([key, data]) => (
                     <option key={key} value={key}>{data.label}</option>
                   ))}
                 </select>
+                <div className="absolute right-2 top-0 bottom-0 flex items-center pointer-events-none">
+                  <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </div>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">Target Speed</label>
+                <div className="relative">
                 <select 
                   value={paceType}
                   onChange={(e) => setPaceType(e.target.value as PaceType)}
-                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 text-sm text-white focus:border-brand outline-none appearance-none"
+                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 pr-8 text-sm text-white focus:border-brand outline-none appearance-none cursor-pointer"
                 >
                   {(Object.entries(paceData) as [PaceType, typeof paceData[PaceType]][]).map(([key, data]) => (
                     <option key={key} value={key}>{data.label}</option>
                   ))}
                 </select>
+                <div className="absolute right-2 top-0 bottom-0 flex items-center pointer-events-none">
+                  <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </div>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">Tire System Type</label>
+                <div className="relative">
                 <select 
                   value={systemType}
                   onChange={(e) => setSystemType(e.target.value as SystemType)}
-                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 text-sm text-white focus:border-brand outline-none appearance-none mb-2"
+                  className="w-full bg-black/40 border border-neutral-800 rounded px-3 py-2 pr-8 text-sm text-white focus:border-brand outline-none appearance-none cursor-pointer mb-2"
                 >
                   {(Object.entries(systemData) as [SystemType, typeof systemData[SystemType]][]).map(([key, data]) => (
                     <option key={key} value={key}>{data.label}</option>
                   ))}
                 </select>
+                <div className="absolute right-2 top-0 bottom-[0.5rem] flex items-center pointer-events-none">
+                  <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </div>
+                </div>
                 <p className="text-[10px] text-neutral-500 leading-relaxed min-h-[30px]">
                   {systemData[systemType].description}
                 </p>

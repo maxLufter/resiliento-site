@@ -166,9 +166,22 @@ export default function ChecklistPlanner() {
   const [expandedTips, setExpandedTips] = useState<Set<string>>(new Set());
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
-  // Load from localStorage on mount
+  // Load from URL params (shared link) or localStorage on mount
   useEffect(() => {
     try {
+      const params = new URLSearchParams(window.location.search);
+      const urlEvent = params.get('e');
+      const urlConditions = params.get('c');
+      const urlChecked = params.get('k');
+
+      if (urlEvent && DIST_ORDER.includes(urlEvent as EventType)) {
+        // Shared link takes priority over localStorage
+        setEventType(urlEvent as EventType);
+        if (urlConditions) setConditions(new Set(urlConditions.split(',').filter(Boolean) as Condition[]));
+        if (urlChecked) setChecked(new Set(urlChecked.split(',').filter(Boolean)));
+        return;
+      }
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const data = JSON.parse(saved);

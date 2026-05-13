@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type RaceType = 'tri_sprint' | 'tri_olympic' | 'tri_703' | 'tri_ironman' | 'bike' | 'run';
@@ -150,7 +150,9 @@ export default function NutritionCalculator() {
     });
   };
 
-  useMemo(() => {
+  // Sync coffee caffeine when type changes (non-custom only)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
     if (coffeeType !== 'custom') {
       setCoffeeCaffeine(COFFEE_CAFFEINE[coffeeType]);
     }
@@ -513,17 +515,24 @@ export default function NutritionCalculator() {
               <div>
                 <span className="text-xs text-neutral-500 mb-2 block uppercase tracking-wider font-bold">Regular Gel</span>
                 <div className="flex gap-1">
-                  <div className="w-1/2">
+                  <div className="w-1/3">
                     <span className="text-[9px] text-amber-400/70 font-bold uppercase block mb-0.5 text-center">Carbs</span>
                     <div className="relative">
                       <input type="number" value={carbsPerGel} onChange={e => setCarbsPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-3 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">g</span>
                     </div>
                   </div>
-                  <div className="w-1/2">
+                  <div className="w-1/3">
                     <span className="text-[9px] text-rose-400/70 font-bold uppercase block mb-0.5 text-center">Sodium</span>
                     <div className="relative">
                       <input type="number" value={sodiumPerGel} onChange={e => setSodiumPerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-4 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">mg</span>
+                    </div>
+                  </div>
+                  <div className="w-1/3">
+                    <span className="text-[9px] text-green-400/70 font-bold uppercase block mb-0.5 text-center">Caffeine</span>
+                    <div className="relative">
+                      <input type="number" value={caffeinePerGel} onChange={e => setCaffeinePerGel(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-5 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">mg</span>
                     </div>
                   </div>
@@ -558,17 +567,24 @@ export default function NutritionCalculator() {
               <div>
                 <span className="text-xs text-neutral-500 mb-2 block uppercase tracking-wider font-bold">Drink Mix (scoop)</span>
                 <div className="flex gap-1">
-                  <div className="w-1/2">
+                  <div className="w-1/3">
                     <span className="text-[9px] text-amber-400/70 font-bold uppercase block mb-0.5 text-center">Carbs</span>
                     <div className="relative">
                       <input type="number" value={carbsPerScoop} onChange={e => setCarbsPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-3 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">g</span>
                     </div>
                   </div>
-                  <div className="w-1/2">
+                  <div className="w-1/3">
                     <span className="text-[9px] text-rose-400/70 font-bold uppercase block mb-0.5 text-center">Sodium</span>
                     <div className="relative">
                       <input type="number" value={sodiumPerScoop} onChange={e => setSodiumPerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-4 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">mg</span>
+                    </div>
+                  </div>
+                  <div className="w-1/3">
+                    <span className="text-[9px] text-green-400/70 font-bold uppercase block mb-0.5 text-center">Caffeine</span>
+                    <div className="relative">
+                      <input type="number" value={caffeinePerScoop} onChange={e => setCaffeinePerScoop(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-lg px-1 pr-5 h-9 text-white font-mono text-sm text-center focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       <span className="absolute right-1.5 top-2 text-[10px] text-neutral-400 font-mono pointer-events-none">mg</span>
                     </div>
                   </div>

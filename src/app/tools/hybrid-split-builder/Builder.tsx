@@ -144,7 +144,7 @@ export default function Builder() {
         <div className="space-y-4">
           {schedule.map((day) => (
             <div key={day.day} className="flex flex-col md:flex-row bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden shadow">
-              <div className="md:w-32bg-neutral-950 md:border-r border-neutral-800 p-4 flex items-center bg-black/20">
+              <div className="md:w-32 bg-neutral-950 md:border-r border-neutral-800 p-4 flex items-center bg-black/20">
                 <span className="font-bold text-white font-montserrat uppercase tracking-wider text-sm">{day.day}</span>
               </div>
               <div className="flex-1 p-4 grid grid-cols-1 gap-3 relative z-10">

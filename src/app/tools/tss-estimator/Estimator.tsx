@@ -11,7 +11,7 @@ export default function Estimator() {
     if (r <= 4) return { IF: 0.75, label: "Easy (Endurance Base)", color: "text-emerald-400", bg: "bg-emerald-400" };
     if (r <= 6) return { IF: 0.85, label: "Moderate (Tempo)", color: "text-yellow-400", bg: "bg-yellow-400" };
     if (r <= 8) return { IF: 0.95, label: "Hard (Threshold / Intervals)", color: "text-orange-400", bg: "bg-orange-400" };
-    const maxIF = 1.05 + ((rpe - 8) * 0.05);
+    const maxIF = 1.05 + ((r - 8) * 0.05);
     return { IF: maxIF, label: "Maximal Effort (VO2 / Sprinting)", color: "text-red-500", bg: "bg-red-500" };
   };
 

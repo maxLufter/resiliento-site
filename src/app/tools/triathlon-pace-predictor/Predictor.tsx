@@ -14,10 +14,16 @@ const DISTANCES = {
 function parseTimeToSec(str: string): number {
   if (!str) return 0;
   const parts = str.split(':').map(Number);
-  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[0] >= 0 && parts[1] >= 0) {
     return parts[0] * 60 + parts[1];
   }
   return 0;
+}
+
+function isValidTime(str: string): boolean {
+  if (!str) return false;
+  const parts = str.split(':').map(Number);
+  return parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[0] >= 0 && parts[1] >= 0 && parts[1] < 60 && parseTimeToSec(str) > 0;
 }
 
 function formatSecToTime(totalSec: number): string {
@@ -38,6 +44,11 @@ export default function Predictor() {
   const [weight, setWeight] = useState('75');
   const [run5k, setRun5k] = useState('25:00');
 
+  const swimValid = isValidTime(swimCSS);
+  const run5kValid = isValidTime(run5k);
+  const ftpValid = (parseFloat(bikeFtp) || 0) > 0;
+  const weightValid = (parseFloat(weight) || 0) > 0;
+
   const calculate = () => {
     const cssSec = parseTimeToSec(swimCSS);
     const ftp = parseFloat(bikeFtp) || 200;
@@ -57,6 +68,11 @@ export default function Predictor() {
     };
     
     const f = factors[distance];
+
+    // Guard: prevent NaN/Infinity from bad inputs
+    if (cssSec <= 0 || ftp <= 0 || kg <= 0 || r5kSec <= 0) {
+      return { swimTime: '--:--', swimPace: '--:-- /100m', t1Time: formatSecToTime(0), bikeTime: '--:--', bikePace: '-- km/h', t2Time: formatSecToTime(0), runTime: '--:--', runPace: '--:-- /km', total: '--:--:--' };
+    }
 
     // Swim prediction: CSS pace degraded by distance factor
     const swimPaceSec = (cssSec * f.swim);
@@ -127,7 +143,7 @@ export default function Predictor() {
               value={swimCSS}
               onChange={(e) => setSwimCSS(e.target.value)}
               placeholder="01:40"
-              className="w-full bg-black border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none transition-shadow"
+              className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${swimValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
             />
             <p className="text-[10px] text-neutral-500 mt-2">Critical Swim Speed (Threshold Pace).</p>
           </div>
@@ -140,7 +156,7 @@ export default function Predictor() {
                 value={bikeFtp}
                 onChange={(e) => setBikeFtp(e.target.value)}
                 placeholder="220"
-                className="w-full bg-black border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none transition-shadow"
+                className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${ftpValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
               />
             </div>
             <div className="flex-1">
@@ -150,7 +166,7 @@ export default function Predictor() {
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="75"
-                className="w-full bg-black border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none transition-shadow"
+                className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${weightValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
               />
             </div>
           </div>
@@ -162,7 +178,7 @@ export default function Predictor() {
               value={run5k}
               onChange={(e) => setRun5k(e.target.value)}
               placeholder="25:00"
-              className="w-full bg-black border border-neutral-800 rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none transition-shadow"
+              className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${run5kValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
             />
           </div>
         </div>
