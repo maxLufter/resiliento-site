@@ -687,9 +687,7 @@ export default function NutritionCalculator() {
           <FuelingTimeline 
             key={leg.name} 
             leg={leg} 
-            totalRaceMin={totalRaceMin} 
             useCaffeine={useCaffeine} 
-            bodyMass={bodyMass} 
             nutritionType={leg.name === 'Bike' ? bikeFuelType : runFuelType} 
             bikeBottleCount={bikeBottleCount}
             bikeBottleVolume={bikeBottleVolume}
