@@ -55,6 +55,16 @@ export default function PaceCalculatorPage() {
         <div className="max-w-5xl mx-auto">
           <Calculator />
         </div>
+
+        <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
+          <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Pacing is planning. Training is execution.</h3>
+          <p className="text-neutral-400 font-inter mb-6">
+            Knowing the pace required for a sub-3 marathon is easy. Building a training plan that gets you there without injury is hard. The RESILIENTO engine automatically adjusts your volume and intensity daily to keep you on target.
+          </p>
+          <Link href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
+            Join the Adaptive Engine Waitlist
+          </Link>
+        </div>
       </div>
     </>
   );

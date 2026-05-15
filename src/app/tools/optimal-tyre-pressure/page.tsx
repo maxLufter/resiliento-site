@@ -55,6 +55,16 @@ export default function TyrePressurePage() {
         <div className="max-w-5xl mx-auto">
           <Calculator />
         </div>
+
+        <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
+          <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Free speed is great. A faster engine is better.</h3>
+          <p className="text-neutral-400 font-inter mb-6">
+            Optimizing your gear saves watts, but optimizing your physiology wins races. The RESILIENTO engine adapts your daily volume and intensity to build an unbreakable hybrid engine.
+          </p>
+          <Link href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
+            Join the Adaptive Engine Waitlist
+          </Link>
+        </div>
       </div>
     </>
   );

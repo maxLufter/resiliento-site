@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import HRZonesCalculator from './HRZonesCalculator';
 
 export const metadata: Metadata = {
@@ -35,11 +36,10 @@ export default function HRZonesCalculatorPage() {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section */}
+        <div className="mb-8">
+          <Link href="/tools" className="text-xs font-mono tracking-[0.2em] uppercase text-slate-500 hover:text-brand transition-colors">← All Tools</Link>
+        </div>
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <a href="/tools" className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-neutral-500 hover:text-brand transition-colors mb-8 group">
-            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span>
-            All Tools
-          </a>
           <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6 font-montserrat flex items-center justify-center gap-4">
             <span className="text-brand">❤️</span> 
             Heart Rate <span className="text-brand">ZONES</span>
@@ -82,6 +82,16 @@ export default function HRZonesCalculatorPage() {
               </div>
             </div>
           </section>
+
+          <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Training zones are only as good as the plan that uses them.</h3>
+            <p className="text-neutral-400 font-inter mb-6">
+              Knowing your LTHR is the first step. The RESILIENTO engine automatically structures your entire week of endurance and strength around these exact physiological zones to guarantee progress without overtraining.
+            </p>
+            <Link href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
+              Join the Adaptive Engine Waitlist
+            </Link>
+          </div>
         </div>
       </div>
     </main>

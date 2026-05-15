@@ -55,6 +55,16 @@ export default function ChecklistPage() {
         <div className="max-w-4xl mx-auto">
           <ChecklistPlanner />
         </div>
+
+        <div className="mt-16 bg-neutral-900 border border-neutral-800 rounded-xl p-8 text-center max-w-2xl mx-auto">
+          <h3 className="text-xl font-bold text-white mb-4 font-montserrat">Don't forget the most important item: Fitness.</h3>
+          <p className="text-neutral-400 font-inter mb-6">
+            Having the right gear is essential, but arriving at the start line overtrained or underprepared ruins the race. The RESILIENTO engine dynamically structures your training to peak perfectly for race day.
+          </p>
+          <Link href="/waitlist" className="inline-block bg-brand text-black font-semibold tracking-wide py-3 px-8 rounded-md transition-transform hover:scale-105">
+            Join the Adaptive Engine Waitlist
+          </Link>
+        </div>
       </div>
     </>
   );
