@@ -17,7 +17,7 @@ export function Navigation() {
             </div>
             <div className="flex flex-col justify-center">
               <span className="font-montserrat font-[550] text-[20px] sm:text-3xl lg:text-[32px] text-white tracking-[0.13em] uppercase leading-none -mr-[0.13em]">RESILIENTO</span>
-              <span className="font-montserrat font-bold tracking-[0.25em] text-[7px] sm:text-[9px] lg:text-[10.5px] text-slate-400 uppercase mt-1">HYBRID TRAINING ENGINE</span>
+              <span className="font-montserrat font-bold tracking-[0.38em] sm:tracking-[0.39em] lg:tracking-[0.41em] text-[7px] sm:text-[9px] lg:text-[10.5px] text-slate-400 uppercase mt-1 -mr-[0.41em]">HYBRID TRAINING ENGINE</span>
             </div>
           </Link>
         </div>
