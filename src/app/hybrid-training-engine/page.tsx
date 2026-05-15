@@ -3,10 +3,10 @@ import Image from "next/image";
 import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Hybrid Training Engine Architecture | RESILIENTO",
+  title: "Hybrid Training Engine Architecture",
   description: "Why fragmented training apps fail hybrid athletes and how a unified engine coordinates endurance, strength, and recovery in one macrocycle.",
   openGraph: {
-    title: "Hybrid Training Engine Architecture | RESILIENTO",
+    title: "Hybrid Training Engine Architecture",
     description: "Why fragmented training apps fail hybrid athletes and how a unified engine coordinates endurance, strength, and recovery in one macrocycle.",
     url: "https://resiliento.app/hybrid-training-engine",
   },

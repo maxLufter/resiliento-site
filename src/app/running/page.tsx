@@ -4,10 +4,10 @@ import { ExpandableListItem } from "@/components/ExpandableListItem";
 import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive Running Training Program & Plan | RESILIENTO",
+  title: "Adaptive Running Training Program & Plan",
   description: "Adaptive running plan for athletes who also lift heavy. Algorithmically buffers track sessions from strength days to prevent interference and injury.",
   openGraph: {
-    title: "Adaptive Running Training Program & Plan | RESILIENTO",
+    title: "Adaptive Running Training Program & Plan",
     description: "Adaptive running plan for athletes who also lift heavy. Algorithmically buffers track sessions from strength days to prevent interference and injury.",
     url: "https://resiliento.app/running",
   },

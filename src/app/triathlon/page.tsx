@@ -5,10 +5,10 @@ import { ExpandableListItem } from "@/components/ExpandableListItem";
 import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive Triathlon Training Program & Coaching App | RESILIENTO",
+  title: "Adaptive Triathlon Training Program & Coaching App",
   description: "Adaptive triathlon training app that coordinates swim, bike, run, and strength into one system. Dynamically adjusts when life disrupts your schedule.",
   openGraph: {
-    title: "Adaptive Triathlon Training Program & Coaching App | RESILIENTO",
+    title: "Adaptive Triathlon Training Program & Coaching App",
     description: "Adaptive triathlon training app that coordinates swim, bike, run, and strength into one system. Dynamically adjusts when life disrupts your schedule.",
     url: "https://resiliento.app/triathlon",
   },

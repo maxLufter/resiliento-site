@@ -5,7 +5,7 @@ import { Zap } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Race Nutrition Planner — Carbs, Sodium, Caffeine & Fluid Plan | RESILIENTO',
+  title: 'Race Nutrition Planner — Carbs, Sodium, Caffeine & Fluid Plan',
   description: 'Evidence-based race nutrition planner for triathlon, cycling, and running. Calculate carbohydrate, sodium, fluid, and caffeine targets based on your event distance, body mass, gut tolerance, and conditions.',
   keywords: 'race nutrition planner, triathlon nutrition plan, ironman nutrition strategy, carb intake calculator, race fueling plan, sodium electrolyte calculator',
 };

@@ -3,10 +3,10 @@ import Image from "next/image";
 import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive Training Planner Algorithm | RESILIENTO",
+  title: "Adaptive Training Planner Algorithm",
   description: "Adaptive training planner that reschedules missed workouts and compresses sessions when time is short. No more anxiety from broken static plans.",
   openGraph: {
-    title: "Adaptive Training Planner Algorithm | RESILIENTO",
+    title: "Adaptive Training Planner Algorithm",
     description: "Adaptive training planner that reschedules missed workouts and compresses sessions when time is short. No more anxiety from broken static plans.",
     url: "https://resiliento.app/adaptive-training-planner",
   },

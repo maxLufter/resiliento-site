@@ -5,7 +5,7 @@ import { Gauge } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Optimal Tyre Pressure Calculator (Physics-Based) | RESILIENTO',
+  title: 'Optimal Tyre Pressure Calculator (Physics-Based)',
   description: 'Calculate your optimal cycling tire pressure. A sophisticated physics-based calculator balancing casing tension, surface impedance, hookless rim limits, and wet weather conditions for maximum speed.',
   keywords: 'optimal tyre pressure calculator, cycling tire pressure, road bike tire pressure, gravel bike tire pressure, silca pressure calculator alternative',
 };

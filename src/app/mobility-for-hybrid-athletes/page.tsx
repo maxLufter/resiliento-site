@@ -3,10 +3,10 @@ import Image from "next/image";
 import { SoftwareApplicationJsonLd, FAQJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Structural Mobility for Hybrid Athletes | RESILIENTO",
+  title: "Structural Mobility for Hybrid Athletes",
   description: "Sport-specific mobility for hybrid athletes. Context-aware protocols that activate before lifting and restore after endurance — integrated into your plan.",
   openGraph: {
-    title: "Structural Mobility for Hybrid Athletes | RESILIENTO",
+    title: "Structural Mobility for Hybrid Athletes",
     description: "Sport-specific mobility for hybrid athletes. Context-aware protocols that activate before lifting and restore after endurance — integrated into your plan.",
     url: "https://resiliento.app/mobility-for-hybrid-athletes",
   },

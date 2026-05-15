@@ -5,7 +5,7 @@ import { Activity } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Training Stress Score (TSS) Estimator | RESILIENTO Tools',
+  title: 'Training Stress Score (TSS) Estimator',
   description: 'Estimate the physiological cost of your endurance or strength workouts using RPE and duration. Calculate your training stress score and recovery runway for free.',
 };
 

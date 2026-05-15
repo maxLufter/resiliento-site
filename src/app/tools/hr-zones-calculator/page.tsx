@@ -3,7 +3,7 @@ import Link from 'next/link';
 import HRZonesCalculator from './HRZonesCalculator';
 
 export const metadata: Metadata = {
-  title: 'Heart Rate Training Zones Calculator | LTHR | RESILIENTO',
+  title: 'Heart Rate Training Zones Calculator | LTHR',
   description: 'Calculate your exact endurance training zones using the RESILIENTO LTHR model to optimize your conditioning.',
   openGraph: {
     title: 'Heart Rate Training Zones Calculator',

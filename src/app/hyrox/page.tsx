@@ -5,10 +5,10 @@ import { ExpandableListItem } from "@/components/ExpandableListItem";
 import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive HYROX Training Program & Race Plan | RESILIENTO",
+  title: "Adaptive HYROX Training Program & Race Plan",
   description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
   openGraph: {
-    title: "Adaptive HYROX Training Program & Race Plan | RESILIENTO",
+    title: "Adaptive HYROX Training Program & Race Plan",
     description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
     url: "https://resiliento.app/hyrox",
   },

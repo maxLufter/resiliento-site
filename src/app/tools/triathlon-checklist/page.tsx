@@ -5,7 +5,7 @@ import { ClipboardCheck } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Triathlon Race Day Checklist & Packing Planner | RESILIENTO',
+  title: 'Triathlon Race Day Checklist & Packing Planner',
   description: 'Never forget essential race gear again. Smart triathlon packing checklist that adapts to your event distance (Sprint to Ironman), wetsuit rules, and weather conditions.',
   keywords: 'triathlon checklist, triathlon packing list, race day checklist, ironman packing list, triathlon gear list, wetsuit triathlon checklist',
 };

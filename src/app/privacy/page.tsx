@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Privacy Policy | RESILIENTO",
+  title: "Privacy Policy",
   description: "Privacy policy for RESILIENTO.",
 };
 

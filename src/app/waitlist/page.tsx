@@ -1,7 +1,7 @@
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 export const metadata = {
-  title: "Join Waitlist | RESILIENTO",
+  title: "Join Waitlist",
   description: "Join the waitlist for RESILIENTO — the adaptive training app for triathlon, HYROX, running, and hybrid athletes. Limited closed-cohort access.",
   openGraph: {
     title: "Join the RESILIENTO Waitlist",

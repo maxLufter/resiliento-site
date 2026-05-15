@@ -5,7 +5,7 @@ import { Footprints } from 'lucide-react';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Running Pace Calculator & Speed Converter | RESILIENTO',
+  title: 'Running Pace Calculator & Speed Converter',
   description: 'Free Running Pace Calculator. Plan your race strategy, calculate required pace for target finish times, predict event outcomes, and seamlessly convert pace to km/h or mph.',
   keywords: 'running pace calculator, pace to km/h converter, marathon finish time predictor, half marathon pace calculator',
 };

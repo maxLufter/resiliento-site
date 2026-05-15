@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Free Endurance & Hybrid Training Tools',
   description: 'Free training tools for endurance and hybrid athletes. Triathlon pace predictor, TSS estimator, race nutrition planner, running pace calculator, and more.',
   openGraph: {
-    title: 'Free Endurance & Hybrid Training Tools | RESILIENTO',
+    title: 'Free Endurance & Hybrid Training Tools',
     description: 'Free training tools for endurance and hybrid athletes. Triathlon pace predictor, TSS estimator, race nutrition planner, running pace calculator, and more.',
     url: 'https://resiliento.app/tools',
   },
