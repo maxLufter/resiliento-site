@@ -21,8 +21,10 @@ const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }:
             type="number"
             value={value}
             onChange={(e) => {
-              const val = Number(e.target.value);
-              if (!isNaN(val)) onChange(val);
+              const raw = e.target.value;
+              if (raw === '' || raw === '-') return;
+              const val = Number(raw);
+              if (!isNaN(val)) onChange(Math.min(max, Math.max(min, val)));
             }}
             className="w-full bg-black border border-neutral-800 rounded text-center h-8 text-white font-mono text-sm focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
@@ -89,7 +91,10 @@ export default function Calculator() {
 
     // Sophisticated physical base model derived from hoop stress & empiric testing
     // Base formula: PSI = (Load_kg / Width_mm^1.5) * 240
-    const calcBase = (load: number, width: number) => (load / Math.pow(width, 1.5)) * 240;
+    const calcBase = (load: number, width: number) => {
+      const safeWidth = Math.max(width, 1);
+      return (load / Math.pow(safeWidth, 1.5)) * 240;
+    };
 
     const baseFront = calcBase(frontLoad, frontTireWidth);
     const baseRear = calcBase(rearLoad, rearTireWidth);

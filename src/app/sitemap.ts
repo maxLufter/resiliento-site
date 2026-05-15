@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const today = '2026-05-13';
-  const toolsUpdate = '2026-05-13';
-  const landingUpdate = '2026-05-13';
+  const today = '2026-05-15';
+  const toolsUpdate = '2026-05-15';
+  const landingUpdate = '2026-05-15';
   const staticDate = '2025-12-01';
 
   return [
@@ -111,6 +111,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'https://resiliento.app/tools/race-nutrition-calculator',
+      lastModified: toolsUpdate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://resiliento.app/tools/hr-zones-calculator',
       lastModified: toolsUpdate,
       changeFrequency: 'weekly',
       priority: 0.8,

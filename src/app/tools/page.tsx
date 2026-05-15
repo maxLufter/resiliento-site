@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Timer, Activity, Calendar, Gauge, Footprints, ClipboardCheck, Zap } from 'lucide-react';
+import { Timer, Activity, Calendar, Gauge, Footprints, ClipboardCheck, Zap, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Free Endurance & Hybrid Training Tools',
@@ -61,6 +61,13 @@ const tools = [
     href: '/tools/race-nutrition-calculator',
     tag: 'Nutrition',
     icon: Zap,
+  },
+  {
+    title: 'Heart Rate Zones Calculator',
+    description: 'Calculate your exact endurance training zones using the RESILIENTO LTHR model.',
+    href: '/tools/hr-zones-calculator',
+    tag: 'Physiology',
+    icon: Heart,
   },
 ];
 
