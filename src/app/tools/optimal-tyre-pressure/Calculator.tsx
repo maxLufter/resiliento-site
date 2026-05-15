@@ -1,44 +1,81 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type BikeType = 'triathlon' | 'road' | 'gravel' | 'mtb';
 type SurfaceType = 'track' | 'new_pavement' | 'good_pavement' | 'worn_pavement' | 'poor_pavement' | 'hardpack' | 'gravel' | 'chunky_gravel';
 type SystemType = 'tubeless_perf' | 'tubeless_std' | 'tubular' | 'latex_tpu' | 'butyl';
 type PaceType = 'relaxed' | 'moderate' | 'fast' | 'race';
 
-const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }: { label: string; value: number; unit: string; onChange: (val: number) => void; min: number; max: number; step?: number; note?: string }) => (
-  <div>
-    <label className="flex flex-col mb-2">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-2">{label}</span>
-      <div className="flex items-center gap-1">
-        <button 
-          onClick={() => onChange(Math.max(min, value - step))}
-          className="w-8 h-8 rounded bg-neutral-800 text-neutral-400 flex items-center justify-center hover:bg-neutral-700 hover:text-white transition-colors"
-        >–</button>
-        <div className="relative flex-1">
-          <input 
-            type="number"
-            value={value}
-            onChange={(e) => {
-              const raw = e.target.value;
-              if (raw === '' || raw === '-') return;
-              const val = Number(raw);
-              if (!isNaN(val)) onChange(Math.min(max, Math.max(min, val)));
+const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }: { label: string; value: number; unit: string; onChange: (val: number) => void; min: number; max: number; step?: number; note?: string }) => {
+  const [inputValue, setInputValue] = useState(value.toString());
+
+  useEffect(() => {
+    const parsedInput = parseFloat(inputValue);
+    if (isNaN(parsedInput) || parsedInput !== value) {
+      setInputValue(value.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const handleBlur = () => {
+    let parsed = parseFloat(inputValue);
+    if (isNaN(parsed)) parsed = min;
+    const clamped = Math.min(max, Math.max(min, parsed));
+    setInputValue(clamped.toString());
+    onChange(clamped);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleBlur();
+    }
+  };
+
+  return (
+    <div>
+      <label className="flex flex-col mb-2">
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-2">{label}</span>
+        <div className="flex items-center gap-1">
+          <button 
+            onClick={() => {
+              const newVal = Math.max(min, value - step);
+              setInputValue(newVal.toString());
+              onChange(newVal);
             }}
-            className="w-full bg-black border border-neutral-800 rounded text-center h-8 text-white font-mono text-sm focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          />
+            className="w-8 h-8 rounded bg-neutral-800 text-neutral-400 flex items-center justify-center hover:bg-neutral-700 hover:text-white transition-colors"
+          >–</button>
+          <div className="relative flex-1">
+            <input 
+              type="number"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                const parsed = parseFloat(e.target.value);
+                if (!isNaN(parsed)) {
+                  onChange(parsed);
+                }
+              }}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              className="w-full bg-black border border-neutral-800 rounded text-center h-8 text-white font-mono text-sm focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            />
+          </div>
+          <button 
+            onClick={() => {
+              const newVal = Math.min(max, value + step);
+              setInputValue(newVal.toString());
+              onChange(newVal);
+            }}
+            className="w-8 h-8 rounded bg-neutral-800 text-neutral-400 flex items-center justify-center hover:bg-neutral-700 hover:text-white transition-colors"
+          >+</button>
+          <span className="text-brand font-mono text-sm ml-2 w-6">{unit}</span>
         </div>
-        <button 
-          onClick={() => onChange(Math.min(max, value + step))}
-          className="w-8 h-8 rounded bg-neutral-800 text-neutral-400 flex items-center justify-center hover:bg-neutral-700 hover:text-white transition-colors"
-        >+</button>
-        <span className="text-brand font-mono text-sm ml-2 w-6">{unit}</span>
-      </div>
-    </label>
-    {note && <p className="text-[10px] text-neutral-500 mt-1 text-center">{note}</p>}
-  </div>
-);
+      </label>
+      {note && <p className="text-[10px] text-neutral-500 mt-1 text-center">{note}</p>}
+    </div>
+  );
+};
 
 export default function Calculator() {
   const [systemWeight, setSystemWeight] = useState<number>(85);
