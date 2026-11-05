@@ -45,3 +45,24 @@ The site topology generates deeply indexable landing hubs calibrated for key coh
 - Hybrid Running & Mobility
 
 All sub-segments employ robust metadata and generate unified `sitemap.ts` structures natively.
+
+### Training tool pages
+
+All eight tool routes use the server-rendered `ToolPage` component. `src/lib/tool-guides.ts` holds each tool's search title, description, instructions, worked example, method, questions and contextual links. Keep examples consistent with the calculator and change the visible review date and sitemap date when content materially changes. Preserve existing route URLs.
+
+`WebApplication`, breadcrumb and catalog `ItemList` data describe the visible content; they do not guarantee a Google rich result. Ratings and endorsements are not fabricated. The calculators remain usable without signup.
+
+Validate with Node 22.18+ or Node 24+:
+
+```bash
+npm test
+npm run build
+# Against a running local production build:
+npm run verify:site -- http://127.0.0.1:3100
+# After the Vercel production deployment completes:
+npm run verify:site -- https://resiliento.app
+```
+
+The read-only site check verifies HTTP responses, server-rendered guidance, metadata, canonical URLs, structured data, contextual links, sitemap and robots. It never submits the waitlist form.
+
+Custom funnel events are opt-in through `NEXT_PUBLIC_VERCEL_CUSTOM_EVENTS=true` and require a Vercel plan that supports custom events. Without that flag, existing page-view analytics remain active and the new funnel events are not sent. Tool-origin attribution is also included in new waitlist notification emails.

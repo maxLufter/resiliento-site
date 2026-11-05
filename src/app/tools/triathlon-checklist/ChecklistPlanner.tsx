@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { parseChecklistState } from '@/lib/checklist';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type EventType = 'sprint' | 'olympic' | '70.3' | 'ironman';
@@ -51,7 +52,7 @@ const CATEGORIES: Category[] = [
       { id: 'wetsuit', label: 'Wetsuit', conditions: ['wetsuit'] },
       { id: 'anti_chafe', label: 'Anti-chafe balm / Body Glide', tip: 'Apply to neck, wrists, ankles, and anywhere that might rub' },
       { id: 'aero_calf_sleeves', label: 'Aero calf sleeves', conditions: ['wetsuit'], tip: 'Wear under wetsuit; very hard to put on wet legs in T1' },
-      { id: 'aero_kinesio_tape', label: 'Aero bubbles / aero kinesio tape', tip: 'Apply to shins before the race for aerodynamic gains' },
+      { id: 'timing_chip', label: 'Timing chip and strap', tip: 'Check collection and wearing instructions in the athlete guide' },
       { id: 'anti_fog', label: 'Anti-fog spray' },
       { id: 'ear_plugs', label: 'Ear plugs (optional)', conditions: ['cold'] },
       { id: 'neoprene_cap', label: 'Neoprene swim cap', conditions: ['cold'], tip: 'Double cap for cold open water' },
@@ -119,7 +120,7 @@ const CATEGORIES: Category[] = [
     items: [
       { id: 'race_gels', label: 'Race gels (full count for distance)' },
       { id: 'electrolyte_tabs', label: 'Electrolyte tablets / powder' },
-      { id: 'salt_caps', label: 'Salt / electrolyte capsules', conditions: ['hot'], tip: 'Critical for hot conditions to prevent cramping' },
+      { id: 'salt_caps', label: 'Salt / electrolyte capsules', conditions: ['hot'], tip: 'Use only as part of a practiced hydration plan; salt does not reliably prevent cramps' },
       { id: 'pre_race_breakfast', label: 'Pre-race breakfast food', tip: 'Eat what you\'ve practiced — nothing new on race day' },
       { id: 'pre_race_coffee', label: 'Coffee / caffeine' },
       { id: 'race_drink_mix', label: 'Race drink mix (bottles pre-mixed)' },
@@ -166,39 +167,32 @@ export default function ChecklistPlanner() {
   const [expandedTips, setExpandedTips] = useState<Set<string>>(new Set());
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
+  const [hydrated, setHydrated] = useState(false);
+
   // Load from URL params (shared link) or localStorage on mount
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const urlEvent = params.get('e');
-      const urlConditions = params.get('c');
-      const urlChecked = params.get('k');
-
-      if (urlEvent && DIST_ORDER.includes(urlEvent as EventType)) {
-        // Shared link takes priority over localStorage
-        setTimeout(() => {
-          setEventType(urlEvent as EventType);
-          if (urlConditions) setConditions(new Set(urlConditions.split(',').filter(Boolean) as Condition[]));
-          if (urlChecked) setChecked(new Set(urlChecked.split(',').filter(Boolean)));
-        }, 0);
-        return;
-      }
-
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const data = JSON.parse(saved);
-        setTimeout(() => {
-          if (data.eventType) setEventType(data.eventType);
-          if (data.conditions) setConditions(new Set(data.conditions));
-          if (data.checked) setChecked(new Set(data.checked));
-          if (data.hiddenItems) setHiddenItems(new Set(data.hiddenItems));
-        }, 0);
-      }
-    } catch { /* ignore parse errors */ }
+    const timer = window.setTimeout(() => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlEvent = params.get('e');
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const raw = urlEvent && DIST_ORDER.includes(urlEvent as EventType)
+          ? { eventType: urlEvent, conditions: (params.get('c') ?? '').split(','), checked: (params.get('k') ?? '').split(','), hiddenItems: (params.get('h') ?? '').split(',') }
+          : saved ? JSON.parse(saved) : null;
+        if (raw) {
+          const data = parseChecklistState(raw, CATEGORIES.flatMap(c => c.items.map(i => i.id)));
+          setEventType(data.eventType); setConditions(new Set(data.conditions));
+          setChecked(new Set(data.checked)); setHiddenItems(new Set(data.hiddenItems));
+        }
+      } catch { /* Keep defaults if storage is unavailable or malformed. */ }
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  // Persist to localStorage on changes
+  // Persist only after restoring, including React Strict Mode remounts.
   useEffect(() => {
+    if (!hydrated) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         eventType,
@@ -207,7 +201,7 @@ export default function ChecklistPlanner() {
         hiddenItems: Array.from(hiddenItems),
       }));
     } catch { /* ignore storage errors */ }
-  }, [eventType, conditions, checked, hiddenItems]);
+  }, [hydrated, eventType, conditions, checked, hiddenItems]);
 
   const toggleCondition = (c: Condition) => {
     setConditions(prev => {
@@ -326,7 +320,7 @@ export default function ChecklistPlanner() {
         pre { white-space: pre-wrap; font-family: inherit; font-size: 14px; }
         @media print { body { padding: 20px; } }
       </style></head>
-      <body><pre>${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body></html>
+      <body><pre>${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body></html>
     `);
     printWindow.document.close();
     printWindow.print();
@@ -337,6 +331,7 @@ export default function ChecklistPlanner() {
     params.set('e', eventType);
     params.set('c', Array.from(conditions).join(','));
     if (checked.size > 0) params.set('k', Array.from(checked).join(','));
+    if (hiddenItems.size > 0) params.set('h', Array.from(hiddenItems).join(','));
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     try {
       await navigator.clipboard.writeText(url);

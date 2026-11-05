@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  const today = '2026-05-15';
-  const toolsUpdate = '2026-05-15';
+  const today = '2026-11-04';
+  const toolsUpdate = '2026-11-05';
   const landingUpdate = '2026-05-15';
   const staticDate = '2025-12-01';
 
   return [
+    { url: 'https://resiliento.app/guides/hyrox-world-triathlon', lastModified: today, changeFrequency: 'monthly', priority: 0.7 },
     {
       url: 'https://resiliento.app',
       lastModified: today,
@@ -15,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'https://resiliento.app/waitlist',
-      lastModified: landingUpdate,
+      lastModified: today,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
@@ -39,19 +40,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'https://resiliento.app/hyrox',
-      lastModified: landingUpdate,
+      lastModified: today,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: 'https://resiliento.app/triathlon',
-      lastModified: landingUpdate,
+      lastModified: today,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: 'https://resiliento.app/running',
-      lastModified: landingUpdate,
+      lastModified: today,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
@@ -63,7 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: 'https://resiliento.app/privacy',
-      lastModified: staticDate,
+      lastModified: today,
       changeFrequency: 'monthly',
       priority: 0.3,
     },

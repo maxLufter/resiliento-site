@@ -1,22 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { heartRateZones } from '@/lib/calculators';
 
 export default function HRZonesCalculator() {
   const [lthr, setLthr] = useState<number>(165);
 
-  const calculateZones = () => {
-    const l = lthr > 0 ? lthr : 1;
-    return [
-      { zone: 'Zone 1', name: 'Recovery', min: null, max: Math.floor(l * 0.74) - 1, desc: 'Easy, conversational pace.' },
-      { zone: 'Zone 2', name: 'Aerobic Base', min: Math.floor(l * 0.74), max: Math.floor(l * 0.88) - 1, desc: 'All-day pace, builds aerobic base.' },
-      { zone: 'Zone 3', name: 'Tempo', min: Math.floor(l * 0.88), max: Math.floor(l * 0.94) - 1, desc: 'Comfortably hard, sustainable but requires focus.' },
-      { zone: 'Zone 4', name: 'Threshold', min: Math.floor(l * 0.94), max: Math.floor(l * 1.01) - 1, desc: 'Just below lactate threshold, burn is noticeable.' },
-      { zone: 'Zone 5', name: 'VO2 / Anaerobic', min: Math.floor(l * 1.01), max: null, desc: 'Maximal oxygen uptake, very hard effort.' },
-    ];
-  };
-
-  const zones = calculateZones();
+  const [sport, setSport] = useState<'running' | 'cycling'>('running');
+  const zones = heartRateZones(lthr, sport);
 
   return (
     <div className="max-w-3xl mx-auto font-inter">
@@ -24,23 +15,28 @@ export default function HRZonesCalculator() {
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl mb-8">
         <h2 className="text-xl font-bold text-white mb-6 tracking-tight">Heart Rate Profile</h2>
 
+        <label className="block text-sm text-neutral-300 mb-4">Sport
+          <select aria-label="Heart rate zone sport" value={sport} onChange={e => setSport(e.target.value as 'running' | 'cycling')} className="ml-4 bg-black border border-neutral-700 p-2 rounded">
+            <option value="running">Running</option><option value="cycling">Cycling</option>
+          </select>
+        </label>
         <div className="p-6 bg-black/40 rounded-xl border border-neutral-800/50">
           <label className="block text-[10px] font-bold uppercase tracking-widest text-brand mb-2">Lactate Threshold HR (LTHR)</label>
           <div className="relative max-w-sm">
             <input 
-              type="number" 
+              type="number" min={60} max={230} step={1} aria-label="Lactate threshold heart rate in bpm"
               value={lthr || ''} 
-              onChange={(e) => setLthr(Math.max(1, parseInt(e.target.value) || 0))} 
+              onChange={(e) => setLthr(Number(e.target.value))}
               className="w-full bg-black border border-neutral-800 rounded-lg h-14 text-white font-mono text-2xl px-4 focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all focus:shadow-[0_0_20px_rgba(var(--brand-rgb),0.1)]" 
             />
             <span className="absolute right-4 top-4 text-sm text-neutral-500 font-mono">bpm</span>
           </div>
           <div className="mt-4 space-y-2">
             <p className="text-xs text-neutral-400 leading-relaxed">
-              <strong className="text-white">How to find your LTHR:</strong> Modern fitness watches (Garmin, Coros, Apple Watch) often estimate this automatically after hard runs.
+              <strong className="text-white">How to find your LTHR:</strong> Use a sport-specific lab result, a suitable field test, or a threshold estimate from a compatible watch. Running and cycling thresholds may differ.
             </p>
             <p className="text-xs text-neutral-500 leading-relaxed">
-              <strong>Field Test:</strong> Run a 30-minute all-out time trial by yourself. Your LTHR is your average heart rate for the <em>last 20 minutes</em> of the effort. (Alternatively, take 95% of the average HR from a 20-minute all-out test).
+              <strong>Field Test:</strong> Joe Friel’s field protocol uses the average heart rate for the <em>last 20 minutes</em> of a 30-minute solo time trial in your chosen sport. It is a hard test, intended for athletes prepared for that effort; use a coach or lab if unsure.
             </p>
           </div>
         </div>
@@ -50,10 +46,11 @@ export default function HRZonesCalculator() {
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden shadow-2xl">
         <div className="px-6 py-4 bg-black/40 border-b border-neutral-800 flex justify-between items-center">
           <h3 className="text-sm font-bold text-white uppercase tracking-widest">Calculated Training Zones</h3>
-          <span className="text-xs text-brand font-mono font-bold">RESILIENTO (LTHR)</span>
+          <span className="text-xs text-brand font-mono font-bold">FRIEL / {sport.toUpperCase()}</span>
         </div>
         
         <div className="divide-y divide-neutral-800/30">
+          {zones.length === 0 && <p role="status" className="p-6 text-amber-300">Enter a whole-number LTHR between 60 and 230 bpm.</p>}
           {zones.map((z, idx) => {
             const isHighIntensity = idx >= zones.length - 2;
             const isMidIntensity = idx > 1 && idx < zones.length - 2;

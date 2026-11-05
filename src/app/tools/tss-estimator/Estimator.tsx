@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { estimateStress } from '@/lib/calculators';
 
 export default function Estimator() {
   const [durationMin, setDurationMin] = useState<number>(60);
@@ -15,22 +16,16 @@ export default function Estimator() {
     return { IF: maxIF, label: "Maximal Effort (VO2 / Sprinting)", color: "text-red-500", bg: "bg-red-500" };
   };
 
-  const calculateTSS = () => {
-    const { IF } = getIFData(rpe);
-    const hours = durationMin / 60;
-    const tss = hours * (IF * IF) * 100;
-    return Math.round(tss);
-  };
-
   const getReadinessImpact = (tss: number) => {
-    if (tss < 20) return { label: "Active Recovery", hours: "0h", color: "text-slate-400", gauge: 10 };
-    if (tss < 45) return { label: "Low Impact", hours: "12h", color: "text-blue-400", gauge: 25 };
-    if (tss < 80) return { label: "Moderate Impact", hours: "24-36h", color: "text-brand", gauge: 50 };
-    if (tss < 130) return { label: "High Impact", hours: "36-48h", color: "text-orange-400", gauge: 75 };
-    return { label: "Severe Impact", hours: "48-72h+", color: "text-red-500", gauge: 100 };
+    if (tss < 20) return { label: "Active Recovery", color: "text-slate-400", gauge: 10 };
+    if (tss < 45) return { label: "Low Impact", color: "text-blue-400", gauge: 25 };
+    if (tss < 80) return { label: "Moderate Impact", color: "text-brand", gauge: 50 };
+    if (tss < 130) return { label: "High Impact", color: "text-orange-400", gauge: 75 };
+    return { label: "Severe Impact", color: "text-red-500", gauge: 100 };
   };
 
-  const tss = calculateTSS();
+  const estimate = estimateStress(durationMin, rpe, getIFData(rpe).IF);
+  const tss = estimate?.proxy ?? 0;
   const impact = getReadinessImpact(tss);
   const rpeData = getIFData(rpe);
 
@@ -45,7 +40,7 @@ export default function Estimator() {
               <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400">Duration</span>
               <div className="flex items-center gap-2">
                 <input 
-                  type="number"
+                  type="number" min={1} max={1440} aria-label="Session duration in minutes"
                   value={durationMin}
                   onChange={(e) => setDurationMin(Number(e.target.value))}
                   className="bg-black border border-neutral-800 rounded text-center w-16 py-1 text-white font-mono text-sm focus:border-brand outline-none"
@@ -55,7 +50,7 @@ export default function Estimator() {
             </label>
             <input 
               type="range" 
-              min="15" 
+              aria-label="Session duration" min="1"
               max="300" 
               step="5"
               value={durationMin}
@@ -71,7 +66,7 @@ export default function Estimator() {
             </label>
             <input 
               type="range" 
-              min="1" 
+              aria-label="Session perceived exertion" min="1"
               max="10" 
               step="1"
               value={rpe}
@@ -97,16 +92,17 @@ export default function Estimator() {
         {/* Dynamic Background Glow based on impact */}
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[100px] rounded-full pointer-events-none opacity-20 ${impact.gauge > 50 ? (impact.gauge > 75 ? 'bg-red-500' : 'bg-orange-500') : 'bg-brand'}`}></div>
         
+        {!estimate && <p role="status" className="text-amber-300 text-sm mb-4">Enter a duration from 1 to 1440 minutes.</p>}
         <h2 className="text-sm font-bold text-neutral-500 mb-6 font-mono uppercase tracking-widest text-center">Estimated Stress Load</h2>
         
         <div className="text-6xl md:text-8xl font-bold font-mono text-center mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 drop-shadow-md">
-          {tss} <span className="text-2xl text-neutral-600 block sm:inline mt-2 sm:mt-0">rTSS</span>
+          {estimate ? tss : '—'} <span className="text-2xl text-neutral-600 block sm:inline mt-2 sm:mt-0">TSS proxy</span>
         </div>
         
         <div className="border border-neutral-800/80 bg-black/60 rounded-xl p-5 w-full backdrop-blur-sm z-10 relative">
           <div className="flex justify-between items-end mb-3">
-            <span className="text-xs text-neutral-400 uppercase tracking-widest">Recovery Runway</span>
-            <span className={`text-xl font-bold ${impact.color}`}>{impact.hours}</span>
+            <span className="text-xs text-neutral-400 uppercase tracking-widest">Session-RPE load</span>
+            <span className={`text-xl font-bold ${impact.color}`}>{estimate ? `${estimate.sessionRpe} AU` : '—'}</span>
           </div>
           
           {/* Gauge Bar */}
@@ -123,7 +119,7 @@ export default function Estimator() {
 
         <div className="mt-8 z-10 relative flex justify-center">
           <p className="text-[10px] text-neutral-600 leading-relaxed max-w-sm text-center">
-            *Disclaimer: This is an rTSS (Rate of Perceived Exertion) proxy. True physiological stress (hrTSS or TSS) requires absolute heart rate curve mapping or normalized power (NP).
+            Session-RPE = minutes × perceived effort (arbitrary units). The TSS proxy uses a heuristic RPE-to-intensity mapping, not measured power or running rTSS. Neither estimates your personal recovery time. Compare similar sessions and use your own recovery signals.
           </p>
         </div>
       </div>

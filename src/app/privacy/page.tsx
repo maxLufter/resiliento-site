@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl uppercase mb-2">
           Privacy Policy
         </h1>
-        <p className="text-slate-500 font-mono text-[10px] tracking-widest uppercase">Effective Date: April 2026</p>
+        <p className="text-slate-500 font-mono text-[10px] tracking-widest uppercase">Updated: November 2026</p>
       </header>
 
       <div className="prose prose-invert prose-brand max-w-none text-slate-300">
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           Currently, as RESILIENTO is operating primarily as a waitlist and marketing site, we collect minimal data:
         </p>
         <ul>
-          <li><strong>Identity and Contact Data:</strong> Email address when you join our waitlist.</li>
+          <li><strong>Identity and Contact Data:</strong> Email address when you join our waitlist, plus any optional name, sport and training details you provide. We also include the signup page or referring tool in the notification to understand which tools help visitors.</li>
           <li><strong>Technical Data:</strong> Internet protocol (IP) address, browser type and version, time zone setting and location.</li>
           <li><strong>Usage Data:</strong> Information about how you use our website.</li>
         </ul>

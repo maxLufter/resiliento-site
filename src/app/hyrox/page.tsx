@@ -1,3 +1,4 @@
+import { ToolsSpotlight } from "@/components/ToolsSpotlight";
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { MovementVisualizer } from "@/components/MovementVisualizer";
@@ -5,11 +6,11 @@ import { ExpandableListItem } from "@/components/ExpandableListItem";
 import { SoftwareApplicationJsonLd } from "@/components/StructuredData";
 
 export const metadata = {
-  title: "Adaptive HYROX Training Program & Race Plan",
-  description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
+  title: "HYROX Training Planner | Running, Strength & Race Prep",
+  description: "Plan HYROX running and strength with free training tools. Explore the RESILIENTO training app and join the early-access waitlist.",
   openGraph: {
-    title: "Adaptive HYROX Training Program & Race Plan",
-    description: "Adaptive HYROX training program unifying sled conditioning, compromise running, and strength. One system that adapts to your fatigue and schedule.",
+    title: "HYROX Training Planner | Running, Strength & Race Prep",
+    description: "Plan HYROX running and strength with free training tools. Explore the RESILIENTO training app and join the early-access waitlist.",
     url: "https://resiliento.app/hyrox",
   },
 };
@@ -27,11 +28,11 @@ export default function HyroxPage() {
           <div className="max-w-5xl">
             <div className="flex items-center gap-4 mb-16">
               <div className="h-[2px] w-16 bg-brand"></div>
-              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
+              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Free tools live · App waitlist open</span>
             </div>
             
             <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
-              The Adaptive <br className="hidden sm:block"/> HYROX Engine.
+              Your HYROX <br className="hidden sm:block"/> Training Week.
             </h1>
             
             <p className="text-lg sm:text-2xl lg:text-3xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] sm:leading-[1.4] max-w-3xl font-light tracking-tight">
@@ -49,10 +50,15 @@ export default function HyroxPage() {
                 </span>
                 <span className="text-brand group-hover:text-black ml-4 transform group-hover:translate-x-1 transition-all">→</span>
               </Link>
+              <Link href="/tools" className="text-brand text-sm font-semibold underline underline-offset-8 hover:text-white transition-colors">Try the free training tools →</Link>
             </div>
           </div>
         </div>
       </section>
+
+      <ToolsSpotlight />
+
+      <aside className="max-w-7xl mx-auto px-6 py-8 text-slate-300"><Link href="/guides/hyrox-world-triathlon" className="text-brand underline underline-offset-4">HYROX × World Triathlon: what the new partnership means for your training →</Link></aside>
 
       {/* The Collision Section - HYROX Specific */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-32 lg:py-40 border-b border-border">

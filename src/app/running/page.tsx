@@ -1,3 +1,4 @@
+import { ToolsSpotlight } from "@/components/ToolsSpotlight";
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { ExpandableListItem } from "@/components/ExpandableListItem";
@@ -26,7 +27,7 @@ export default function RunningPage() {
           <div className="max-w-5xl">
             <div className="flex items-center gap-4 mb-16">
               <div className="h-[2px] w-16 bg-brand"></div>
-              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
+              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Free tools live · App waitlist open</span>
             </div>
             
             <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-10 leading-[0.9] uppercase">
@@ -47,10 +48,13 @@ export default function RunningPage() {
                 </span>
                 <span className="text-brand group-hover:text-black ml-4 transform group-hover:translate-x-1 transition-all">→</span>
               </Link>
+              <Link href="/tools" className="text-brand text-sm font-semibold underline underline-offset-8 hover:text-white transition-colors">Try the free training tools →</Link>
             </div>
           </div>
         </div>
       </section>
+
+      <ToolsSpotlight slugs={["running-pace-calculator", "hr-zones-calculator", "hybrid-split-builder"]} />
 
       {/* The Collision Section */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-32 lg:py-40 border-b border-border">

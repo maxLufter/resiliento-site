@@ -24,7 +24,7 @@ export function Navigation() {
 
         <nav className="hidden md:flex items-center gap-12 text-[11px] font-mono tracking-[0.3em] text-slate-500 uppercase">
           <Link href="/tools" className="hover:text-brand transition-colors">
-            Tools
+            Free Tools
           </Link>
           <Link href="/hybrid-training-engine" className="hover:text-brand transition-colors">
             Theory
@@ -50,7 +50,7 @@ export function Navigation() {
       {/* Mobile Nav Row */}
       <div className="md:hidden border-t border-white/5 bg-black/40 backdrop-blur-md">
         <nav className="flex items-center justify-center gap-6 px-4 py-3 text-[9px] font-mono tracking-[0.2em] text-slate-400 uppercase overflow-x-auto hide-scrollbar">
-          <Link href="/tools" className="hover:text-brand transition-colors whitespace-nowrap">Tools</Link>
+          <Link href="/tools" className="hover:text-brand transition-colors whitespace-nowrap">Free Tools</Link>
           <Link href="/hybrid-training-engine" className="hover:text-brand transition-colors whitespace-nowrap">Theory</Link>
           <Link href="/adaptive-training-planner" className="hover:text-brand transition-colors whitespace-nowrap">Adaptation</Link>
           <Link href="/mobility-for-hybrid-athletes" className="hover:text-brand transition-colors whitespace-nowrap">Mobility</Link>

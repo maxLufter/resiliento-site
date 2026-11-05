@@ -47,12 +47,12 @@ const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }:
           >–</button>
           <div className="relative flex-1">
             <input 
-              type="number"
+              type="number" min={min} max={max} step={step} aria-label={label}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
                 const parsed = parseFloat(e.target.value);
-                if (!isNaN(parsed)) {
+                if (Number.isFinite(parsed) && parsed >= min && parsed <= max) {
                   onChange(parsed);
                 }
               }}
@@ -72,6 +72,7 @@ const NumberInput = ({ label, value, unit, onChange, min, max, step = 1, note }:
           <span className="text-brand font-mono text-sm ml-2 w-6">{unit}</span>
         </div>
       </label>
+      {(!Number.isFinite(Number(inputValue)) || inputValue.trim() === "" || Number(inputValue) < min || Number(inputValue) > max) && <p role="status" className="text-xs text-amber-300 mt-2">Enter {min}–{max} {unit}. The result uses your last valid value until corrected.</p>}
       {note && <p className="text-[10px] text-neutral-500 mt-1 text-center">{note}</p>}
     </div>
   );
@@ -108,7 +109,7 @@ export default function Calculator() {
 
   const systemData: Record<SystemType, { label: string, modifier: number, description: string }> = {
     tubeless_perf: { label: 'High Perf. Tubeless (Thin Casing)', modifier: 1.0, description: 'Top-tier racing tubeless (e.g., GP5000 S TR, Corsa PRO). Extremely supple casing with no inner tube friction.' },
-    tubular: { label: 'High Perf. Tubular', modifier: 1.0, description: 'Sewn-up racing tires. Mathematically identical to high-perf tubeless due to lack of tube friction and supple casings.' },
+    tubular: { label: 'High Perf. Tubular', modifier: 1.0, description: 'Sewn-up racing tires. This simplified model uses the same factor as performance tubeless; individual casings differ.' },
     tubeless_std: { label: 'Standard Tubeless (Thick Casing)', modifier: 0.97, description: 'Everyday or endurance tubeless tires. Thicker sidewalls require slightly lower pressure to deform correctly.' },
     latex_tpu: { label: 'Clincher + Latex/TPU Tube', modifier: 1.02, description: 'Standard clincher tire paired with a highly flexible Latex or TPU tube. Very low internal friction.' },
     butyl: { label: 'Clincher + Standard Butyl Tube', modifier: 1.05, description: 'Standard clincher tire with a regular butyl rubber tube. High internal friction requires higher pressure.' },
@@ -126,7 +127,7 @@ export default function Calculator() {
     const frontLoad = systemWeight * dist.front;
     const rearLoad = systemWeight * dist.rear;
 
-    // Sophisticated physical base model derived from hoop stress & empiric testing
+    // Heuristic starting-pressure model; not a manufacturer safety specification.
     // Base formula: PSI = (Load_kg / Width_mm^1.5) * 240
     const calcBase = (load: number, width: number) => {
       const safeWidth = Math.max(width, 1);
@@ -154,7 +155,7 @@ export default function Calculator() {
     // Weather condition modifier (-5% for wet)
     const wetModifier = isWet ? 0.95 : 1.0;
 
-    // Minimum safe pressure hard-cap to prevent ridiculous values
+    // Model floors, not certified minimum safe pressures.
     const frontMinPsi = frontTireWidth > 45 ? 15 : (frontTireWidth > 32 ? 25 : 40);
     const rearMinPsi = rearTireWidth > 45 ? 15 : (rearTireWidth > 32 ? 25 : 40);
 
@@ -195,7 +196,7 @@ export default function Calculator() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Inputs Panel */}
       <div className="lg:col-span-7 bg-neutral-900 border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col gap-8">
-        <h2 className="text-xl font-bold text-white font-montserrat tracking-wide">System Parameters</h2>
+        <h2 className="text-xl font-bold text-white font-montserrat tracking-wide">System Parameters</h2><p className="text-sm text-neutral-400">Starting estimate only. Stay within both manufacturers’ permitted pressure ranges and use the lower of the tyre and rim maximum pressures, including any tyre-width-dependent hookless limit. A 5 bar cap does not establish compatibility or a safe pressure for every setup.</p>
         
         <div className="space-y-8">
           {/* Top Parameters Row */}
@@ -205,7 +206,7 @@ export default function Calculator() {
               value={systemWeight} 
               onChange={setSystemWeight} 
               unit="kg" min={50} max={130} 
-              note="Rider + Bike."
+              note="Rider + bike + luggage."
             />
             <NumberInput 
               label="Front Tire" 
@@ -326,16 +327,16 @@ export default function Calculator() {
         <div className={`absolute top-0 right-0 w-64 h-64 blur-[120px] rounded-full pointer-events-none opacity-20 ${getGlowColor(results.rearPsi)}`}></div>
         <div className={`absolute bottom-0 left-0 w-48 h-48 blur-[100px] rounded-full pointer-events-none opacity-20 ${getGlowColor(results.frontPsi)}`}></div>
         
-        <h2 className="text-sm font-bold text-neutral-500 mb-8 font-mono uppercase tracking-widest text-center">Optimal Breakpoint</h2>
+        <h2 className="text-sm font-bold text-neutral-500 mb-8 font-mono uppercase tracking-widest text-center">Starting Pressure Estimate</h2>
         
         {results.hooklessWarning && (
           <div className="z-10 relative bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-6">
             <h3 className="text-red-400 font-bold text-[10px] uppercase tracking-widest mb-1 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-              Safety Limit Reached
+              Model Cap Reached
             </h3>
             <p className="text-[10px] text-red-200/70 leading-relaxed">
-              Your optimal pressure exceeds the strict 72.5 PSI (5.0 BAR) ISO limit for hookless rims. The recommendation has been capped. Consider running a wider tire to safely lower your pressure.
+              The estimate exceeds this calculator’s 72.5 PSI cap and has been reduced. Your tyre or rim may require a lower maximum. Check the approved tyre sizes and pressure ranges before using the result.
             </p>
           </div>
         )}
@@ -386,7 +387,7 @@ export default function Calculator() {
             <span className="text-xs font-mono text-neutral-300">F: -{results.frontEffectiveDropPct}% / R: -{results.rearEffectiveDropPct}%</span>
           </div>
           <p className="text-[10px] text-neutral-500 leading-relaxed">
-            This physics model dynamically calculates the point where casing hysteresis losses intersect with surface vibration losses. The drop accounts for the exact volume of your tires adapting to {surfaceData[surfaceType].label}.
+            This heuristic adjusts a load-and-width estimate for {surfaceData[surfaceType].label}. It does not measure casing stiffness, rim geometry or real surface losses. The model floors are not manufacturer-approved minimum pressures.
           </p>
         </div>
       </div>

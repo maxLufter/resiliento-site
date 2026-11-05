@@ -1,65 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-
-type DayPlan = { day: string; blocks: { type: 'run' | 'lift' | 'rest'; label: string; desc: string; time: string }[] };
+import { buildHybridWeek } from '@/lib/calculators';
 
 export default function Builder() {
   const [runs, setRuns] = useState(3);
   const [lifts, setLifts] = useState(3);
 
-  const generateSchedule = (): DayPlan[] => {
-    const days: DayPlan[] = [
-      { day: 'Monday', blocks: [] },
-      { day: 'Tuesday', blocks: [] },
-      { day: 'Wednesday', blocks: [] },
-      { day: 'Thursday', blocks: [] },
-      { day: 'Friday', blocks: [] },
-      { day: 'Saturday', blocks: [] },
-      { day: 'Sunday', blocks: [] },
-    ];
-
-    let rCount = runs;
-    let lCount = lifts;
-
-    const addSession = (dayIdx: number, type: 'run' | 'lift', label: string, desc: string, time: string) => {
-      days[dayIdx].blocks.push({ type, label, desc, time });
-    };
-
-    // Sunday logic (Long Run)
-    if (rCount > 0) { addSession(6, 'run', 'Long Endurance', 'Zone 2 aerobic base building.', 'AM'); rCount--; }
-    
-    // Lifting Logic
-    if (lCount > 0) { addSession(0, 'lift', 'Heavy Lower Body', 'Squats & deadlifts (high systemic fatigue).', 'PM'); lCount--; }
-    if (lCount > 0) { addSession(3, 'lift', 'Heavy Upper Body', 'Push/Pull routines.', 'PM'); lCount--; }
-    if (lCount > 0) { addSession(5, 'lift', 'Full Body / Accessory', 'Functional or explosive focus.', 'AM'); lCount--; }
-    if (lCount > 0) { addSession(2, 'lift', 'Upper Body Accessory', 'Hypertrophy secondary.', 'PM'); lCount--; }
-    if (lCount > 0) { addSession(4, 'lift', 'Hyrox / Metcon', 'Heavy conditioning.', 'PM'); lCount--; }
-
-    // Run Logic
-    if (rCount > 0) { addSession(1, 'run', 'Speed / Intervals', 'Threshold or VO2 Max efforts.', 'AM'); rCount--; }
-    if (rCount > 0) { addSession(3, 'run', 'Easy Aerobic Walk/Run', 'Recovery pace flush.', 'AM'); rCount--; }
-    if (rCount > 0) { addSession(5, 'run', 'Tempo / Sweetspot', 'Moderate sustained intensity.', 'PM'); rCount--; }
-    if (rCount > 0) { addSession(0, 'run', 'Shakeout Run', 'Very easy mechanical warmup.', 'AM'); rCount--; }
-    
-    // Sort and fill Rests
-    days.forEach(d => {
-      if (d.blocks.length === 0) {
-        d.blocks.push({ type: 'rest', label: 'Active Recovery', desc: 'Mobility, gentle flow, or complete rest.', time: 'ALL DAY' });
-      } else {
-        // Sort so AM is before PM
-        d.blocks.sort((a, b) => {
-          if (a.time === 'AM' && b.time === 'PM') return -1;
-          if (a.time === 'PM' && b.time === 'AM') return 1;
-          return 0;
-        });
-      }
-    });
-
-    return days;
-  };
-
-  const schedule = generateSchedule();
+  const schedule = buildHybridWeek(runs, lifts);
+  const doubleDays = schedule.filter(day => day.blocks.length > 1).length;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -80,7 +29,7 @@ export default function Builder() {
               step="1"
               value={runs}
               onChange={(e) => setRuns(Number(e.target.value))}
-              className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              aria-label="Runs per week" className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
             />
           </div>
 
@@ -96,7 +45,7 @@ export default function Builder() {
               step="1"
               value={lifts}
               onChange={(e) => setLifts(Number(e.target.value))}
-              className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
+              aria-label="Strength sessions per week" className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
             />
           </div>
         </div>
@@ -109,9 +58,9 @@ export default function Builder() {
             <span className="text-white font-mono font-bold">{runs + lifts}</span>
           </div>
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-neutral-300">2-A-Day Required?</span>
-            <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${runs + lifts > 6 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
-              {runs + lifts > 6 ? 'YES' : 'NO'}
+            <span className="text-sm font-medium text-neutral-300">Double-session days</span>
+            <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${doubleDays > 0 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
+              {doubleDays}
             </span>
           </div>
         </div>
@@ -121,15 +70,15 @@ export default function Builder() {
           <ul className="text-[11px] text-neutral-400 space-y-3 list-none pl-0">
             <li className="flex items-start">
               <span className="text-brand mr-2">›</span>
-              Endurance placed AM, Strength PM during doubles to maximize mTOR lifting adaptations.
+              Easy runs go before upper-body work on double days. Separate sessions by several hours and prioritize your main goal.
             </li>
             <li className="flex items-start">
               <span className="text-brand mr-2">›</span>
-              Hard run intervals buffered 24h away from heavy lower body lifts to avoid &quot;dead legs&quot;.
+              Lower-body strength is on Tuesday; the quality run is on Friday. With only two runs, both stay easy.
             </li>
             <li className="flex items-start">
               <span className="text-brand mr-2">›</span>
-              Long runs anchored to Sunday; Saturday acts as prep (or light volume).
+              Sunday holds the long easy run. Saturday stays easy; reduce frequency if you need a full rest day.
             </li>
           </ul>
         </div>

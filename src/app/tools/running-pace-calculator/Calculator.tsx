@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatDuration, nonNegative, runningResult } from '@/lib/calculators';
 
 type CalcMode = 'pace' | 'time' | 'distance';
 type DistUnit = 'km' | 'mi';
@@ -51,11 +52,11 @@ function PaceCalculator() {
   const [selectedEvent, setSelectedEvent] = useState<number>(10000);
 
   // Formatting helpers
-  const displayDistance = distanceUnit === 'km' ? distanceMeters / 1000 : distanceMeters / 1609.34;
+  const displayDistance = distanceUnit === 'km' ? distanceMeters / 1000 : distanceMeters / 1609.344;
   
   const handleDistanceChange = (val: number) => {
     setSelectedEvent(0);
-    setDistanceMeters(distanceUnit === 'km' ? val * 1000 : val * 1609.34);
+    setDistanceMeters(nonNegative(distanceUnit === 'km' ? val * 1000 : val * 1609.344, 1000000));
   };
 
   const handleEventChange = (meters: number) => {
@@ -71,46 +72,24 @@ function PaceCalculator() {
   const timeS = Math.floor(timeSeconds % 60);
 
   const handleTimeChange = (newH: number, newM: number, newS: number) => {
-    setTimeSeconds((newH * 3600) + (newM * 60) + newS);
+    setTimeSeconds(nonNegative(Math.floor(newH), 168) * 3600 + nonNegative(Math.floor(newM), 59) * 60 + nonNegative(Math.floor(newS), 59));
   };
 
-  const currentPaceForUnit = paceUnit === 'km' ? paceSecondsPerKm : paceSecondsPerKm * 1.60934;
+  const currentPaceForUnit = paceUnit === 'km' ? paceSecondsPerKm : paceSecondsPerKm * 1.609344;
   const pm = Math.floor(currentPaceForUnit / 60);
   const ps = Math.floor(currentPaceForUnit % 60);
 
   const handlePaceChange = (newM: number, newS: number) => {
-    const totalS = (newM * 60) + newS;
-    setPaceSecondsPerKm(paceUnit === 'km' ? totalS : totalS / 1.60934);
+    const totalS = nonNegative(Math.floor(newM), 120) * 60 + nonNegative(Math.floor(newS), 59);
+    setPaceSecondsPerKm(paceUnit === 'km' ? totalS : totalS / 1.609344);
   };
 
-  // Calculations
-  let outPaceS = 0;
-  let outTimeS = 0;
-  let outDistM = 0;
-
-  if (mode === 'pace') {
-    outPaceS = distanceMeters > 0 ? timeSeconds / (distanceMeters / 1000) : 0;
-  } else if (mode === 'time') {
-    outTimeS = paceSecondsPerKm * (distanceMeters / 1000);
-  } else if (mode === 'distance') {
-    outDistM = paceSecondsPerKm > 0 ? (timeSeconds / paceSecondsPerKm) * 1000 : 0;
-  }
-
-  const formatPaceStr = (secs: number) => {
-    if (!secs || !isFinite(secs) || secs <= 0) return '0:00';
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const formatTimeStr = (secs: number) => {
-    if (!secs || !isFinite(secs) || secs <= 0) return '00:00:00';
-    const h = Math.floor(secs / 3600);
-    const m = Math.floor((secs % 3600) / 60);
-    const s = Math.floor(secs % 60);
-    if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
+  const result = runningResult(mode, distanceMeters, timeSeconds, paceSecondsPerKm);
+  const outPaceS = mode === 'pace' ? result : null;
+  const outTimeS = mode === 'time' ? result : null;
+  const outDistM = mode === 'distance' ? result : null;
+  const formatPaceStr = (seconds: number | null) => seconds === null ? '—' : formatDuration(seconds);
+  const formatTimeStr = (seconds: number | null) => seconds === null ? '—' : formatDuration(seconds, true);
 
   // Render Inputs
   const renderDistanceInput = () => (
@@ -127,7 +106,7 @@ function PaceCalculator() {
       </div>
       <div className="flex items-center gap-2">
         <input 
-          type="number"
+          type="number" min="0" aria-label="Distance"
           value={displayDistance === 0 ? '' : Number(parseFloat(displayDistance.toFixed(4)))}
           onChange={(e) => handleDistanceChange(Number(e.target.value))}
           placeholder="0.00"
@@ -150,17 +129,17 @@ function PaceCalculator() {
       <label className="block text-[10px] font-bold uppercase tracking-widest mb-2 text-neutral-400">Finish Time</label>
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <input type="number" value={timeH === 0 ? '' : timeH} placeholder="0" onChange={e => handleTimeChange(Number(e.target.value), timeM, timeS)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input type="number" min="0" aria-label="Time hours" value={timeH === 0 ? '' : timeH} placeholder="0" onChange={e => handleTimeChange(Number(e.target.value), timeM, timeS)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
           <span className="absolute right-3 top-3.5 text-xs text-neutral-500 font-mono">h</span>
         </div>
         <span className="text-neutral-600 font-bold">:</span>
         <div className="relative flex-1">
-          <input type="number" value={timeM === 0 ? '' : timeM} placeholder="0" onChange={e => handleTimeChange(timeH, Number(e.target.value), timeS)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input type="number" min="0" aria-label="Time minutes" value={timeM === 0 ? '' : timeM} placeholder="0" onChange={e => handleTimeChange(timeH, Number(e.target.value), timeS)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
           <span className="absolute right-3 top-3.5 text-xs text-neutral-500 font-mono">m</span>
         </div>
         <span className="text-neutral-600 font-bold">:</span>
         <div className="relative flex-1">
-          <input type="number" value={timeS === 0 ? '' : timeS} placeholder="0" onChange={e => handleTimeChange(timeH, timeM, Number(e.target.value))} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input type="number" min="0" aria-label="Time seconds" value={timeS === 0 ? '' : timeS} placeholder="0" onChange={e => handleTimeChange(timeH, timeM, Number(e.target.value))} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
           <span className="absolute right-3 top-3.5 text-xs text-neutral-500 font-mono">s</span>
         </div>
       </div>
@@ -172,12 +151,12 @@ function PaceCalculator() {
       <label className="block text-[10px] font-bold uppercase tracking-widest mb-2 text-neutral-400">Average Pace</label>
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <input type="number" value={pm === 0 ? '' : pm} placeholder="0" onChange={e => handlePaceChange(Number(e.target.value), ps)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input type="number" min="0" aria-label="Pace minutes" value={pm === 0 ? '' : pm} placeholder="0" onChange={e => handlePaceChange(Number(e.target.value), ps)} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
           <span className="absolute right-3 top-3.5 text-xs text-neutral-500 font-mono">m</span>
         </div>
         <span className="text-neutral-600 font-bold">:</span>
         <div className="relative flex-1">
-          <input type="number" value={ps === 0 ? '' : ps} placeholder="0" onChange={e => handlePaceChange(pm, Number(e.target.value))} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input type="number" min="0" aria-label="Pace seconds" value={ps === 0 ? '' : ps} placeholder="0" onChange={e => handlePaceChange(pm, Number(e.target.value))} className="w-full bg-black border border-neutral-800 rounded-lg text-center h-12 text-white font-mono text-lg focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
           <span className="absolute right-3 top-3.5 text-xs text-neutral-500 font-mono">s</span>
         </div>
         <span className="text-neutral-600 px-1 font-mono">/</span>
@@ -195,6 +174,7 @@ function PaceCalculator() {
 
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      {result === null && <p role="status" className="text-sm text-amber-300 mb-4">Enter positive values for both inputs to calculate a result.</p>}
       {/* Mode Selector */}
       <div className="mb-8 bg-black/40 p-1.5 rounded-xl border border-neutral-800 flex">
         {(['pace', 'time', 'distance'] as CalcMode[]).map(m => (
@@ -229,7 +209,7 @@ function PaceCalculator() {
                   {formatPaceStr(outPaceS)} <span className="text-lg text-neutral-500">/km</span>
                 </div>
                 <div className="text-xl font-mono text-neutral-400">
-                  {formatPaceStr(outPaceS * 1.60934)} <span className="text-sm text-neutral-600">/mi</span>
+                  {formatPaceStr(outPaceS === null ? null : outPaceS * 1.609344)} <span className="text-sm text-neutral-600">/mi</span>
                 </div>
               </>
             )}
@@ -247,10 +227,10 @@ function PaceCalculator() {
               <>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2 block">Total Distance</span>
                 <div className="text-5xl font-bold font-mono text-white mb-2 tracking-tighter">
-                  {(outDistM / 1000).toFixed(2)} <span className="text-lg text-neutral-500">km</span>
+                  {outDistM === null ? '—' : (outDistM / 1000).toFixed(2)} <span className="text-lg text-neutral-500">km</span>
                 </div>
                 <div className="text-xl font-mono text-neutral-400">
-                  {(outDistM / 1609.34).toFixed(2)} <span className="text-sm text-neutral-600">mi</span>
+                  {outDistM === null ? '—' : (outDistM / 1609.344).toFixed(2)} <span className="text-sm text-neutral-600">mi</span>
                 </div>
               </>
             )}
@@ -267,18 +247,13 @@ function PaceConverter() {
   const [paceUnit, setPaceUnit] = useState<DistUnit>('km');
 
   const totalSec = (paceM * 60) + paceS;
-  const secPerKm = paceUnit === 'km' ? totalSec : totalSec / 1.60934;
-  const secPerMi = paceUnit === 'mi' ? totalSec : totalSec * 1.60934;
+  const secPerKm = paceUnit === 'km' ? totalSec : totalSec / 1.609344;
+  const secPerMi = paceUnit === 'mi' ? totalSec : totalSec * 1.609344;
   
   const kmh = secPerKm > 0 ? 3600 / secPerKm : 0;
   const mph = secPerMi > 0 ? 3600 / secPerMi : 0;
 
-  const formatPace = (secs: number) => {
-    if (!secs || !isFinite(secs) || secs <= 0) return '0:00';
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
+  const formatPace = (seconds: number) => seconds > 0 ? formatDuration(seconds) : '—';
 
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-10 shadow-2xl">
@@ -288,12 +263,12 @@ function PaceConverter() {
         </label>
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
-            <input type="number" value={paceM === 0 ? '' : paceM} placeholder="0" onChange={e => setPaceM(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-xl text-center h-16 text-white font-mono text-2xl focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all focus:shadow-[0_0_20px_rgba(var(--brand-rgb),0.1)]" />
+            <input type="number" min="0" aria-label="Converter pace minutes" value={paceM === 0 ? '' : paceM} placeholder="0" onChange={e => setPaceM(nonNegative(Math.floor(Number(e.target.value)), 120))} className="w-full bg-black border border-neutral-800 rounded-xl text-center h-16 text-white font-mono text-2xl focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all focus:shadow-[0_0_20px_rgba(var(--brand-rgb),0.1)]" />
             <span className="absolute right-4 top-5 text-sm text-neutral-500 font-mono">m</span>
           </div>
           <span className="text-neutral-600 font-bold text-2xl">:</span>
           <div className="relative flex-1">
-            <input type="number" value={paceS === 0 ? '' : paceS} placeholder="0" onChange={e => setPaceS(Number(e.target.value) || 0)} className="w-full bg-black border border-neutral-800 rounded-xl text-center h-16 text-white font-mono text-2xl focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all focus:shadow-[0_0_20px_rgba(var(--brand-rgb),0.1)]" />
+            <input type="number" min="0" aria-label="Converter pace seconds" value={paceS === 0 ? '' : paceS} placeholder="0" onChange={e => setPaceS(nonNegative(Math.floor(Number(e.target.value)), 59))} className="w-full bg-black border border-neutral-800 rounded-xl text-center h-16 text-white font-mono text-2xl focus:border-brand outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all focus:shadow-[0_0_20px_rgba(var(--brand-rgb),0.1)]" />
             <span className="absolute right-4 top-5 text-sm text-neutral-500 font-mono">s</span>
           </div>
           <span className="text-neutral-600 px-2 font-mono text-xl">/</span>
@@ -319,11 +294,11 @@ function PaceConverter() {
         </div>
         <div className="flex flex-col items-center justify-center p-6 bg-black/40 rounded-xl border border-neutral-800/50">
            <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-2 text-center">km/h</span>
-           <div className="text-2xl font-bold font-mono text-white">{kmh.toFixed(2)}</div>
+           <div className="text-2xl font-bold font-mono text-white">{totalSec > 0 ? kmh.toFixed(2) : '—'}</div>
         </div>
         <div className="flex flex-col items-center justify-center p-6 bg-black/40 rounded-xl border border-neutral-800/50">
            <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-2 text-center">mph</span>
-           <div className="text-2xl font-bold font-mono text-white">{mph.toFixed(2)}</div>
+           <div className="text-2xl font-bold font-mono text-white">{totalSec > 0 ? mph.toFixed(2) : '—'}</div>
         </div>
       </div>
     </div>

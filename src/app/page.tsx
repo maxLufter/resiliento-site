@@ -1,3 +1,4 @@
+import { ToolsSpotlight } from "@/components/ToolsSpotlight";
 import Link from "next/link";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { MovementVisualizer } from "@/components/MovementVisualizer";
@@ -34,7 +35,7 @@ export default function Home() {
           <div className="max-w-5xl">
             <div className="flex items-center gap-4 mb-16">
               <div className="h-[2px] w-16 bg-brand"></div>
-              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Status: Closed Cohort V1.0</span>
+              <span className="text-brand text-[11px] font-mono tracking-[0.3em] uppercase">Free tools live · App waitlist open</span>
             </div>
             
             <h1 className="text-5xl sm:text-7xl lg:text-[8rem] font-bold tracking-tighter text-white mb-6 leading-[0.9] uppercase">
@@ -45,7 +46,7 @@ export default function Home() {
               Adaptive training app for triathlon, HYROX, running, and hybrid athletes.
             </p>
             <p className="text-lg sm:text-xl text-slate-400 mb-10 sm:mb-16 leading-[1.6] max-w-3xl font-light tracking-tight">
-              One central system coordinating endurance, strength, mobility, and recovery with dynamic adaptation. Built for those who demand systematic logic, not blind compliance.
+              Plan your training week, race pace and fueling with our free tools today. Join the waitlist for an app that brings endurance, strength and recovery into one coordinated plan.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-8">
@@ -58,10 +59,13 @@ export default function Home() {
                 </span>
                 <span className="text-brand group-hover:text-black ml-4 transform group-hover:translate-x-1 transition-all">→</span>
               </Link>
+              <Link href="/tools" className="text-brand text-sm font-semibold underline underline-offset-8 hover:text-white transition-colors">Try the free training tools →</Link>
             </div>
           </div>
         </div>
       </section>
+
+      <ToolsSpotlight />
 
       {/* Gateway Section - Sport Specific Intents */}
       <section className="py-20 sm:py-32 bg-[#050505] border-b border-border">

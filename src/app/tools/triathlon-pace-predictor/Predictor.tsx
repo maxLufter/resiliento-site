@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { parseMinutesSeconds, formatDuration, estimateBikeSpeed } from '@/lib/calculators';
 
 type DistanceMode = 'sprint' | 'olympic' | 'half' | 'full';
 
@@ -11,31 +12,9 @@ const DISTANCES = {
   full: { swim: 3800, bike: 180, run: 42.2, label: '140.6 (Full)' },
 };
 
-function parseTimeToSec(str: string): number {
-  if (!str) return 0;
-  const parts = str.split(':').map(Number);
-  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[0] >= 0 && parts[1] >= 0) {
-    return parts[0] * 60 + parts[1];
-  }
-  return 0;
-}
-
-function isValidTime(str: string): boolean {
-  if (!str) return false;
-  const parts = str.split(':').map(Number);
-  return parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1]) && parts[0] >= 0 && parts[1] >= 0 && parts[1] < 60 && parseTimeToSec(str) > 0;
-}
-
-function formatSecToTime(totalSec: number): string {
-  if (totalSec <= 0) return '--:--';
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = Math.floor(totalSec % 60);
-  if (h > 0) {
-    return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  }
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
+const parseTimeToSec = (value: string) => parseMinutesSeconds(value) ?? 0;
+const isValidTime = (value: string) => parseMinutesSeconds(value) !== null;
+const formatSecToTime = (seconds: number) => seconds > 0 ? formatDuration(seconds, true) : '--:--';
 
 export default function Predictor() {
   const [distance, setDistance] = useState<DistanceMode>('olympic');
@@ -46,13 +25,13 @@ export default function Predictor() {
 
   const swimValid = isValidTime(swimCSS);
   const run5kValid = isValidTime(run5k);
-  const ftpValid = (parseFloat(bikeFtp) || 0) > 0;
-  const weightValid = (parseFloat(weight) || 0) > 0;
+  const ftpValid = Number.isFinite(Number(bikeFtp)) && Number(bikeFtp) >= 50 && Number(bikeFtp) <= 600;
+  const weightValid = Number.isFinite(Number(weight)) && Number(weight) >= 30 && Number(weight) <= 200;
 
   const calculate = () => {
     const cssSec = parseTimeToSec(swimCSS);
-    const ftp = parseFloat(bikeFtp) || 200;
-    const kg = parseFloat(weight) || 75;
+    const ftp = Number(bikeFtp);
+    const kg = Number(weight);
     const r5kSec = parseTimeToSec(run5k);
     const dist = DISTANCES[distance];
 
@@ -69,7 +48,7 @@ export default function Predictor() {
     const f = factors[distance];
 
     // Guard: prevent NaN/Infinity from bad inputs
-    if (cssSec <= 0 || ftp <= 0 || kg <= 0 || r5kSec <= 0) {
+    if (!swimValid || !run5kValid || !ftpValid || !weightValid) {
       return { swimTime: '--:--', swimPace: '--:-- /100m', t1Time: formatSecToTime(0), bikeTime: '--:--', bikePace: '-- km/h', t2Time: formatSecToTime(0), runTime: '--:--', runPace: '--:-- /km', total: '--:--:--' };
     }
 
@@ -77,11 +56,9 @@ export default function Predictor() {
     const swimPaceSec = (cssSec * f.swim);
     const swimTime = (swimPaceSec / 100) * dist.swim;
 
-    // Bike prediction: Non-linear watts to speed approximation
-    // Uses cubic root relation for aerodynamic drag on a flat TT setup
+    // Bike prediction: flat-course power balance with rolling resistance.
     const targetWatts = ftp * f.bike;
-    // Base speed on TT block: roughly 40km/h at 296W. Math.cbrt(296) * 6.012 ~= 40
-    const actualBikeSpeed = Math.cbrt(targetWatts) * 6.1; 
+    const actualBikeSpeed = estimateBikeSpeed(targetWatts, kg);
     const bikeTime = (dist.bike / actualBikeSpeed) * 3600;
 
     // Run prediction: Riegel formula for distance scaling, then tri-fatigue factor
@@ -139,7 +116,7 @@ export default function Predictor() {
             <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-2">Swim CSS (MM:SS per 100m)</label>
             <input 
               type="text" 
-              value={swimCSS}
+              aria-label="Swim CSS minutes and seconds per 100 metres" value={swimCSS}
               onChange={(e) => setSwimCSS(e.target.value)}
               placeholder="01:40"
               className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${swimValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
@@ -152,7 +129,7 @@ export default function Predictor() {
               <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-2">Bike FTP (Watts)</label>
               <input 
                 type="number" 
-                value={bikeFtp}
+                min={50} max={600} aria-label="Bike FTP in watts" value={bikeFtp}
                 onChange={(e) => setBikeFtp(e.target.value)}
                 placeholder="220"
                 className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${ftpValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
@@ -162,7 +139,7 @@ export default function Predictor() {
               <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-2">Weight (kg)</label>
               <input 
                 type="number" 
-                value={weight}
+                min={30} max={200} aria-label="Rider weight in kilograms" value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="75"
                 className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${weightValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
@@ -174,7 +151,7 @@ export default function Predictor() {
             <label className="block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-2">Run 5k Base (MM:SS)</label>
             <input 
               type="text" 
-              value={run5k}
+              aria-label="5 km run time in minutes and seconds" value={run5k}
               onChange={(e) => setRun5k(e.target.value)}
               placeholder="25:00"
               className={`w-full bg-black border rounded-lg px-4 py-3 text-white font-mono placeholder:text-neutral-600 focus:ring-1 focus:outline-none transition-shadow ${run5kValid ? 'border-neutral-800 focus:border-brand focus:ring-brand' : 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'}`}
@@ -187,6 +164,7 @@ export default function Predictor() {
       <div className="lg:col-span-7 bg-neutral-950 border border-neutral-800 rounded-2xl p-6 md:p-10 flex flex-col justify-center relative overflow-hidden shadow-2xl">
         <div className="absolute right-0 bottom-0 w-64 h-64 bg-brand/5 blur-[120px] rounded-full pointer-events-none"></div>
         
+        {(!swimValid || !run5kValid || !ftpValid || !weightValid) && <p role="status" className="text-sm text-amber-300 mb-4">Enter times as MM:SS, FTP from 50–600 W and weight from 30–200 kg.</p>}
         <h2 className="text-sm font-bold text-brand mb-2 font-mono uppercase tracking-widest">Calculated Projection</h2>
         <div className="text-5xl md:text-7xl font-bold text-white font-mono tracking-tight mb-8 drop-shadow-lg">
           {results.total}
@@ -231,7 +209,7 @@ export default function Predictor() {
 
         <div className="mt-8 pt-6 border-t border-neutral-800/50">
           <p className="text-xs text-neutral-500 leading-relaxed max-w-lg">
-            Calculations apply dynamic fatigue degradation to your baseline assuming optimal pacing and nutrition. Actual results can vary wildly due to elevation, weather, and training execution.
+            Planning estimate, not a race prediction guarantee. Bike assumptions: flat road, no wind, TT position (CdA 0.25 m²), rolling coefficient 0.004, 9 kg bike/kit and 97% drivetrain efficiency. Swim/run fatigue factors are heuristics. Hills, position, weather and endurance preparation can materially change your time.
           </p>
         </div>
       </div>
