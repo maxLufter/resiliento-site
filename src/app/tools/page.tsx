@@ -4,6 +4,17 @@ import { ArrowUpRight } from 'lucide-react';
 import { toolCatalog } from '@/lib/tool-catalog';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
+const tools = [
+  ...toolCatalog.map(tool => ({ ...tool, href: `/tools/${tool.slug}` })),
+  {
+    slug: 'resiliento-bikefit',
+    title: 'Resiliento Bikefit',
+    description: 'Analyze a side-view riding video with AI pose tracking, then compare your road or triathlon position after an adjustment.',
+    tag: 'AI bike fit',
+    href: 'https://bikefit.resiliento.app/',
+  },
+];
+
 export const metadata: Metadata = {
   alternates: { canonical: "/tools" },
   title: 'Free Running, Triathlon & Hybrid Training Tools',
@@ -21,8 +32,8 @@ export default function ToolsIndexPage() {
   const collection = {
     '@context': 'https://schema.org', '@type': 'CollectionPage',
     name: 'Free Running, Triathlon & Hybrid Training Tools', url: 'https://resiliento.app/tools',
-    mainEntity: { '@type': 'ItemList', numberOfItems: toolCatalog.length, itemListElement: toolCatalog.map((tool, index) => ({
-      '@type': 'ListItem', position: index + 1, name: tool.title, url: `https://resiliento.app/tools/${tool.slug}`,
+    mainEntity: { '@type': 'ItemList', numberOfItems: tools.length, itemListElement: tools.map((tool, index) => ({
+      '@type': 'ListItem', position: index + 1, name: tool.title, url: new URL(tool.href, 'https://resiliento.app').href,
     })) },
   };
   return (
@@ -34,15 +45,15 @@ export default function ToolsIndexPage() {
           Free Training <span className="text-brand">Tools</span>
         </h1>
         <p className="text-lg leading-8 text-neutral-300 font-inter">
-          Eight free calculators and planners for running, triathlon and hybrid training. Start with your training week, race pace or fueling plan. No account or email required.
+          Eight free calculators and planners for running, triathlon and hybrid training, plus video-based bike fitting from Resiliento Bikefit.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {toolCatalog.map((tool) => (
+        {tools.map((tool) => (
           <Link
             key={tool.slug}
-            href={`/tools/${tool.slug}`}
+            href={tool.href}
             className="flex flex-col bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-brand/50 transition-colors group"
           >
             <div className="p-8 flex-1 flex flex-col relative">
