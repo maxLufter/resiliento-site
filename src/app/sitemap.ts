@@ -69,6 +69,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      url: 'https://resiliento.app/hyrox-tracker',
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: 'https://resiliento.app/tools',
       lastModified: toolsUpdate,
       changeFrequency: 'weekly',

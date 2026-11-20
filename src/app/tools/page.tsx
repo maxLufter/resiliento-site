@@ -5,6 +5,13 @@ import { toolCatalog } from '@/lib/tool-catalog';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 const tools = [
+  {
+    slug: 'resiliento-hybrid-tracker',
+    title: 'Resiliento Hybrid Tracker',
+    description: 'Follow runs and stations on your Garmin watch, choose from ten quick workouts, or build a custom session.',
+    tag: 'Garmin watch app',
+    href: '/hyrox-tracker',
+  },
   ...toolCatalog.map(tool => ({ ...tool, href: `/tools/${tool.slug}` })),
   {
     slug: 'resiliento-bikefit',
@@ -45,7 +52,7 @@ export default function ToolsIndexPage() {
           Free Training <span className="text-brand">Tools</span>
         </h1>
         <p className="text-lg leading-8 text-neutral-300 font-inter">
-          Eight free calculators and planners for running, triathlon and hybrid training, plus video-based bike fitting from Resiliento Bikefit.
+          Free calculators and planners for running, triathlon and hybrid training, plus our Garmin watch app and video-based bike fitting.
         </p>
       </div>
 
@@ -70,7 +77,7 @@ export default function ToolsIndexPage() {
                 {tool.description}
               </p>
               <div className="text-sm font-semibold text-white flex items-center group-hover:text-brand transition-colors">
-                Launch Tool 
+                {tool.slug === 'resiliento-hybrid-tracker' ? 'Explore the app' : 'Launch Tool'}
                 <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </div>
