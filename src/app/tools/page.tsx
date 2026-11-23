@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { toolCatalog } from '@/lib/tool-catalog';
@@ -7,9 +8,9 @@ import { BreadcrumbJsonLd } from '@/components/StructuredData';
 const tools = [
   {
     slug: 'resiliento-hybrid-tracker',
-    title: 'Resiliento Hybrid Tracker',
-    description: 'Follow runs and stations on your Garmin watch, choose from ten quick workouts, or build a custom session.',
-    tag: 'Garmin watch app',
+    title: 'Resiliento: HYROX & Hybrid Tracker',
+    description: 'Free standalone Garmin app for HYROX races & hybrid training — 101 watches, Roxzone splits, 10 presets, Concept2 PM5 BLE, and named Garmin Connect laps.',
+    tag: 'Free Garmin Watch App · Connect IQ',
     href: '/hyrox-tracker',
   },
   ...toolCatalog.map(tool => ({ ...tool, href: `/tools/${tool.slug}` })),
@@ -57,32 +58,71 @@ export default function ToolsIndexPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {tools.map((tool) => (
-          <Link
-            key={tool.slug}
-            href={tool.href}
-            className="flex flex-col bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-brand/50 transition-colors group"
-          >
-            <div className="p-8 flex-1 flex flex-col relative">
-              <div className="absolute top-8 right-8 text-neutral-600 group-hover:text-brand/40 transition-colors">
-                <ArrowUpRight size={28} strokeWidth={1.5} />
+        {tools.map((tool) => {
+          const isFeaturedApp = tool.slug === 'resiliento-hybrid-tracker';
+          if (isFeaturedApp) {
+            return (
+              <Link
+                key={tool.slug}
+                href={tool.href}
+                className="md:col-span-2 grid md:grid-cols-[1.05fr_0.95fr] bg-neutral-900 border border-[#FFED00]/30 rounded-xl overflow-hidden hover:border-[#FFED00]/70 transition-colors group"
+              >
+                <div className="p-8 flex-1 flex flex-col relative justify-between">
+                  <div>
+                    <span className="text-xs font-semibold text-[#FFED00] font-mono uppercase tracking-wider mb-3 block">
+                      {tool.tag}
+                    </span>
+                    <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-[#FFED00] transition-colors font-montserrat">
+                      {tool.title}
+                    </h2>
+                    <p className="text-neutral-300 font-inter text-sm leading-relaxed mb-6">
+                      {tool.description}
+                    </p>
+                  </div>
+                  <div className="text-sm font-semibold text-[#FFED00] flex items-center">
+                    Explore the app
+                    <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+                <div className="relative bg-black flex items-center justify-center p-4 md:p-5 border-t md:border-t-0 md:border-l border-neutral-800">
+                  <Image
+                    src="/hybrid-tracker/hero-banner.jpg"
+                    alt="Resiliento: HYROX & Hybrid Tracker Garmin watch hero preview"
+                    width={1440}
+                    height={720}
+                    className="w-full h-auto rounded-lg object-cover"
+                  />
+                </div>
+              </Link>
+            );
+          }
+          return (
+            <Link
+              key={tool.slug}
+              href={tool.href}
+              className="flex flex-col bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-brand/50 transition-colors group"
+            >
+              <div className="p-8 flex-1 flex flex-col relative">
+                <div className="absolute top-8 right-8 text-neutral-600 group-hover:text-brand/40 transition-colors">
+                  <ArrowUpRight size={28} strokeWidth={1.5} />
+                </div>
+                <span className="text-xs font-semibold text-brand font-mono uppercase tracking-wider mb-4 block">
+                  {tool.tag}
+                </span>
+                <h2 className="text-xl font-bold text-white mb-4 group-hover:text-brand transition-colors font-montserrat pr-10">
+                  {tool.title}
+                </h2>
+                <p className="text-neutral-400 font-inter text-sm mb-6 flex-1">
+                  {tool.description}
+                </p>
+                <div className="text-sm font-semibold text-white flex items-center group-hover:text-brand transition-colors">
+                  Launch Tool
+                  <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                </div>
               </div>
-              <span className="text-xs font-semibold text-brand font-mono uppercase tracking-wider mb-4 block">
-                {tool.tag}
-              </span>
-              <h2 className="text-xl font-bold text-white mb-4 group-hover:text-brand transition-colors font-montserrat pr-10">
-                {tool.title}
-              </h2>
-              <p className="text-neutral-400 font-inter text-sm mb-6 flex-1">
-                {tool.description}
-              </p>
-              <div className="text-sm font-semibold text-white flex items-center group-hover:text-brand transition-colors">
-                {tool.slug === 'resiliento-hybrid-tracker' ? 'Explore the app' : 'Launch Tool'}
-                <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
       <section className="max-w-4xl mx-auto mt-14 border-t border-white/10 pt-10 text-slate-300 leading-relaxed">
