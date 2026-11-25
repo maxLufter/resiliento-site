@@ -5,8 +5,8 @@ import CardPreview from './CardPreview';
 
 const panel='rounded-2xl border border-white/10 bg-[#080c0b] p-6 sm:p-8';
 const button='inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand disabled:opacity-50';
-export default function ShareWorkout({a,title,setTitle,exporting,onImage,onCopy,onFit,onJson}:{
-  a:Analysis;title:string;setTitle:(value:string)=>void;exporting:boolean;
+export default function ShareWorkout({a,title,setTitle,exporting,notice,onImage,onCopy,onFit,onJson}:{
+  a:Analysis;title:string;setTitle:(value:string)=>void;exporting:boolean;notice?:string;
   onImage:()=>void;onCopy:(value:string,label:string)=>void;onFit:()=>void;onJson:()=>void;
 }) {
   return <section className="grid min-w-0 grid-cols-1 items-start gap-7 lg:grid-cols-2">
@@ -19,6 +19,7 @@ export default function ShareWorkout({a,title,setTitle,exporting,onImage,onCopy,
       <div className={panel}>
         <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand">Prepare for Strava</p>
         <h3 className="mb-6 text-2xl font-semibold">Your workout, ready to share.</h3>
+        {notice&&<p aria-hidden="true" className="mb-5 rounded-lg border border-brand/25 bg-brand/5 p-3.5 text-sm text-brand">{notice}</p>}
         <label htmlFor="workout-title" className="mb-2 block text-sm text-slate-400">Activity title</label>
         <input id="workout-title" value={title} maxLength={200} onChange={e=>setTitle(e.target.value)} onBlur={()=>setTitle(brandedTitle(title))} className="mb-4 w-full rounded-lg border border-white/20 bg-black p-3 text-base focus:outline-brand"/>
         <button className={button} onClick={()=>onCopy(brandedTitle(title),'Title')}><Copy size={17}/>Copy title</button>

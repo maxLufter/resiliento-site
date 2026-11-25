@@ -113,3 +113,55 @@ test('retired wrist counts cannot enter laps, aggregates, rep volume or share te
   const legacy=analyzeMessages(data([{fields:{0:2,2:8,5:2,15:3,17:118}}]));
   assert.equal(legacy.splits[0].count,null); // Source fallback in older FITs is filtered too.
 });
+
+test('dirty string buffers, weighted custom names, volume allowlists, record rh_phase and strict sources',()=>{
+  const start=new Date('2026-11-25T10:00:00.000Z');
+  const lapAt=(sec,fields,elapsed=sec+60,hr=150,maxHr=170)=>({
+    startTime:new Date(start.getTime()+sec*1000),totalTimerTime:60,totalElapsedTime:elapsed-sec,
+    avgHeartRate:hr,maxHeartRate:maxHr,fields
+  });
+  const fields={0:'rh_segment_type',2:'rh_station_id',3:'rh_round_index',4:'rh_target_value',5:'rh_target_unit',10:'rh_target_weight_kg',15:'rh_station_source',16:'rh_station_distance_m',17:'rh_station_count',20:'rh_station_count_source',27:'rh_stage_label'};
+  const map=Object.fromEntries(Object.entries(fields).map(([n],i)=>[n,`${i+70}`]));
+  const rawLaps=[
+    {...lapAt(0,{0:5,3:0},60,120,25),startTime:start},
+    lapAt(60,{0:2,2:9,5:2,10:24,15:1,17:20,20:1,27:['KB Swings / 24 kg','80 m']}),
+    lapAt(120,{0:2,2:5,5:1,10:20,15:1,16:500,17:30,20:1}),
+    lapAt(180,{0:1,4:1000,5:1}),
+    lapAt(239,{0:2,2:4,5:2,10:15,15:1,16:80,17:25,20:1}),
+    lapAt(299,{0:2,2:8,5:2,15:1,17:40,20:4}),
+  ];
+  const msg={
+    developerDataIdMesgs:[
+      {developerDataIndex:0,applicationId:Buffer.from('9a829a1003e94e8ebf293998e96ae04e','hex')},
+      {developerDataIndex:1,applicationId:[null]},
+    ],
+    fieldDescriptionMesgs:[
+      ...Object.entries(fields).map(([n,name])=>({developerDataIndex:0,nativeMesgNum:19,fieldDefinitionNumber:+n,fieldName:name,key:+map[n]})),
+      {developerDataIndex:0,nativeMesgNum:18,fieldDefinitionNumber:28,fieldName:'rh_workout_name',key:101},
+      {developerDataIndex:0,nativeMesgNum:18,fieldDefinitionNumber:29,fieldName:'rh_division',key:102},
+      {developerDataIndex:0,nativeMesgNum:20,fieldDefinitionNumber:32,fieldName:'rh_phase',key:103},
+    ],
+    sessionMesgs:[{startTime:start,numLaps:rawLaps.length,totalTimerTime:360,totalElapsedTime:360,developerFields:{101:['Race\u0000old','stale'],102:'Men Open'}}],
+    lapMesgs:rawLaps.map(l=>({...l,developerFields:Object.fromEntries(Object.entries(l.fields).map(([n,v])=>[map[n],v]))})),
+    recordMesgs:[
+      {timestamp:new Date(start.getTime()+65*1000),heartRate:155,developerFields:{103:3}},
+      {timestamp:new Date(start.getTime()+238*1000),heartRate:171,developerFields:{}},
+      {timestamp:new Date(start.getTime()+239*1000),heartRate:172,developerFields:{}},
+    ],
+  };
+  const a=analyzeMessages(msg);
+  assert.equal(a.recognized,true);
+  assert.equal(a.title,'Resiliento - Race');
+  assert.equal(a.division,'Men Open');
+  assert.equal(a.splits[0].round,null);
+  assert.equal(a.splits[0].maxHr,null);
+  assert.equal(a.splits[1].name,'KB Swings');
+  assert.equal(a.stations.find(s=>s.name==='KB Swings')?.repVolume,480);
+  assert.equal(a.stations.find(s=>s.station===5)?.distanceVolume,0);
+  assert.equal(a.stations.find(s=>s.station===4)?.distanceVolume,0);
+  assert.equal(a.stations.find(s=>s.station===4)?.repVolume,0);
+  assert.equal(a.splits[5].count,null); // Invalid countSource=4 must not inherit distance source=1.
+  assert.equal(a.records[0].phase,3);
+  assert.equal(a.records[1].phase,1);
+  assert.equal(a.records[2].phase,2);
+});
