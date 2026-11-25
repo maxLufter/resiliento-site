@@ -29,6 +29,9 @@ export default function PrivacyPage() {
           <li><strong>Usage Data:</strong> Information about how you use our website.</li>
         </ul>
 
+        <h2>Local FIT workout analysis</h2>
+        <p>The FIT analyzer reads activity files and calculates reports in your browser. We do not upload your FIT, activity title, measurements, heart-rate samples or generated report to our servers or analytics. Reports are held in page memory and are removed when you clear the report or leave the page. Downloads remain on your device. Opening Strava takes you to a separate service where you choose what to upload. Our usual website visit analytics still apply.</p>
+
         <h2>3. How We Use Your Data</h2>
         <p>
           We use your data primarily to manage our waitlist, contact you regarding early access to the platform, and to improve our website experience through basic analytics.
