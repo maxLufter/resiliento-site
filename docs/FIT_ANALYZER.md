@@ -9,3 +9,5 @@ Exports: original FIT bytes unchanged, complete normalized JSON, branded title a
 Strava is manual: edit an already synced activity or upload the original FIT at https://www.strava.com/upload/select, paste title/description, attach PNG. Users set Hybrid Racing in Strava. No direct upload or photo API is promised.
 
 Validation: `npm test` includes native simulator FITs for nine station types, PM5, older schema/manual zero, CRC/length failures, identity mapping, pace bounds, partial observations, source semantics and changing carry loads. Build with `npm run build`. Browser QA covers actual worker decoding, all nine station cards, real previously exported FIT, live card preview and PNG download. Personal FITs and exported cards are never committed.
+
+Automatic wrist counts are retired. Source 3 counts from historical FITs are excluded during normalization, including mixed manual-distance/wrist-count laps. They cannot contribute to rep volume, lap results, station totals, descriptions, cards or normalized JSON. Original FIT bytes remain unchanged. Manual zero and PM5 strokes remain supported.

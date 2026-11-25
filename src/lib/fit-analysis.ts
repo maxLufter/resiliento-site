@@ -1,6 +1,6 @@
 // Pure normalization: no network, storage, analytics or browser state.
 export type Raw = Record<string, unknown>;
-export type Source = 'Manual' | 'PM5' | 'Wrist estimate' | 'GPS estimate';
+export type Source = 'Manual' | 'PM5' | 'GPS estimate';
 export type Measure = { value: number; source: Source };
 export type Split = {
   index: number; phase: number; station: number; round: number | null; name: string;
@@ -39,7 +39,7 @@ const FIELD_NAMES: Record<number, string> = {
   17:'rh_station_count', 18:'rh_station_power_w', 19:'rh_station_pace_500_s',
   20:'rh_station_count_source', 27:'rh_stage_label', 28:'rh_workout_name', 29:'rh_division',
 };
-const SOURCES: Record<number, Source> = {1:'Manual', 2:'PM5', 3:'Wrist estimate', 4:'GPS estimate'};
+const SOURCES: Record<number, Source> = {1:'Manual', 2:'PM5', 4:'GPS estimate'};
 function object(value: unknown): Raw { return value && typeof value === 'object' ? value as Raw : {}; }
 function array(value: unknown): Raw[] { return Array.isArray(value) ? value.map(object) : []; }
 function num(value: unknown, max = Number.MAX_SAFE_INTEGER): number | null {
@@ -126,6 +126,7 @@ export function analyzeMessages(messages: Raw): Analysis {
   if (!recognized) warnings.push('No verified Resiliento stage fields found. This report shows native FIT laps; station targets and exercise results cannot be inferred.');
   if (recognized && [...simulator].some(i=>trusted.has(i))) warnings.push('This file uses a sideload/simulator app ID. Resiliento fields were matched by their schema.');
   let offset = 0;
+  let excludedWristCounts = 0;
   const splits: Split[] = nativeLaps.map((l,index) => {
     const n = (field: number, max=65535) => num(get(l,19,field),max);
     const phase = recognized ? n(0,6) ?? 0 : 0;
@@ -142,7 +143,8 @@ export function analyzeMessages(messages: Raw): Analysis {
     const supportsCount = [1,4,5,6,7,8].includes(station) || (station===9 && unit===2);
     const metresValue = n(16); const countValue = n(17);
     const metres = phase===2 && supportsMetres && metresValue!==null && (source===1 || (source===2 && erg) || (source===4 && [2,3,4,6,7].includes(station))) ? {value:metresValue,source:SOURCES[source]} : null;
-    const count = phase===2 && supportsCount && countValue!==null && (countSource===1 || (countSource===2 && erg) || (countSource===3 && [1,4,5,6,7,8].includes(station))) ? {value:countValue,source:SOURCES[countSource]} : null;
+    const count = phase===2 && supportsCount && countValue!==null && (countSource===1 || (countSource===2 && erg)) ? {value:countValue,source:SOURCES[countSource]} : null;
+    if(phase===2 && countSource===3 && countValue!==null) excludedWristCounts++;
     const weightValue = n(10,301); const hr = num(l.avgHeartRate,255); const targetValue=n(4);
     const split: Split = {index:index+1,phase,station,round:n(3,255),name,label,seconds,elapsed,start:epoch(l.startTime),
       hr:hr && hr>=30 ? hr : null,maxHr:num(l.maxHeartRate,255),target:targetValue && unit ? targetValue : null,unit,
@@ -151,6 +153,7 @@ export function analyzeMessages(messages: Raw): Analysis {
     offset += seconds;
     return split;
   });
+  if(excludedWristCounts) warnings.push('Automatic wrist counts from this older recording were excluded because they are unreliable. Time, heart rate and other recorded measurements are retained.');
   const runs=splits.filter(s=>s.phase===1); const gps=runs.filter(s=>s.gpsPace!==null); const targets=runs.filter(s=>s.targetPace!==null);
   const eligible=gps.length?gps:targets; const source=gps.length?'GPS' as const:'Target' as const;
   const metres=eligible.reduce((t,s)=>t+(source==='GPS'?s.runMetres!:s.target!),0);

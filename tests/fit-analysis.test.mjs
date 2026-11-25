@@ -69,7 +69,7 @@ test('partial actuals, independent sources, changing carry loads and custom unit
   ]));
   const carry=a.stations[0];assert.equal(carry.metres.value,60);assert.equal(carry.metres.coverage,2);
   assert.equal(carry.distanceVolume,2080);assert.equal(carry.distanceVolumeCoverage,2);
-  assert.deepEqual(carry.count.sources,['Wrist estimate']);assert.equal(carry.countUnit,'steps');
+  assert.equal(carry.count.coverage,0);assert.deepEqual(carry.count.sources,[]);assert.equal(carry.countUnit,'steps');
   assert.equal(carry.repVolumeCoverage,0);assert.equal(a.stations.length,3);
   assert.equal(a.stations[1].count.value,0);assert.equal(a.stations[1].count.coverage,1);
 });
@@ -99,4 +99,17 @@ test('branding is idempotent and text export never presents prescriptions as act
   const a=analyzeMessages(data([{fields:{0:2,2:2,4:50,5:1,10:152}}]));
   const description=stravaDescription(a);assert.ok(description.includes('prescribed load 152 kg'));
   assert.ok(!description.includes('50 m'));assert.ok(description.includes('actual result not recorded'));
+});
+
+test('retired wrist counts cannot enter laps, aggregates, rep volume or share text',()=>{
+  const a=analyzeMessages(data([1,4,5,6,7,8].map(station=>({fields:{0:2,2:station,5:2,4:100,10:20,15:3,17:999,20:3}}))));
+  assert.ok(a.splits.every(s=>s.count===null));
+  assert.ok(a.stations.every(s=>s.count.coverage===0&&s.repVolume===0&&s.repVolumeCoverage===0));
+  assert.ok(!stravaDescription(a).includes('999'));
+  assert.ok(a.warnings.some(w=>w.includes('wrist counts')));
+  const mixed=analyzeMessages(data([{fields:{0:2,2:7,5:1,4:50,10:20,15:1,16:25,17:999,20:3}}]));
+  assert.equal(mixed.splits[0].metres.value,25);assert.equal(mixed.splits[0].count,null);
+  assert.equal(mixed.stations[0].distanceVolume,500);assert.equal(mixed.stations[0].repVolume,0);
+  const legacy=analyzeMessages(data([{fields:{0:2,2:8,5:2,15:3,17:118}}]));
+  assert.equal(legacy.splits[0].count,null); // Source fallback in older FITs is filtered too.
 });
