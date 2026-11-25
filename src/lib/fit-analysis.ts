@@ -19,7 +19,7 @@ export type StationSummary = {
   distanceVolumeCoverage: number; repVolumeCoverage: number;
 };
 export type Analysis = {
-  title: string; date: string | null; recognized: boolean; warnings: string[];
+  title: string; division: string | null; date: string | null; recognized: boolean; warnings: string[];
   totalSeconds: number; workoutSeconds: number; elapsedSeconds: number;
   nativeMetres: number | null; nativeHr: number | null; calories: number | null;
   phases: { phase: number; name: string; seconds: number; hr: number | null; laps: number }[];
@@ -38,6 +38,7 @@ const FIELD_NAMES: Record<number, string> = {
   10:'rh_target_weight_kg', 15:'rh_station_source', 16:'rh_station_distance_m',
   17:'rh_station_count', 18:'rh_station_power_w', 19:'rh_station_pace_500_s',
   20:'rh_station_count_source', 27:'rh_stage_label', 28:'rh_workout_name', 29:'rh_division',
+  32:'rh_phase',
 };
 const SOURCES: Record<number, Source> = {1:'Manual', 2:'PM5', 4:'GPS estimate'};
 function object(value: unknown): Raw { return value && typeof value === 'object' ? value as Raw : {}; }
@@ -45,13 +46,24 @@ function array(value: unknown): Raw[] { return Array.isArray(value) ? value.map(
 function num(value: unknown, max = Number.MAX_SAFE_INTEGER): number | null {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value < max ? value : null;
 }
-function text(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000 ]+$/g, '').slice(0, 500) : ''; }
+function text(value: unknown): string {
+  const raw = typeof value === 'string' ? value : Array.isArray(value) && typeof value[0] === 'string' ? value[0] : '';
+  return raw.replace(/\u0000[\s\S]*$/, '').replace(/ +$/g, '').slice(0, 500);
+}
 function epoch(value: unknown): number | null {
   if (value instanceof Date && Number.isFinite(value.getTime())) return value.getTime() / 1000;
   return null;
 }
 function id(value: unknown): string {
-  return (Array.isArray(value) || ArrayBuffer.isView(value)) ? Array.from(value as number[]).map(n => n.toString(16).padStart(2, '0')).join('') : '';
+  const bytes = value instanceof Uint8Array
+    ? Array.from(value)
+    : Array.isArray(value)
+      ? value
+      : ArrayBuffer.isView(value) && !(value instanceof DataView)
+        ? Array.from(value as unknown as ArrayLike<number>)
+        : null;
+  if (!bytes || bytes.some(n => typeof n !== 'number' || !Number.isInteger(n) || n < 0 || n > 255)) return '';
+  return bytes.map(n => n.toString(16).padStart(2, '0')).join('');
 }
 export function brandedTitle(name: string): string {
   const clean = name.replace(/^Resiliento(?:\s*[-·:]\s*|\s+Hybrid\s*)/i, '').trim();
@@ -80,8 +92,8 @@ function aggregate(splits: Split[]): StationSummary[] {
   }
   return [...groups.values()].map(laps => {
     const totals = (key: 'metres'|'count') => ({value:laps.reduce((t,s) => t+(s[key]?.value ?? 0),0), coverage:laps.filter(s=>s[key]!==null).length, sources:[...new Set(laps.flatMap(s=>s[key] ? [s[key]!.source] : []))]});
-    const dist = laps.filter(s => s.metres !== null && s.weight !== null);
-    const reps = laps.filter(s => s.count !== null && s.weight !== null && ![1,5,6].includes(s.station));
+    const dist = laps.filter(s => s.metres !== null && s.weight !== null && [2,3,6,7,9].includes(s.station));
+    const reps = laps.filter(s => s.count !== null && s.weight !== null && [7,8,9].includes(s.station));
     return {name:laps[0].name,station:laps[0].station,laps:laps.length,seconds:laps.reduce((t,s)=>t+s.seconds,0),hr:weightedHr(laps),
       metres:totals('metres'),count:totals('count'),countUnit:countUnit(laps[0].station),
       weights:[...new Set(laps.flatMap(s=>s.weight===null?[]:[s.weight]))].sort((a,b)=>a-b),weightedLaps:laps.filter(s=>s.weight!==null).length,
@@ -133,11 +145,14 @@ export function analyzeMessages(messages: Raw): Analysis {
     const station = phase===2 ? n(2,10) ?? 0 : 0;
     const unit = n(5,4) ?? 0;
     const label = text(get(l,19,27));
-    const name = phase===2 ? station===9 ? label.split(' · ')[0] || STATIONS[9] : STATIONS[station] || 'Station' : PHASES[phase];
+    const customName = label.split(' · ')[0].split(' / ')[0].trim();
+    const name = phase===2 ? station===9 ? customName || STATIONS[9] : STATIONS[station] || 'Station' : PHASES[phase];
     const seconds = num(l.totalTimerTime) ?? num(l.totalElapsedTime) ?? 0;
     const elapsed = num(l.totalElapsedTime) ?? seconds;
-    const runMetres = phase===1 ? recognized ? n(7,2)===1 ? n(6,4294967295) : null : num(l.totalDistance) : null;
-    const source = n(15,5) ?? 0; const countSource = n(20,4) ?? source;
+    const runMetres = phase !== 1 ? null : recognized ? (n(7,2)===1 ? n(6,4294967295) : null) : num(l.totalDistance);
+    const source = n(15,5) ?? 0;
+    const rawCountSource = get(l,19,20);
+    const countSource = (rawCountSource === undefined || rawCountSource === null || rawCountSource === 255) ? source : (n(20,4) ?? 0);
     const erg = [1,5].includes(station);
     const supportsMetres = [1,2,3,4,5,6,7].includes(station) || (station===9 && unit===1);
     const supportsCount = [1,4,5,6,7,8].includes(station) || (station===9 && unit===2);
@@ -145,9 +160,9 @@ export function analyzeMessages(messages: Raw): Analysis {
     const metres = phase===2 && supportsMetres && metresValue!==null && (source===1 || (source===2 && erg) || (source===4 && [2,3,4,6,7].includes(station))) ? {value:metresValue,source:SOURCES[source]} : null;
     const count = phase===2 && supportsCount && countValue!==null && (countSource===1 || (countSource===2 && erg)) ? {value:countValue,source:SOURCES[countSource]} : null;
     if(phase===2 && countSource===3 && countValue!==null) excludedWristCounts++;
-    const weightValue = n(10,301); const hr = num(l.avgHeartRate,255); const targetValue=n(4);
-    const split: Split = {index:index+1,phase,station,round:n(3,255),name,label,seconds,elapsed,start:epoch(l.startTime),
-      hr:hr && hr>=30 ? hr : null,maxHr:num(l.maxHeartRate,255),target:targetValue && unit ? targetValue : null,unit,
+    const weightValue = n(10,301); const hr = num(l.avgHeartRate,255); const rawMaxHr = num(l.maxHeartRate,255); const targetValue=n(4);
+    const split: Split = {index:index+1,phase,station,round:phase===5?null:n(3,255),name,label,seconds,elapsed,start:epoch(l.startTime),
+      hr:hr && hr>=30 ? hr : null,maxHr:rawMaxHr!==null && rawMaxHr>=30 ? rawMaxHr : null,target:targetValue && unit ? targetValue : null,unit,
       weight:phase===2 && weightValue ? weightValue : null,runMetres,metres,count,watts:erg?n(18):null,ergPace:erg && (n(19)??0)>0?n(19):null,
       gpsPace:phase===1?paceFor(seconds,runMetres):null,targetPace:phase===1 && unit===1?paceFor(seconds,targetValue):null};
     offset += seconds;
@@ -164,17 +179,34 @@ export function analyzeMessages(messages: Raw): Analysis {
     return laps.length?[{phase,name:PHASES[phase],seconds:laps.reduce((t,s)=>t+s.seconds,0),hr:weightedHr(laps),laps:laps.length}]:[];
   });
   const origin=epoch(session.startTime) ?? splits[0]?.start;
+  const lapBounds=splits.flatMap((s,i)=>{
+    if(s.start===null) return [];
+    let nextStart:number|null=null;
+    for(let j=i+1;j<splits.length;j++){if(splits[j].start!==null){nextStart=splits[j].start;break;}}
+    const rawEnd=s.start+s.elapsed;
+    const end=nextStart!==null?Math.max(s.start,Math.min(rawEnd,nextStart)):rawEnd;
+    return [{start:s.start,end,phase:s.phase}];
+  });
+  let lapCursor=0;
+  const matchLapPhase=(time:number)=>{
+    if(lapCursor>0 && time<lapBounds[lapCursor-1].end) lapCursor=0;
+    while(lapCursor<lapBounds.length && time>=lapBounds[lapCursor].end) lapCursor++;
+    const bound=lapBounds[lapCursor];
+    return bound && time>=bound.start && time<bound.end ? bound.phase : null;
+  };
   const records=array(messages.recordMesgs).flatMap(r=>{
     const time=epoch(r.timestamp); const hr=num(r.heartRate,255);
     if(time===null || origin===null || origin===undefined || !hr || hr<30) return [];
-    const split=splits.find(s=>s.start!==null && time>=s.start && time<s.start+s.elapsed);
-    return [{time:time-origin,hr,phase:split?.phase??null}];
+    const recPhase=recognized ? num(get(r,20,32),6) : null;
+    const matchedPhase=matchLapPhase(time);
+    return [{time:time-origin,hr,phase:recPhase!==null && recPhase>0 ? recPhase : matchedPhase}];
   });
   const context=text(get(session,18,28)) || text(session.sportProfileName);
+  const division=recognized ? text(get(session,18,29)) || null : null;
   const fallback=recognized ? [...new Set(splits.filter(s=>![3,4,5].includes(s.phase)).map(s=>s.name))].join(' · ') : 'Workout';
   const nativeSeconds=num(session.totalTimerTime) ?? offset;
   if (recognized && splits.some(s=>s.phase===0)) warnings.push('Some laps have no stage classification. Their time remains visible as Activity.');
-  return {title:brandedTitle(context||fallback),date:origin?new Date(origin*1000).toISOString():null,recognized,warnings,
+  return {title:brandedTitle(context||fallback),division,date:origin?new Date(origin*1000).toISOString():null,recognized,warnings,
     totalSeconds:nativeSeconds,workoutSeconds:recognized?splits.filter(s=>s.phase!==5).reduce((t,s)=>t+s.seconds,0):nativeSeconds,
     elapsedSeconds:num(session.totalElapsedTime)??nativeSeconds,nativeMetres:num(session.totalDistance),nativeHr:(num(session.avgHeartRate,255)??0)>=30?num(session.avgHeartRate,255):null,calories:num(session.totalCalories,65535),
     phases,splits,stations:aggregate(splits),pace,records};

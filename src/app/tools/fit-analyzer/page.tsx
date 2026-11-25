@@ -1,15 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { BreadcrumbJsonLd } from '@/components/StructuredData';
 import Analyzer from './Analyzer';
 
+const description = 'Open a Garmin FIT file privately in your browser. Explore hybrid workout splits, station results, running pace and heart rate, then prepare a card for Strava.';
 export const metadata: Metadata = {
   title:'FIT Workout Analyzer | Hybrid Training & HYROX',
-  description:'Open a Garmin FIT file privately in your browser. Explore hybrid workout splits, station results, running pace and heart rate, then prepare a card for Strava.',
+  description,
   alternates:{canonical:'/tools/fit-analyzer'},
+  openGraph:{title:'FIT Workout Analyzer | Hybrid Training & HYROX',description,url:'https://resiliento.app/tools/fit-analyzer',images:['/og-image.jpg']},
+  twitter:{card:'summary_large_image',title:'FIT Workout Analyzer | Hybrid Training & HYROX',description,images:['/og-image.jpg']},
 };
 
 export default function Page() {
   return <div className="mx-auto max-w-7xl px-5 pb-24 pt-36 sm:px-8 sm:pt-40">
+    <BreadcrumbJsonLd items={[{name:'Home',url:'https://resiliento.app'},{name:'Free Training Tools',url:'https://resiliento.app/tools'},{name:'FIT Analyzer',url:'https://resiliento.app/tools/fit-analyzer'}]}/>
     <nav aria-label="Breadcrumb" className="mb-9 flex gap-3 text-sm text-slate-400"><Link href="/tools" className="hover:text-brand">Free training tools</Link><span>/</span><span className="text-white">FIT analyzer</span></nav>
     <header className="mb-10 max-w-3xl">
       <p className="mb-4 font-mono text-sm uppercase tracking-[.18em] text-brand">Resiliento · Workout lab</p>
