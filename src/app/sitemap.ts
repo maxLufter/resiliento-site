@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticDate = '2025-12-01';
 
   return [
+    { url: 'https://resiliento.app/tools/fit-analyzer', lastModified: '2026-11-25', changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://resiliento.app/guides/hyrox-world-triathlon', lastModified: today, changeFrequency: 'monthly', priority: 0.7 },
     {
       url: 'https://resiliento.app',

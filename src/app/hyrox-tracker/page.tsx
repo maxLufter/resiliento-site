@@ -394,6 +394,12 @@ export default function HybridTrackerPage() {
         </div>
       </section>
 
+      <section className="my-12 rounded-2xl border border-brand/30 bg-brand/5 p-7 sm:p-10">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand">After the workout</p>
+        <h2 className="text-2xl font-semibold sm:text-3xl">See the whole picture in your browser.</h2>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-300">Open your saved FIT to explore run splits, every performed station and recorded heart rate. Download a workout card and prepare a title and description for Strava. Your activity file stays on your device.</p>
+        <Link href="/tools/fit-analyzer" className="mt-6 inline-flex rounded-lg bg-brand px-6 py-3 text-base font-semibold text-black">Analyze a FIT workout</Link>
+      </section>
       {/* 6 Core Capability Cards */}
       <section className="border-b border-border py-16">
         <div className="max-w-3xl">

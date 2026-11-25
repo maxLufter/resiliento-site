@@ -6,6 +6,7 @@ import { toolCatalog } from '@/lib/tool-catalog';
 import { BreadcrumbJsonLd } from '@/components/StructuredData';
 
 const tools = [
+  { slug: 'fit-analyzer', title: 'FIT Workout Analyzer', description: 'Explore hybrid workout splits, station results and heart rate privately in your browser. Prepare a card for Strava.', tag: 'Workout analysis', href: '/tools/fit-analyzer' },
   {
     slug: 'resiliento-hybrid-tracker',
     title: 'Resiliento: HYROX & Hybrid Tracker',
@@ -53,7 +54,7 @@ export default function ToolsIndexPage() {
           Free Training <span className="text-brand">Tools</span>
         </h1>
         <p className="text-lg leading-8 text-neutral-300 font-inter">
-          Free calculators and planners for running, triathlon and hybrid training, plus our Garmin watch app and video-based bike fitting.
+          Free calculators, workout analysis and planners for running, triathlon and hybrid training, plus our Garmin watch app and video-based bike fitting.
         </p>
       </div>
 
