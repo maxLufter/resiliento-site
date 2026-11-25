@@ -131,9 +131,9 @@ const capabilities = [
     icon: Sliders,
   },
   {
-    title: 'Concept2 PM5 BLE & Wrist Rep Telemetry',
+    title: 'Concept2 PM5 BLE & Manual Results',
     description:
-      'Pair Concept2 PM5 SkiErg and RowErg monitors directly via watch Bluetooth Low Energy for live watts, /500 m pace, distance, and stroke data, alongside wrist repetition and load volume tracking.',
+      'Pair Concept2 PM5 SkiErg and RowErg monitors directly via watch Bluetooth Low Energy for live watts, /500 m pace, distance, and stroke data, alongside manual station results and load volume tracking.',
     icon: Cpu,
   },
   {
@@ -175,7 +175,7 @@ const faqs = [
   {
     question: 'Does it work indoors without GPS and with Concept2 ergometers?',
     answer:
-      'Yes. Choose Indoor mode directly on the Ready screen to disable GPS while recording time, heart rate zones, target-based run pace stats, wrist rep counts, and direct Bluetooth Low Energy telemetry from paired Concept2 PM5 SkiErg or RowErg monitors.',
+      'Yes. Choose Indoor mode directly on the Ready screen to disable GPS while recording time, heart rate zones, target-based run pace stats, manual station results, and direct Bluetooth Low Energy telemetry from paired Concept2 PM5 SkiErg or RowErg monitors.',
   },
   {
     question: 'How does touchscreen lock work on Venu vs. Forerunner and Fenix?',
