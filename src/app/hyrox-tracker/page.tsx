@@ -91,23 +91,23 @@ const screenGallery = [
   {
     src: '/hybrid-tracker/card-03-race.png',
     badge: 'Race Setup',
-    title: 'GPS Mode & 1-Tap Roxzone Toggle',
+    title: 'Warm up, Division & Roxzone Setup',
     caption:
-      'Switch Indoor treadmill or Outdoor GPS and toggle Roxzone transitions right on the Ready card before locking in with Record.',
+      'Toggle Indoor GPS, Warm up, Roxzone transitions, and Singles/Doubles division right on the Ready card before starting.',
   },
   {
     src: '/hybrid-tracker/card-04-telemetry.png',
     badge: 'Live Race View',
-    title: 'Zone Arc, Undo & Concept2 PM5 BLE',
+    title: 'Immediate Laps & Concept2 PM5 BLE',
     caption:
-      'Track stage and total timers, heart rate zone arc, live Concept2 SkiErg/RowErg metrics, target run pace delta, and the lower-right LAP cue.',
+      'Track stage and total timers, heart rate zone arc, live Concept2 SkiErg/RowErg telemetry, optional target run pace delta, and immediate LAP boundaries.',
   },
   {
     src: '/hybrid-tracker/card-05-stats.png',
-    badge: 'Post-Workout Stats',
-    title: '12-Page Watch Summary & FIT Laps',
+    badge: 'Stats & Strava Cards',
+    title: 'Watch Analytics & Strava Share Cards',
     caption:
-      'Review TOTAL TIME, AVG HR, KCAL, PACE/km, compromised run drift, bottleneck station, and kg*m mechanical volume right on your wrist.',
+      'Review TOTAL TIME, AVG HR, KCAL, and PACE/km on your wrist, inspect clean Garmin Connect laps, or drop your .zip/.fit file into FIT Analyzer for a Strava PNG card.',
   },
 ];
 
@@ -119,15 +119,15 @@ const capabilities = [
     icon: Gauge,
   },
   {
-    title: 'Roxzone Lookahead & 5s Lap Undo',
+    title: 'Warm up & Roxzone Lookahead',
     description:
-      'When Roxzone transitions are enabled, both the active workout view and the 5-second Lap Undo banner preview the upcoming station (> Next Stage) so you never double-tap or miss a transition.',
+      'Record optional Warm up separately from main race time, and preview the upcoming station (> Next Stage) during Roxzone transitions up to 64 runtime stages.',
     icon: Timer,
   },
   {
-    title: '10 Quick Presets + Custom Builder',
+    title: '10 Quick Presets + Auto-Save Builder',
     description:
-      'Launch proven workouts like Half HYROX Sim, Compromised Running, or Sled & Grip x3, or build custom multi-round templates with x0.5-x2 target scaling directly inside the workout preview.',
+      'Launch Half HYROX Sim, Compromised Running, or Sled & Grip x3 with button scrolling, or build auto-saving custom circuits with MM:SS durations and x0.5-x2 scaling.',
     icon: Sliders,
   },
   {
@@ -139,13 +139,13 @@ const capabilities = [
   {
     title: 'Race-Day Ergonomics & Smooth Labels',
     description:
-      'Target run pace alerts with live ahead/behind deltas, a clear 4 o’clock LAP cue ideal for 2-button Venu watches, optional workout touch lock on 5-button watches, and marquee scrolling labels on every screen.',
+      'Optional Target Run Pace alerts with live ahead/behind deltas, a clear 4 o’clock LAP cue ideal for 2-button Venu watches, optional workout touch lock on 5-button watches, and marquee scrolling labels on every screen.',
     icon: Activity,
   },
   {
-    title: 'Named Garmin Connect Laps & Deep Stats',
+    title: 'Clean Connect Laps & Strava Cards',
     description:
-      'Writes custom FIT developer fields for stage names, targets, weights, and erg telemetry alongside 12 on-watch summary pages covering run pace decay, compromised runs, and slowest station bottlenecks.',
+      'Compact 15-field FIT laps, M:SS / H:MM:SS Connect Stats without truncation noise, 12 on-watch summary pages, and free browser .zip/.fit Strava PNG card generation.',
     icon: BarChart3,
   },
 ];
@@ -199,7 +199,7 @@ export default function HybridTrackerPage() {
     installUrl: CONNECT_IQ_URL,
     applicationCategory: 'SportsApplication',
     operatingSystem: 'Garmin Connect IQ',
-    softwareVersion: '1.2.1',
+    softwareVersion: '1.3.0',
     image: 'https://resiliento.app/hybrid-tracker/hero-banner.jpg',
     offers: {
       '@type': 'Offer',
@@ -237,7 +237,7 @@ export default function HybridTrackerPage() {
         <div className="mt-7 flex flex-wrap items-center gap-3">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#FFED00]/35 bg-[#FFED00]/10 px-3.5 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-[#FFED00]">
             <span className="h-2 w-2 rounded-full bg-[#FFED00]" />
-            Live on Connect IQ · v1.2.1
+            Live on Connect IQ · v1.3.0
           </span>
           <span className="rounded-full border border-white/15 bg-neutral-900 px-3.5 py-1 font-mono text-xs uppercase tracking-wider text-slate-300">
             100% Free · Offline-First · 101 Watches
@@ -395,10 +395,10 @@ export default function HybridTrackerPage() {
       </section>
 
       <section className="my-12 rounded-2xl border border-brand/30 bg-brand/5 p-7 sm:p-10">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand">After the workout</p>
-        <h2 className="text-2xl font-semibold sm:text-3xl">See the whole picture in your browser.</h2>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-300">Open your saved FIT to explore run splits, every performed station and recorded heart rate. Download a workout card and prepare a title and description for Strava. Your activity file stays on your device.</p>
-        <Link href="/tools/fit-analyzer" className="mt-6 inline-flex rounded-lg bg-brand px-6 py-3 text-base font-semibold text-black">Analyze a FIT workout</Link>
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand">After the workout · Strava Share Card</p>
+        <h2 className="text-2xl font-semibold sm:text-3xl">Generate your Strava card &amp; analyze every split in your browser.</h2>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-300">Drop your Garmin Connect .zip export or .fit file directly into your browser to inspect every run split, station result, and heart-rate phase, then download a branded 4:5 Strava PNG workout card and formatted split summary. Your activity file stays on your device.</p>
+        <Link href="/tools/fit-analyzer" className="mt-6 inline-flex rounded-lg bg-brand px-6 py-3 text-base font-semibold text-black">Open FIT Analyzer &amp; Strava Card</Link>
       </section>
       {/* 6 Core Capability Cards */}
       <section className="border-b border-border py-16">
@@ -485,9 +485,9 @@ export default function HybridTrackerPage() {
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-slate-300">
                     Press LAP (or tap the 4 o&apos;clock cue) at each stage
-                    boundary with 5s Lap Undo protection, then review 12 watch
-                    pages or open Activity → Laps in Garmin Connect (rotate
-                    phone to landscape to view all named stage columns).
+                    boundary for immediate lap recording, then review 12 watch
+                    pages, open Activity → Laps in Garmin Connect, or generate a
+                    Strava PNG card at /tools/fit-analyzer.
                   </p>
                 </div>
               </li>

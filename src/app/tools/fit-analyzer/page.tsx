@@ -23,7 +23,7 @@ export default function Page() {
     </header>
     <Analyzer />
     <section className="mt-16 grid gap-8 border-t border-white/10 pt-10 text-base leading-relaxed text-slate-400 md:grid-cols-3">
-      <div><h2 className="mb-3 text-lg font-semibold text-white">Get your original FIT</h2><p>In Garmin Connect on the web, open the activity and choose Export Original from its settings. Unzip the download and select the .fit file here.</p></div>
+      <div><h2 className="mb-3 text-lg font-semibold text-white">Get your original FIT</h2><p>In Garmin Connect on the web, open the activity and choose Export File from its settings. Select the downloaded .zip archive directly here — no need to unzip it.</p></div>
       <div><h2 className="mb-3 text-lg font-semibold text-white">Built for hybrid workouts</h2><p>Resiliento stage fields unlock exercise-specific results. Other single-session FIT activities get a basic report from their native data. Missing measurements stay missing.</p></div>
       <div><h2 className="mb-3 text-lg font-semibold text-white">Your browser does the work</h2><p>FIT parsing, calculations and image generation run on your device. No workout uploads, accounts or saved history. Clearing the report removes it from this page.</p></div>
     </section>

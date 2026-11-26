@@ -31,7 +31,12 @@ export type Analysis = {
 const STATIONS = ['', 'SkiErg', 'Sled Push', 'Sled Pull', 'Burpee Broad Jump', 'RowErg', 'Farmers Carry', 'Sandbag Lunges', 'Wall Balls', 'Custom station'];
 export const PHASES = ['Activity', 'Run', 'Station', 'Roxzone', 'Rest', 'Warmup'];
 export const PHASE_COLORS = ['#94a3b8', '#16edb9', '#a78bfa', '#fbbf24', '#94a3b8', '#38bdf8'];
-const IDENTITIES = ['5d680cdcea104211b25568aa60065d6e', '9a829a1003e94e8ebf293998e96ae04e'];
+const IDENTITIES = [
+  '5d680cdcea104211b25568aa60065d6e',
+  '6a76f5948546411ea4c7fc59eef1606b',
+  '9a829a1003e94e8ebf293998e96ae04e',
+  '8da17e8cd6274135b08b01cb04a32d95',
+];
 const FIELD_NAMES: Record<number, string> = {
   0:'rh_segment_type', 1:'rh_segment_index', 2:'rh_station_id', 3:'rh_round_index',
   4:'rh_target_value', 5:'rh_target_unit', 6:'rh_run_distance_m', 7:'rh_distance_source',
@@ -133,7 +138,11 @@ export function analyzeMessages(messages: Raw): Analysis {
   const get = (msg: Raw, native: number, field: number): unknown => {
     const key = maps.get(native)?.get(field); return key===undefined ? undefined : object(msg.developerFields)[key];
   };
-  const recognized = nativeLaps.some(l => (num(get(l,19,0),6)??0)>0);
+  const recognized = trusted.size > 0 && (
+    nativeLaps.some(l => (num(get(l,19,0),6)??0)>0) ||
+    array(messages.recordMesgs).some(r => (num(get(r,20,32),6)??0)>0) ||
+    text(get(session,18,28)).length > 0
+  );
   const warnings: string[] = [];
   if (!recognized) warnings.push('No verified Resiliento stage fields found. This report shows native FIT laps; station targets and exercise results cannot be inferred.');
   if (recognized && [...simulator].some(i=>trusted.has(i))) warnings.push('This file uses a sideload/simulator app ID. Resiliento fields were matched by their schema.');
@@ -168,6 +177,52 @@ export function analyzeMessages(messages: Raw): Analysis {
     offset += seconds;
     return split;
   });
+  const origin=epoch(session.startTime) ?? splits[0]?.start;
+  const lapBounds=splits.flatMap((s,i)=>{
+    if(s.start===null) return [];
+    let nextStart:number|null=null;
+    for(let j=i+1;j<splits.length;j++){if(splits[j].start!==null){nextStart=splits[j].start;break;}}
+    const rawEnd=s.start+s.elapsed;
+    const end=nextStart!==null?Math.max(s.start,Math.min(rawEnd,nextStart)):rawEnd;
+    return [{index:i,start:s.start,end}];
+  });
+  let lapCursor=0;
+  const matchLapBound=(time:number)=>{
+    if(lapCursor>0 && time<lapBounds[lapCursor-1].end) lapCursor=0;
+    while(lapCursor<lapBounds.length && time>=lapBounds[lapCursor].end) lapCursor++;
+    const bound=lapBounds[lapCursor];
+    return bound && time>=bound.start && time<bound.end ? bound.index : null;
+  };
+  let recoveredLapPhases = 0;
+  const lapPhaseVotes = new Map<number, Map<number, number>>();
+  const rawRecords = array(messages.recordMesgs);
+  if (recognized && splits.some(s => s.phase === 0)) {
+    for (const r of rawRecords) {
+      const time = epoch(r.timestamp);
+      const recPhase = num(get(r,20,32),6);
+      if (time === null || recPhase === null || recPhase <= 0 || recPhase > 5) continue;
+      const lapIndex = matchLapBound(time);
+      if (lapIndex === null || splits[lapIndex].phase !== 0) continue;
+      const votes = lapPhaseVotes.get(lapIndex) || new Map<number, number>();
+      votes.set(recPhase, (votes.get(recPhase) || 0) + 1);
+      lapPhaseVotes.set(lapIndex, votes);
+    }
+    for (const [lapIndex, votes] of lapPhaseVotes.entries()) {
+      let bestPhase = 0; let bestCount = 0;
+      for (const [phase, count] of votes.entries()) {
+        if (count > bestCount) { bestPhase = phase; bestCount = count; }
+      }
+      if (bestPhase > 0) {
+        const s = splits[lapIndex];
+        s.phase = bestPhase;
+        s.name = PHASES[bestPhase] || s.name;
+        if (bestPhase === 5) s.round = null;
+        recoveredLapPhases++;
+      }
+    }
+    lapCursor = 0;
+  }
+  if (recoveredLapPhases) warnings.push('Early laps in this activity had no Garmin stage metadata due to older firmware lap-buffer limits. Their phases (Warmup, Run, Station) were recovered from per-second records; exact station names on those laps could not be restored.');
   if(excludedWristCounts) warnings.push('Automatic wrist counts from this older recording were excluded because they are unreliable. Time, heart rate and other recorded measurements are retained.');
   const runs=splits.filter(s=>s.phase===1); const gps=runs.filter(s=>s.gpsPace!==null); const targets=runs.filter(s=>s.targetPace!==null);
   const eligible=gps.length?gps:targets; const source=gps.length?'GPS' as const:'Target' as const;
@@ -178,27 +233,12 @@ export function analyzeMessages(messages: Raw): Analysis {
     const laps=splits.filter(s=>s.phase===phase);
     return laps.length?[{phase,name:PHASES[phase],seconds:laps.reduce((t,s)=>t+s.seconds,0),hr:weightedHr(laps),laps:laps.length}]:[];
   });
-  const origin=epoch(session.startTime) ?? splits[0]?.start;
-  const lapBounds=splits.flatMap((s,i)=>{
-    if(s.start===null) return [];
-    let nextStart:number|null=null;
-    for(let j=i+1;j<splits.length;j++){if(splits[j].start!==null){nextStart=splits[j].start;break;}}
-    const rawEnd=s.start+s.elapsed;
-    const end=nextStart!==null?Math.max(s.start,Math.min(rawEnd,nextStart)):rawEnd;
-    return [{start:s.start,end,phase:s.phase}];
-  });
-  let lapCursor=0;
-  const matchLapPhase=(time:number)=>{
-    if(lapCursor>0 && time<lapBounds[lapCursor-1].end) lapCursor=0;
-    while(lapCursor<lapBounds.length && time>=lapBounds[lapCursor].end) lapCursor++;
-    const bound=lapBounds[lapCursor];
-    return bound && time>=bound.start && time<bound.end ? bound.phase : null;
-  };
-  const records=array(messages.recordMesgs).flatMap(r=>{
+  const records=rawRecords.flatMap(r=>{
     const time=epoch(r.timestamp); const hr=num(r.heartRate,255);
     if(time===null || origin===null || origin===undefined || !hr || hr<30) return [];
     const recPhase=recognized ? num(get(r,20,32),6) : null;
-    const matchedPhase=matchLapPhase(time);
+    const matchedIdx=matchLapBound(time);
+    const matchedPhase=matchedIdx!==null ? splits[matchedIdx].phase : null;
     return [{time:time-origin,hr,phase:recPhase!==null && recPhase>0 ? recPhase : matchedPhase}];
   });
   const context=text(get(session,18,28)) || text(session.sportProfileName);

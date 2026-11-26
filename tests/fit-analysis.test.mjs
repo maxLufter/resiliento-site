@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { decodeFit } from '../src/lib/fit-decode.ts';
+import { extractFitFromZip } from '../src/lib/fit-zip.ts';
 import { analyzeMessages, brandedTitle, paceFor, stravaDescription } from '../src/lib/fit-analysis.ts';
 
 const fixture=name=>{
@@ -164,4 +165,81 @@ test('dirty string buffers, weighted custom names, volume allowlists, record rh_
   assert.equal(a.records[0].phase,3);
   assert.equal(a.records[1].phase,1);
   assert.equal(a.records[2].phase,2);
+});
+
+test('Store UUIDs and partial-lap rh_phase recovery work for Beta 7 buffer-limited FITs',()=>{
+  const start=new Date('2026-11-26T05:24:54.000Z');
+  const fields={0:'rh_segment_type',2:'rh_station_id',3:'rh_round_index',4:'rh_target_value',5:'rh_target_unit'};
+  const map=Object.fromEntries(Object.entries(fields).map(([n],i)=>[n,`${i+70}`]));
+  const msg={
+    developerDataIdMesgs:[{developerDataIndex:0,applicationId:Buffer.from('8da17e8cd6274135b08b01cb04a32d95','hex')}],
+    fieldDescriptionMesgs:[
+      ...Object.entries(fields).map(([n,name])=>({developerDataIndex:0,nativeMesgNum:19,fieldDefinitionNumber:+n,fieldName:name,key:+map[n]})),
+      {developerDataIndex:0,nativeMesgNum:18,fieldDefinitionNumber:28,fieldName:'rh_workout_name',key:101},
+      {developerDataIndex:0,nativeMesgNum:20,fieldDefinitionNumber:32,fieldName:'rh_phase',key:103},
+    ],
+    sessionMesgs:[{startTime:start,numLaps:3,totalTimerTime:180,totalElapsedTime:180,developerFields:{101:'Free training'}}],
+    lapMesgs:[
+      {startTime:start,totalTimerTime:60,totalElapsedTime:60,avgHeartRate:127,developerFields:{}},
+      {startTime:new Date(start.getTime()+60000),totalTimerTime:60,totalElapsedTime:60,avgHeartRate:150,developerFields:{}},
+      {startTime:new Date(start.getTime()+120000),totalTimerTime:60,totalElapsedTime:60,avgHeartRate:155,developerFields:{[map[0]]:2,[map[2]]:8,[map[4]]:100,[map[5]]:2}},
+    ],
+    recordMesgs:[
+      {timestamp:new Date(start.getTime()+10000),heartRate:127,developerFields:{103:5}},
+      {timestamp:new Date(start.getTime()+70000),heartRate:150,developerFields:{103:1}},
+      {timestamp:new Date(start.getTime()+130000),heartRate:155,developerFields:{103:2}},
+    ],
+  };
+  const a=analyzeMessages(msg);
+  assert.equal(a.recognized,true);
+  assert.equal(a.splits[0].phase,5);assert.equal(a.splits[0].name,'Warmup');
+  assert.equal(a.splits[1].phase,1);assert.equal(a.splits[1].name,'Run');
+  assert.equal(a.splits[2].phase,2);assert.equal(a.splits[2].name,'Wall Balls');
+  assert.ok(a.warnings.some(w=>w.includes('recovered from per-second records')));
+
+  // Production Store UUID is also recognized.
+  msg.developerDataIdMesgs[0].applicationId=Buffer.from('6a76f5948546411ea4c7fc59eef1606b','hex');
+  assert.equal(analyzeMessages(msg).recognized,true);
+});
+
+import { deflateRawSync } from 'node:zlib';
+function makeZip(entries) {
+  const locals=[];const centrals=[];let offset=0;
+  for(const e of entries){
+    const name=Buffer.from(e.name,'utf8');
+    const comp=e.deflate?deflateRawSync(e.data):e.data;
+    const method=e.deflate?8:0;const flags=e.encrypted?1:0;
+    const lfh=Buffer.alloc(30);
+    lfh.writeUInt32LE(0x04034b50,0);lfh.writeUInt16LE(20,4);lfh.writeUInt16LE(flags,6);lfh.writeUInt16LE(method,8);
+    lfh.writeUInt32LE(comp.length,18);lfh.writeUInt32LE(e.data.length,22);lfh.writeUInt16LE(name.length,26);
+    locals.push(lfh,name,comp);
+    const cd=Buffer.alloc(46);
+    cd.writeUInt32LE(0x02014b50,0);cd.writeUInt16LE(20,4);cd.writeUInt16LE(20,6);cd.writeUInt16LE(flags,8);cd.writeUInt16LE(method,10);
+    cd.writeUInt32LE(comp.length,20);cd.writeUInt32LE(e.data.length,24);cd.writeUInt16LE(name.length,28);cd.writeUInt32LE(offset,42);
+    centrals.push(cd,name);
+    offset+=lfh.length+name.length+comp.length;
+  }
+  const cdBuf=Buffer.concat(centrals);
+  const eocd=Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50,0);eocd.writeUInt16LE(entries.length,8);eocd.writeUInt16LE(entries.length,10);
+  eocd.writeUInt32LE(cdBuf.length,12);eocd.writeUInt32LE(offset,16);
+  return Buffer.concat([...locals,cdBuf,eocd]);
+}
+
+test('extractFitFromZip extracts stored and deflated Garmin FIT exports and rejects malformed ZIPs',async ()=>{
+  const quickBytes=readFileSync(new URL('./fixtures/resiliento-quick.fit',import.meta.url));
+  for(const deflate of [false,true]){
+    const zip=makeZip([{name:'12345_ACTIVITY.fit',data:quickBytes,deflate}]);
+    const extracted=await extractFitFromZip(zip.buffer.slice(zip.byteOffset,zip.byteOffset+zip.byteLength));
+    assert.equal(extracted.name,'12345_ACTIVITY.fit');
+    assert.equal(decodeFit(extracted.bytes).recognized,true);
+  }
+  const emptyZip=makeZip([]);
+  await assert.rejects(()=>extractFitFromZip(emptyZip.buffer.slice(emptyZip.byteOffset,emptyZip.byteOffset+emptyZip.byteLength)),/No \.fit/);
+  const noFit=makeZip([{name:'notes.txt',data:Buffer.from('hi'),deflate:false}]);
+  await assert.rejects(()=>extractFitFromZip(noFit.buffer.slice(noFit.byteOffset,noFit.byteOffset+noFit.byteLength)),/No \.fit/);
+  const multiFit=makeZip([{name:'a.fit',data:quickBytes,deflate:false},{name:'b.fit',data:quickBytes,deflate:false}]);
+  await assert.rejects(()=>extractFitFromZip(multiFit.buffer.slice(multiFit.byteOffset,multiFit.byteOffset+multiFit.byteLength)),/one \.fit/);
+  const encZip=makeZip([{name:'a.fit',data:quickBytes,deflate:false,encrypted:true}]);
+  await assert.rejects(()=>extractFitFromZip(encZip.buffer.slice(encZip.byteOffset,encZip.byteOffset+encZip.byteLength)),/Encrypted/);
 });
